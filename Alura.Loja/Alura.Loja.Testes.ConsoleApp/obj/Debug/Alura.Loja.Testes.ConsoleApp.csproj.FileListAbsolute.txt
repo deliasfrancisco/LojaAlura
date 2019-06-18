@@ -1,0 +1,44 @@
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.exe.config
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.exe
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.pdb
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csprojResolveAssemblyReference.cache
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.exe
+c:\users\caleum\documents\visual studio 2017\Projects\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.pdb
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.exe.config
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.exe
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Alura.Loja.Testes.ConsoleApp.pdb
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csprojAssemblyReference.cache
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.exe
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.pdb
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Microsoft.VisualStudio.CodeCoverage.Shim.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\Microsoft.Win32.Primitives.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.AppContext.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Collections.Immutable.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.ComponentModel.Annotations.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Globalization.Calendars.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Globalization.Extensions.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.IO.Compression.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.IO.Compression.ZipFile.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.IO.FileSystem.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.IO.FileSystem.Primitives.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.IO.UnmanagedMemoryStream.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Net.Http.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Net.NetworkInformation.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Reflection.DispatchProxy.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Reflection.Metadata.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Reflection.TypeExtensions.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Security.Claims.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Security.Cryptography.Algorithms.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Security.Cryptography.Encoding.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Security.Cryptography.Primitives.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Threading.Tasks.Dataflow.dll
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Collections.Immutable.xml
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Reflection.Metadata.xml
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Threading.Tasks.Dataflow.xml
+C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csproj.CopyComplete
