@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Alura.Loja.Testes.ConsoleApp
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -29,14 +29,15 @@ namespace Alura.Loja.Testes.ConsoleApp
 
         private static void GravarUsandoEntity()
         {
-            var p = new Produto();
-            p.Nome = "Harry Potter e a origem da fenix";
+            Produto p = new Produto();
+            p.Nome = "Harry Potter e a Ordem da Fênix";
             p.Categoria = "Livros";
             p.Preco = 19.89;
 
-            using (var repo = new LojaContext())
+            using (var contexto = new LojaContext())
             {
-                repo.Adicionar(p);
+                contexto.Produtos.Add(p);
+                contexto.SaveChanges();
             }
         }
     }

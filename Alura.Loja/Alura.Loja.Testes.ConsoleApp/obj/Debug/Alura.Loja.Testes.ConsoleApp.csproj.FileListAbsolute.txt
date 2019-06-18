@@ -42,3 +42,8 @@ C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\D
 C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Reflection.Metadata.xml
 C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\bin\Debug\System.Threading.Tasks.Dataflow.xml
 C:\Users\diego.francisco\Documents\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csproj.CopyComplete
+C:\Users\diego.francisco\Downloads\LojaAlura\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csprojAssemblyReference.cache
+C:\Users\diego.francisco\Downloads\LojaAlura\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.exe.config
+C:\Users\diego.francisco\Downloads\LojaAlura\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\diego.francisco\Downloads\LojaAlura\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.exe
+C:\Users\diego.francisco\Downloads\LojaAlura\Alura.Loja\Alura.Loja.Testes.ConsoleApp\obj\Debug\Alura.Loja.Testes.ConsoleApp.pdb

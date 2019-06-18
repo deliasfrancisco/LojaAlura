@@ -183,6 +183,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LojaContex.cs" />
     <Compile Include="Produto.cs" />
     <Compile Include="ProdutoDAO.cs" />
     <Compile Include="Program.cs" />
