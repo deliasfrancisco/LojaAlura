@@ -1,0 +1,7 @@
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\bin\Debug\LambdaEList.exe.config
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\bin\Debug\LambdaEList.exe
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\bin\Debug\LambdaEList.pdb
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\obj\Debug\LambdaEList.csprojAssemblyReference.cache
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\obj\Debug\LambdaEList.csproj.CoreCompileInputs.cache
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\obj\Debug\LambdaEList.exe
+C:\Users\diego.francisco\Documents\LambdaEList\LambdaEList\obj\Debug\LambdaEList.pdb
