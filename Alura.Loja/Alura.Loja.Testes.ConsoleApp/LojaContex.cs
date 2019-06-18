@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 
 namespace Alura.Loja.Testes.ConsoleApp
 {
-    //public class LojaContex : DbContext //1º Criação do contexto e permite fazer uso da API do Entity herdando de DbContext()
-    //{
-    //    public DbSet<Produto> Produtos { get; set; }// 2º Criação da propriedade para a persistencia da classe Produto
 
-    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    {
-    //        optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LojaDB;Trusted_Connection=true;");
-    //    }
-    //}
-
-    public class LojaContext : DbContext
+    public class LojaContext : DbContext //1º Criação do contexto e permite fazer uso da API do Entity herdando de DbContext()
     {
-        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Produto> Produtos { get; set; }// 2º Criação da propriedade para a persistencia da classe Produto
+
+        public LojaContext()
+        {
+                
+        }
+
+        public LojaContext(DbContextOptions<LojaContext> options) : base (options)
+        {
+
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LojaDB;Trusted_Connection=true;")
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LojaDB;Trusted_Connection=true;");
         }
     }
 }

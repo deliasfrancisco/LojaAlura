@@ -1,3 +1,5 @@
 
 
 	É uma convenção chamarmos as classe pelo modelo de negócios seguido do sufixo Context. 
+
+Qual a diferença entre os métodos Add e AddRange, além de um aceitar como argumento um objeto e outro uma lista? O segundo pode trazer uma melhora significativa de performance para inclusão de muitos objetos.
