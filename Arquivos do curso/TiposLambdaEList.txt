@@ -1,0 +1,43 @@
+
+    {
+        static void Main(string[] args)
+        {
+            List<int> idades = new List<int>();
+
+            idades.Add(27);
+            idades.Add(12);
+            idades.Add(42);
+            idades.Add(70);
+            idades.Add(5);
+
+	    idades.AddRange(new int[] {1, 2, 3, 4, 5}) //sintaxe para incialização de uma array 
+
+            for (int i = 0; i < idades.Count; i++)
+            {
+                Console.WriteLine(idades[i]);
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
+
+
+	forech + tab(2x) -> Atalho para a criação de um laço de preenchimento forach
+
+
+namespace MetodoExtensaoEClasseGenerica.Estensoes
+{
+    public static class ListExtensoes<T> //precisa ser uma metodo static detro de uma classe static para poder ser acessado externamente
+    {// <T> define o que a classe é do tipo generico
+        public static void AdicionarVarios(this List<T> listaDeInteiros, params T[] itens)//criação de uma lista de inteiros e de um vetor sem tamanho definido porem com o argumento params que auto aloca uma tamanho de array
+        {    //METODO ESTATICO                      QUE VAI ATUAR NESSA LISTA       PEGANDO OS ARGUMENTOS
+            // foi feito uso do THIS que juntamente a visibilidade publica permite o acesso direto ao metodo, que também esta estatico
+            foreach (T item in itens)
+            {
+                listaDeInteiros.Add(item);
+            }
+        }
+        // uma lista generica abrange uma grande quantidade de itens (string, char, int, double)
+    }
+}

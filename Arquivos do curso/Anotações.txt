@@ -1,0 +1,262 @@
+Microsoft.Owin.Host.SystemWeb - Este pacote é uma extensão do Owin para a comunicação com o IIS, 
+  não a base do Owin - mas, por dependência, a base do Owin é instalado através do pacote Microsoft.Owin.
+
+O que é o Owin:
+	Vimos o papel do Owin na comunicação entre aplicação e servidor. Além disso, aprendemos como o Owin é muito mais leve em comparação a biblioteca System.Web.
+
+Estender o Owin:
+	Aprendemos sobre a modularização do Owin e instalamos o pacote de extensão do Owin Microsoft.Owin.Host.SystemWeb.
+
+Como configurar o Owin:
+	Para configurar o Owin, criamos o arquivo Startup.cs e o atributo de assembly OwinStartup usando a classe de inicialização com o método Configuration.
+
+Como usar o contexto Owin:
+	Vimos que é possível usar o padrão de alocação de serviço com o Owin e recuperar instâncias à partir do método Get e GetUserManager.
+
+
+Mais extensões do Owin:
+
+Para atingirmos o objetivo desta aula, conhecemos e usamos mais uma extensão do Owin, a Microsoft.Owin.Security.Cookies. a classe SignInManager:
+
+Usamos a classe SignInManager na action de login, além de configurar uma função construtora no Owin. mecanismo de login:
+
+Para atingirmos o objetivo desta aula, conhecemos e usamos mais uma extensão do Owin, a Microsoft.Owin.Security.Cookies.
+
+O cookie de aplicação que mantém o login é invalidado com o método AuthenticationManager.SignOut.
+O que mantém o usuário logado em nosso fórum é o cookie de aplicação. Para o logoff, basta invalidar este cookie.
+
+A fim de proteger os usuários do fórum de um ataque de força bruta, implementamos a função de lockout. Para isto, foi necessário a alteração do método SignInManager.PasswordSignInAsync
+Com a passagem do parâmetro lockout na invocação do método PasswordSignIn.
+
+GeneratePasswordResetToken - Este método gera um token de mudança de senha para nosso usuário.
+
+var token = UserManager.GeneratePasswordResetToken(usuario.Id);
+var resultado = UserManager.ResetPassword(usuario.Id, token, "MinhaNovaSenha"); - Chamada e passagem de parametros errados, 
+	pois a nova senha não respeita as regras impostas em nosso validador de senhas. 
+	A alteração de senha deve respeitar as mesmas regras de validação de senha ao criar um usuário.
+
+Para criar um codigo n bloco de notas - c:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe Programa.txt
+	Programa.exe - À partir do Windows XP, toda versão do sistema vem com o .NET instalado e o CSC.exe (CSharpCompiler)
+ 	é um dos integrantes. Executando esta instrução teremos como saída um arquivo Programa.exe executável.
+
+
+class Carro : Veiculo - No C# é assim que representamos a herança. Podemos dizer que Carro herda
+	 Veiculo ou Carro deriva Veiculo também!
+
+
+Queremos que, em GerenciadorBonificacao, a invocação de GetBonificacao() seja correta. Queremos que Diretor sobrescreva. 
+Para que isso aconteça, precisamos mudar o código, de forma que GetBonificacao() permita uma sobrescrita de sua implementação. 
+Sendo assim, diremos que GetBonificacao() é um método virtual. Ou seja, tem implementação em Funcionario, mas por ser virtual, 
+possibilita que uma classe filha e mais derivada, mude o comportamento desse método. Começaremos a adequação do código 
+em Funcionario, adicionando virtual após public, na declaração de GetBonificacao().
+
+public virtual double GetBonificacao()
+{
+    return Salario * 0.10;
+}
+
+
+Ao digitarmos, veremos que a fonte de virtual está na cor azul e com a primeira letra minúscula, 
+indicando que é uma palavra reservada. Tudo certo, o código está válido. Após estabelecermos que GetBonificacao() é 
+um método virtual, ou seja, com implementação que pode ser sobrescrita, precisamos apontar em 
+Diretor que GetBonificacao() não é mais um método. O GetBonificacao() de Diretor está sobrescrevendo o 
+GetBonificacao() de Funcionario. Então, em Diretor, adicionaremos override após public, na declaração de GetBonificacao().
+
+public override double GetBonificacao()
+{
+    return Salario;
+}
+
+private < protected < public - Essa é a ordem dos modificadores de visibilidade A palavra chave com a menor visibilidade é 
+private, depois vem o protected e depois public.
+ 
+private - apenas visível dentro da classe; 
+protected - visível dentro da classe e também para as filhas; 
+public - visível em todo lugar; Repare também que protected é relacionado com a herança.
+
+
+classes abstratas não podem ser instanciadas. Para instanciar, devemos criar primeiro uma classe filha não abstrata.
+Uma classe abstrata representa um conceito, algo abstrato, e o compilador não permite instanciar um objeto dessa classe.
+ Para instanciar é preciso criar primeiro uma classe filha não abstrata.
+Não possuem corpo (implementação), apenas definem a assinatura.
+um método abstrato define apenas a assinatura (visibilidade, retorno, nome do método e parâmetros). - propriedade estatica
+
+Um metodo não tem multipla herança, o que pode ser resolvido utilizando interfaces pois podemos fazer uso do polimorfismo sem herança
+
+
+Sobre interfaces - Especie de conttrato que quem assina se responsabiliza de implementar seus metodos
+
+Por mais que esta classe seja abstrata, ela precisa respeitar a interface, nem que seja com um método abstrato no formato public abstract bool Autenticar(string senha);
+
+Após esta mensagem, ocorrerão as atribuições nas variáveis numero e divisor. No momento do cálculo numero / divisor uma exceção será lançada e a aplicação encerrada
+ abruptamente.
+
+Pilha de chamadas - Organiza a execução dos metodos, tendo ciencia de qual esta sendo executado, e fica em estado de aguardo ao seu retorno
+
+
+static void Main(string[] args)
+{
+    M1();
+    Console.ReadLine();
+}
+
+static void M1()
+{
+    try
+    {
+        M2();
+    }
+    catch (DivideByZeroException)
+    {
+        Console.WriteLine("Exceção capturada em M1");
+    }
+}
+
+static void M2()
+{
+    try
+    {
+        LancaExcecao();
+    }
+    catch (DivideByZeroException)
+    {
+        Console.WriteLine("Exceção capturada em M2");
+    }
+}
+
+static void LancaExcecao()
+{
+    int divisor = 0;
+    int resultado = 1 / divisor;
+}
+
+Uma vez que o bloco catch em M2 trata a exceção, ela não é propagada para o método M1 ou o método Main.
+
+NullReferenceException - Pega referencia nula do try catch
+DivideByZeroException - Trata a execeção caso tenha uma divisão por zero - sempre usar ele primeiro
+
+throw - lança a exceção do bloco catch sem ser necessario utilizar o return, e passa para a proxima função
+pipe = "ou"
+
+O tipo de catch a ser executado primeiro sempre é aquele mais especifico
+
+Console.WriteLine("Argumento com problema: " + ex.ParamName); //pega o nome da variavel que cair no catch, porem te que ser passado por parametro para plavara reservada nameof,
+	que pega a string da variavel e transfere para o WriteLine
+
+
+Herança: Aprendemos herança e vimos que, com sua sintaxe bastante simples, ela é importantíssima em qualquer projeto. 
+
+Polimorfismo: Com isso, foi possível tratar objetos do tipo Diretor como Funcionario e evitar repetição de código e várias sobrecargas iguais.
+
+Modificadores virtual e override: Alguns comportamentos possuem implementações diferentes nas classes derivadas, para resolver este problema basta usarmos métodos virtuais e a sobrescrita.
+
+base: A classe filha pode fazer referência aos membros da classe base com uso desta palavra reservada.
+
+Campos somente leitura com o modificador readonly;
+
+Propriedades somente leitura, com omissão do setter;
+
+O operador nameof(); // pega o valor da variavel e adiciona em uma string
+
+A classe de exceção ArgumentException, seus construtores e propriedades;
+
+O StackTrace começa quando lançamos a exceção com throw <objeto de exception>;. Desta forma, se usamos esta sintaxe em blocos catch, estaremos perdendo informações 
+	da exceção original. O StackTrace na CLR começa quando executamos throw <objeto de exception>; até o manipulador da exceção.
+
+IOException - Define uma execeção na leitura de algum arquivo que esta sendo lido pelo programa
+
+Bloco finnaly - sempre é executado apos o try catch, independentemente de qual bloco ele caia o finally é sempre executado, ou seja, quando uma metodo será executado 
+	idenpende de qual bloco do tyr catch ela caia, sempre tem que ser utilizado o finally para não ser necessario tratar todas as possibilidade de erros possiveis
+
+public class LeitorDeArquivo
+{
+        public string Arquivo { get; }
+
+        public LeitorDeArquivo(string arquivo)
+        {
+            Arquivo = arquivo;
+            throw new FileNotFoundException();
+            Console.WriteLine("Abrindo arquivo: " + arquivo);
+        }
+
+        public string Ler Proxima Linha()
+        {
+            Console.WriteLine("Lendo linha...");
+
+            throw new IOException();
+
+            return "linha do arquivo";
+        }
+
+        public void Fechar()
+        {
+                Console.WriteLine("Fechando arquivo.");
+        }
+}
+
+private static void CarregarContas()
+        {
+            LeitorDeArquivo leitor = new LeitorDeArquivo("contas.txt");
+            try
+            {
+                leitor.LerProximaLinha();
+                leitor.LerProximaLinha();
+                leitor.LerProximaLinha();
+            }
+            catch(IOException)
+            {
+                Console.WriteLine("Exceção do tipo IOException capturada e tratada!");
+            }
+            finally
+            {
+                if(leitor != null)
+                {
+                    leitor.Fechar();
+                }
+            }
+        }
+
+
+Não é obrigatório o bloco catch quando temos um finally;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

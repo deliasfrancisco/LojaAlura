@@ -1,0 +1,3 @@
+
+
+	É uma convenção chamarmos as classe pelo modelo de negócios seguido do sufixo Context. 

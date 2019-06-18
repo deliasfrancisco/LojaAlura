@@ -1,0 +1,38 @@
+http://prudenteurbano.com.br/#linhas-itinerarios
+
+http://prudenteurbano.com.br/noticia/mudanca-de-itinerarios-no-dia-19-04/
+
+http://prudenteurbano.com.br/itinerarios/linha-129-saude/
+
+http://prudenteurbano.com.br/itinerarios/linha-101-sao-matheus-x-rio-400-ate-uniesp/
+
+string url = "https://www.bytebank.com.br/cambio?moedaOrigem=real&moedaDestino=dolar&valor=1500"
+
+
+	https://www.google.com/
+
+	search?q=prudente+urbano 
+	&rlz=1C1GCEU_pt-BRBR852BR852
+	&oq=prudente+
+	&aqs=chrome.0.69i59j69i60j69i57j0l2j69i60.4879j0j7
+	&sourceid=chrome
+	&ie=UTF-8
+
+
+
+	https://www.google.com/
+
+	search?q=prudente+urbano+onibus+telefone&
+	rlz=1C1GCEU_pt-BRBR852BR852&
+	oq=prudente+urbano+onibus+telefone&
+	aqs=chrome..69i57.27687j1j7&
+	sourceid=chrome&
+	ie=UTF-8
+	
+	Me ligue em 7894-4654
+
+	Meu número de telefone é 7894-4654
+
+	O número 7894-4654 é para contato profissional
+	
+	[0123456789] [0123456789] [0123456789] [0123456789] - [0123456789] [0123456789] [0123456789] [0123456789] 

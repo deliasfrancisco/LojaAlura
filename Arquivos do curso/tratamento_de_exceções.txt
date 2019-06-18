@@ -1,0 +1,30 @@
+Começamos o curso discutindo como propagar uma situação que um método não sabe tratar para um outro método. Observamos como funciona a pilha de chamadas da 
+	máquina virtual, e tentamos propagar as exceções por meio de códigos - o que descobrimos ser bastante problemático.
+
+Lidamos com a existência dos blocos try e catch; no primeiro, sinalizamos à máquina virtual que executamos um código que potencialmente pode lançar uma exceção. 
+	Sabendo disso, na ocorrência de uma exceção, a máquina virtual visita, de cima para baixo, os blocos catch definidos.
+
+Não precisamos denominar os objetos de exceção, mas é possível fazê-lo. A convenção para isso é utilizar o ex. Vimos que também e possível tratar uma exceção 
+	simplesmente criando-se uma notificação da sua ocorrência, e continuar propagando-a pela pilha de chamadas. Por isso temos o throw.
+
+Quando temos um throw vazio dentro de um bloco catch, a máquina virtual passa o objeto de exceção para o próximo método na pilha de chamadas, assim sucessivamente 
+	até encontrar um bloco catch que possa pegar essa exceção.
+
+Vimos na classe ContaCorrente alguns tipos de exceções do .NET, como a ArgumentException, IOException, e por fim a FileNotFoundException.
+
+Neste caminho, vimos recursos interessantes da linguagem C#. Por exemplo, a propriedade somente leitura, que definimos e que recebe somente um get. Isso significa que 
+	só podemos atribuir um valor a ela no próprio construtor. Vimos também o campo somente leitura, com o modificador readOnly.
+
+Acessamos a documentação da linguagem no site da Microsoft, para vermos a árvore de tipos de exceções. Além disso, definimos nossas próprias exceções, 
+	como é o caso da SaldoInsuficienteException. Seguimos a convenção de um construtor sem argumentos, um com somente uma mensagem, e outro com uma mensagem e uma innerException.
+
+Além dela, tivemos também a OperacaoFinanceiraException, com os mesmos construtores. Com isso, aprendemos que toda exceção no .NET precisa derivar do tipo Exception.
+
+Ao final do curso, vimos a construção com o bloco finally, discutimos o caso em que precisamos de um recurso externo, e que deve ser liberado ao final. 
+	Esta liberação deve ocorrer tanto no caso de sucesso, quanto no de uma exceção. O bloco também ajuda a evitarmos a duplicação de código.
+
+Se o bloco finally terá a única finalidade de liberar recursos, ele pode ser substituído pelo using. Nele, definimos a variável com a qual trabalharemos, que 
+	utilizamos dentro do bloco. Internamente, o compilador criará o finally, bem como a verificação da nulidade da referência.
+
+Caso ela não seja nula, o método Dispose() é chamado. É por causa dele que se torna necessário implementarmos a interface IDisposable na classe LeitorDeArquivo. 
+	Criamos o método, e nele implementamos a lógica para liberar os recursos da aplicação.
