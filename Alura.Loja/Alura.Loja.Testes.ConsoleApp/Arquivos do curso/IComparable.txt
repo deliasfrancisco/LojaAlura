@@ -1,0 +1,89 @@
+	Não é possivel fazer uma ordenação de um objeto criado a partir de uma classe sem a implementação da interface IComparable, pois de trata de um tipo criado pelo o 
+	usuario
+	
+	A implementação do OrderBy(0 so é possivel ser feita atraves da implementação do lambda
+	
+	1.) Usar a estratégia de ordenar as listas sempre pelo método Sort, com uma classe que implementa IComparer<T> dá certo, mas é necessário muito código repetitivo para funcionar! Nesta aula percebemos que quando temos um objeto complexo, na maioria das situações a sua ordenação será feita a partir de uma propriedades de um tipo do .Net (como string, int, double, etc.).
+
+Outro método de ordenação que podemos usar é o OrderBy. Este método pode receber expressões lambda no argumento:
+
+contas.OrderBy(conta => conta.Numero);
+Após a chamada ao OrderBy, vamos exibir todos os itens na tela:
+
+foreach(var conta in contas)
+{
+    Console.WriteLine($"Conta número {conta.Numero}, ag. {conta.Agencia}");
+}
+A ordem continua a mesma!
+
+2.) Note que o retorno do método OrderBy é do tipo IOrderedEnumerable<ContaCorrente>. Vamos guardar o resultado em uma variável e exibir na tela o resultado a partir desta nova coleção:
+
+var contasOrdenadas = contas.OrderBy(conta => conta.Numero);
+
+foreach(var conta in contasOrdenadas)
+{
+    Console.WriteLine($"Conta número {conta.Numero}, ag. {conta.Agencia}");
+}
+Agora sim mostramos na tela os itens ordenados!
+
+3.) Se incluirmos uma referência nula em nossa lista e tentarmos ordenar, haverá uma exceção do tipo NullReferenceException. Para nosso código continuar funcionando nessa situação, podemos expandir nossa expressão lambda e incluir um IF:
+
+var contasOrdenadas = contas.OrderBy(conta =>
+    {
+        if(conta == null)
+        {
+            return int.MaxValue;
+        }
+        return conta.Numero;
+    });
+Agora a variável contasOrdenadas pode conter itens nulos. No momento de escrevermos os itens na tela, precisamos nos preocupar com isto:
+
+foreach(var conta in contasOrdenadas)
+{
+    if(conta != null)
+    {
+        Console.WriteLine($"Conta número {conta.Numero}, ag. {conta.Agencia}");
+    }
+}
+
+
+orderBy() -  
+where() - 
+
+	a implementação de uma inteface se faz dessa forma: 
+		public class Exemplo<interface, tipoGenerico> : herança
+		
+		quando uma metodo tem o THIS significa que suas variaveis são de extensão
+		
+		LINQ - biblioteca Microsoft
+		
+		List<> - o .net ja possui um tipo
+		
+		Juntos, começamos o estudo do tipo List<T>, com o qual percebemos que não é necessário criar uma implementação própria de lista, pois o .NET já possui uma. Além disso, List<T> é análogo ao que criamos e aceita os métodos Add() e Remove(); porém, não aceita o método AdicionarVarios().
+
+Diante desse impasse, criamos um método de extensão, estático, implementado dentro da classe também estática ListExtensoes, onde o primeiro argumento possui o modificador this, indicando ao compilador que trata-se de um método de extensão. Assim, não foi necessário criar um novo tipo derivado de List<T> e, a partir dele, inserir AdicionarVarios().
+
+Nesse contexto, analisamos como o compilador traduz uma chamada para métodos de extensão. Escrevemos como se fosse um método da nossa instância, mas no fim, o compilador transforma em uma chamada de método estático normal, como tínhamos antes.
+
+No caso de AdicionarVarios<T>(), temos um método de extensão mais interessante, pois é um método genérico (T), para o qual utilizamos uma lista de tipo genérico também (List<T>). Como usamos o mesmo tipo genérico para a lista e para o método, ficou mais prático desenvolver nossos códigos, pois o compilador consegue inferir informações a partir dessas definições.
+
+Além de inferir o tipo, em uma chamada de método de extensão com argumento genérico, aprendemos como utilizar var, que não é um tipo do .NET ou do nosso projeto. É uma palavra reservada, utilizada para criar uma variável, quando já atribuimos um valor a ela.
+
+E, no final das contas, var é substituído pelo tipo encontrado à direita do sinal de igual (=) da expressão . No caso de idades, var representa uma lista de inteiros (List<int>):
+
+var idades = new List<int>();
+Falamos de lista, criamos método de extensão, exploramos a sintaxe de inicialização de listas e lidamos com um problema natural, de como ordenar a lista.
+
+Começamos com o método Sort(), que nos obrigou a implementar a interface IComparable, dentro de ContaCorrente. Implementamos esse contrato e entendemos como funciona CompareTo(), além de estabelecer quando retornar um número negativo, positivo (diferente de 0) e 0.
+
+Estudamos que os tipos int e string do .NET também implementam a interface IComparable. Definimos uma lógica padrão para ContaCorrente, mas nos deparamos com situações em que precisamos ordenar o tipo complexo de forma diferente. Considerando isso, utilizamos o método Sort(), que recebe uma classe que implementa a interface IComparer como argumento.
+
+Por meio dessa interface, especificamos exatamente como queremos ordenar nossos itens. Novamente, usamos a mesma lógica de quando retornar 0, quando retornar um número positivo diferente de 0 e quando retornar um número negativo. Além da preocupação com números nulos.
+
+Feito isso, ainda precisamos escrever muito código. Em função disso, começamos a utilizar OrderBy(), método de extensão que faz parte do namespace Linq. Uma particularidade de OrderBy() é que recebe expressão lambda como argumento, tornando o código muito mais fácil de escrever e de ler.
+
+Exploramos o método Where(), que também recebe expressão lambda, mas nesse caso, ela precisa retornar um Booleano (True ou False). Ainda aprendemos mais sobre esses métodos. Vimos que OrderBy() não altera a ordem dos itens da lista, ele retorna outro objeto ordenado.
+
+Ao longo do desenvolvimento dos códigos, percebemos os benefícios de var e da inferência de tipos em chamada de método de extensão, evitando repetições desnecessárias.
+
+Muito conteúdo foi estudado e aprendido. Caso tenha ficado com alguma dúvida, poste no fórum que eu, outros alunos e instrutores estaremos lá para ajudar.

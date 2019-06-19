@@ -1,0 +1,373 @@
+DLL - Biblioteca
+
+Qualquer classe do projeto SupermercadoBom.Modelos poderá chamar o método 
+	AumentarCredito. Como o método é internal, é possível o acessar à partir de 
+	todas as classes do mesmo projeto.
+
+Para referenciar um projeto é necessário termos acesso ao código fonte da biblioteca. 
+Correta! Devemos criar uma solução contendo o projeto de código e incluir a 
+	dependência de projeto.
+
+Quando um executável é compilado, as bibliotecas usadas são copiadas para o mesmo 
+	diretório destino de compilação. Deste modo, a CLR poderá encontrar as 
+	definições dos tipos usados em sua aplicação, buscando as .DLLs no mesmo 
+	diretório do .EXE.
+
+DtaTime dataDeHoje = new DateTime.Now - Pega a data atual
+
+TimeSpan - Faz o calculo da data inicial menos a data final, exibe o intervalo de dias
+ entre a data final e a inicial
+
+static string GetIntervaloDeTempoLegivel(TimeSpan timeSpan)
+{
+    if (timeSpan.Days > 30)
+    {
+        int quantidadeMeses = timeSpan.Days / 30;
+        if (quantidadeMeses == 1)
+        {
+            return "1 mês";
+        }
+        return quantidadeMeses + "meses";
+    }
+    else if (timeSpan.Days > 7)
+    {
+        int quantidadeSemanas = timeSpan.Days / 7;
+    }
+    return timeSpan.Days + "dias";
+}
+
+class Program 
+    {
+        static void Main(string[] args)
+        {
+            DateTime dataFimPagamento = new DateTime(2018, 8, 17);
+            DateTime dataCorrente = DateTime.Now;
+
+            TimeSpan diferenca = dataCorrente - DateTime.Now;
+
+            string mensagem = "Vencimento em " + GetIntervalorDeTempoLegivel(diferenca);
+
+            Console.WriteLine(mensagem):
+
+            Console.WriteLine(dataCorrente);
+            Console.WriteLine(dataFimPagamento);
+
+            Console.ReadLine();
+        }
+
+biblioteca Humanazer - Para evitar o codigo gigamtesco acima, pode ser feito uso da biblioteca Humanize, que é
+	uma DDL que fazemos download e adicionamos nas referencias do projeto. 
+	Essa biblioteca Vale ressaltar que o Humanizer visa atender diferentes 
+	idiomas. Isso nos dá opção de escrever o texto da mensagem em português, 
+	mas a implementação da biblioteca oferece também a opção para espanhol, 
+	inglês e outras opções. Por isso, teremos uma infinidade de pastas nesse
+	diretório.
+	VEJA O EXEMPLO ABAIXO: 
+
+
+	string mensagem = "Vencimento em " + TimeSpanHumanHumanizeExtensions.Humanize(diferenca);
+        	Console.WriteLine(mensagem);
+
+	        Console.ReadLine();
+
+
+Saida: Vencimento em 1 semana
+	Vencimento em 4 dias
+
+Esta biblioteca resolveu os nossos problemas. Podemos testar outros casos, 
+	experimentando alterar TimeSpan diferenca que deixará de receber a subtração dataFimPagamento - dataCorrente e ficará comentado no nosso código. Experimentaremos outros métodos da classe TimeSpan, ao começarmos digitar no VS, o editor vai nos oferecer outros métodos estáticos, como:
+
+From Milliseconds
+FromMinutes
+FromSeconds
+FromTicks
+MaxValue
+MinValue
+Parse
+ParseExact
+ReferenceEquals
+
+
+Install-Package Humanizer -Version 2.6.2 - Pacote NuGet para instalação
+
+Nós formalizamos nosso conhecimento e começamos a criar bibliotecas bastante robustas, 
+inclusive com documentação. Durante o curso, vimos como utilizar o argumento 
+/// (três barras), usado exclusivamente para documentação do C#. Apresentamos a
+ tag <summary>, que é um resumo do método ou da classe criada.
+Conhecemos a tag <param> que faz uma referência para o parâmetro de um método ou 
+construtor. Além deste, usamos <see> para referenciar um membro da classe, seguido 
+do atributo cref.
+Vimos também que para fazer referência para um argumento, o processo é um pouco 
+diferente: no caso, o elemento apropriado é o <paramref>, uma referência do parâmetro 
+do membro que estamos documentando.
+Explicamos também como funciona a compilação de um executável e de uma biblioteca, 
+descobrindo que esta gera um arquivo DLL. Se analisarmos o conteúdo de 
+ByteBank.Modelos > Bin > bin > Debug, encontraremos um dll. Nós percebemos que, 
+se quisermos documentar e gerar um arquivo de documentação a partir do que foi 
+escrito, teremos que acessar as opções de documentação do projeto e marcar a opção
+ "Arquivo de documentação XML".
+A partir desta configuração, tanto a IDE como outros editores, poderão olhar a 
+documentação do código por meio do XML (o mesmo usado pelo .NETFramework). 
+É o mesmo formato usado para montar os tipos da Microsoft no VS.
+Aprendemos a criar DLL e referência-las, assim como documentar. Notamos que não é 
+viável enviar DLLs de uma pessoa para outra, ou manter uma grande equipe de 
+desenvolvimento com dependências de DLLs de bibliotecas externas, pois pode ser 
+bastante trabalhoso.
+Por isso, mostramos como trabalhar com o repositório NuGet. Trata-se de uma 
+galeria de pacotes, com o qual podemos fazer o download de pacotes e recuperá-los 
+quando não existirem e forem essenciais para o funcionamento da aplicação. 
+Fizemos isso usando a biblioteca Humanize, a partir desta conseguimos usar o 
+DateTime e TimeSpan de forma mais legível para as pessoas.
+Nós aprendemos muita coisa, formalizamos o conhecimento e entendemos como é o 
+funcionamento no .NETFramework. E reproduzimos tudo isso no código.
+
+
+o parametro `?` verifica os parametros que estão sendo passados na pagina
+
+"&" usado para a separação das variaveis
+
+string endereco = "R. São Carlos do Pinhal nº746";
+string enderecoFormatado = 
+    endereco
+        .ToUpper()
+        .Replace("r.", "Rua")
+        .Replace(" nº", ", Número ")
+        .ToUpper();
+
+Console.WriteLine(enderecoFormatado);
+
+ 	"R. SÃO CARLOS DO PINHAL Nº746" 
+	Saida Correta!
+
+
+	Temos a página do Byte Bank como exemplo, que termina com moedaOrigem=real&moedaDestino=dolar, bem como o argumento do valor, e conseguimos escrever um código 
+	que recupera real e dolar, dados os argumentos que buscamos com moedaDestino ou moedaOrigem. Fizemos isso usando o método IndexOf(), analisando seu funcionamento 
+	e algumas de suas sobrecargas, junto do qual está a Substring(), com a qual conseguimos recortar um pedaço de uma string, e criar outras. Isto porque aprendemos que a string é um tipo de objeto imutável e, por conta disso, ela nunca é alterada na memória do computador.
+
+O que fazemos é aplicar uma alteração e, com isto, temos uma nova string, sendo que a antiga continua a existir na memória da forma como foi criada inicialmente. Também aprendemos sobre os métodos ToUpper(), ToLower(), e aqueles que trabalham com índices e nos auxiliam em tarefas em que não nos preocupamos com eles, como no caso de StartsWith(), EndsWith(), para verificarmos se uma substring está contida em outra no início ou fim da string original, respectivamente.
+
+Além disso, lidamos com o método Contains(), que retorna um booleano, indicando se uma string original contém um trecho menor ou não. Aprendemos muito sobre o tipo string, fundamental em qualquer aplicação, e fomos um pouco além, com expressões regulares, que criamos de forma enxuta para verificar o número de telefone em um texto qualquer.
+
+Não são em todas as ocasiões que poderemos contar com o texto ao redor do valor que estamos buscando. Às vezes teremos um texto escrito por alguém que não segue uma determinada regra que conhecemos. Entretanto, sabemos do padrão de um número telefônico e, por meio das expressões regulares, conseguimos obter o valor desejado.
+
+Por fim, conhecemos o tipo object, que se encontra no topo da hierarquia de todas as classes do C#, já que nesta linguagem todas as outras derivam dela. E estudamos alguns métodos interessantes que implementamos na ContaCorrente, como o ToString(), que transforma a representação de um objeto para a de uma string, usada pelo Console.WriteLine().
+
+Vimos também o método Equals(), que incluímos na classe Cliente. Ele é definido na classe Object, é virtual, e por este motivo conseguimos dar um override e sobrescrever seu comportamento, sendo um método que recebe como argumento um object também. Acabamos aprendendo um novo tipo de cast, com a palavra reservada as.
+
+Qual a diferença entre as conversões ao utilizarmos as e optarmos pela conversão explícita? Aprendemos que as nos retorna null, quando o cast não é bem sucedido. Enquanto isto, o cast com a conversão explícita, em Cliente outroCliente = (Cliente)obj, por exemplo, lança uma exceção.
+
+
+
+
+
+
+arg1 opcional 2, opcional 1 arg2 e Executando método sem argumentos.
+
+ 
+Correta! Apesar de existir uma sobrecarga com métodos opcionais, o compilador dá prioridade às sobrecargas que já possuem o mesmo número de argumentos da chamadas.
+
+
+Durante o curso, foi necessário copiar todos os itens de um array para nosso novo array, no processo de expansão da lista:
+
+ContaCorrente[] novoArray = new ContaCorrente[novoTamanho];
+
+for(int indice = 0; indice < _itens.Length; indice++)
+{
+    novoArray[indice] = _itens[indice];
+}
+
+_itens = novoArray;
+Mas, o .NET possui uma classe chamada Array. Existem vários métodos de manipulação de arrays disponíveis nesta classe. Um deles é o Copy!
+
+O método Copy possui algumas sobrecargas. Nosso problema com listas exige a cópia de todos os valores (do índice 0 até o último) do array _itens até novoArray. Então podemos usar a sobrecarga mais simples do método Copy:
+
+Array.Copy(_itens, novoArray, _itens.Length);
+Parece simples, não é?
+
+Talvez nem tanto.
+
+Ao olhar esta chamada pela primeira vez, podemos ficar em dúvida em relação ao seu comportamento. Esta chamada faz uma cópia a partir de _itens para novoArray? Será que a chamada está errada e deveríamos inverter a ordem dos argumentos, como Array.Copy(novoArray, _itens, _itens.Length); ?
+
+Na verdade, não. A ordem (_itens, novoArray, _itens.Length) é a correta mesmo. Sabemos disso a partir da documentação deste método aqui!
+
+Mas, vamos lá: recorrer a documentação ou aos recursos do Visual Studio sempre que encontrarmos uma situação desta não é nada produtivo.
+
+Nesta aula aprendemos sobre argumentos opcionais e argumentos nomeados. Usar argumentos nomeados neste tipo de situação realmente nos ajudaria:
+
+Array.Copy(
+    sourceArray: _itens,
+    destinationArray: novoArray,
+    length: _itens.Length);
+Agora ficou bem mais fácil de entender o que estamos fazendo nesta chamada, não é mesmo?
+
+Usamos esta sobrecarga do método Copy porque queremos copiar todos os _itens.Length itens do array _itens a partir do índice 0 para o array de destino novoArray a partir de seu índice 0 também. Contudo, é possível copiar um intervalo menor de itens, por exemplo, 3 itens a partir do índice 4, até o array de destino, começando no índice 2:
+
+_itens:
++---------------------------+
+¦ 1 ¦ 2 ¦ 3 ¦ 4 ¦ 5 ¦ 6 ¦ 7 ¦
++---------------------------+
+
+novoArray:
++---------------------------+
+¦ 0 ¦ 0 ¦ 0 ¦ 0 ¦ 0 ¦ 0 ¦ 0 ¦
++---------------------------+
+
+// copiando 3 itens, a partir do índice 4,
+// em novoArray, a partir do índice 2:
+
+novoArray:
++---------------------------+
+¦ 0 ¦ 0 ¦ 5 ¦ 6 ¦ 7 ¦ 0 ¦ 0 ¦
++---------------------------+
+Para fazer isto usamos outra sobrecarga do método Copy:
+
+Array.Copy(_itens, 4, novoArray, 2, 3);
+Se o uso da primeira sobrecarga do método Copy já era difícil de entender, essa então é impossível. Será que todas as pessoas do time entendem o significado de cada número e posição desta chamada? Será que você vai lembrar disso daqui 6 meses? Bora usar argumentos nomeados:
+
+Array.Copy(
+    sourceArray: _itens,
+    sourceIndex: 4,
+
+    destinationArray: novoArray,
+    destinationIndex: 2,
+
+    length: 3);
+
+
+
+1.) Crie a classeListaDeContaCorrentes, onde poderemos abstrair essa complexidade de lidar com índices e tamanhos de arrays em apenas uma classe.
+
+2.) Internamente, ainda precisaremos de um array para nossa lista funcionar:
+
+public class ListaDeContaCorrente
+{
+    private ContaCorrente[] _itens;
+
+    public ListaDeContaCorrente()
+    {
+        _itens = new ContaCorrente[5];
+    }
+}
+3.) Para a operação de adição de item em nossa lista, precisaremos saber qual a próxima posição disponível no array _itens. Para tanto, vamos criar uma variável chamada _proximaPosicao:
+
+public class ListaDeContaCorrente
+{
+    private ContaCorrente[] _itens;
+    private int _proximaPosicao;
+
+    public ListaDeContaCorrente()
+    {
+        _itens = new ContaCorrente[5];
+        _proximaPosicao = 0;
+    }
+}
+4.) Beleza, agora podemos criar o método Adicionar em nossa classe:
+
+public void Adicionar(ContaCorrente item)
+{
+    _itens[_proximaPosicao] = item;
+}
+5.) Após a adição de um item, precisamos incrementar a variável que aponta para a próxima posição livre:
+
+public void Adicionar(ContaCorrente item)
+{
+    _itens[_proximaPosicao] = item;
+    _proximaPosicao++;
+}
+Vamos aproveitar para adicionar um Console.WriteLine neste método e conseguirmos acompanhar o funcionamento interno da classe durante nossos testes:
+
+Console.WriteLine($"Adicionando no índice {_proximaPosicao} conta {item.Agencia}/{item.Numero}");
+6.) De volta ao método Main da classe Program, vamos testar esta classe!
+
+ListaDeContaCorrente lista = new ListaDeContaCorrente();
+
+lista.Adicionar(new ContaCorrente(345, 23462));
+lista.Adicionar(new ContaCorrente(363, 22451));
+lista.Adicionar(new ContaCorrente(735, 23552));
+Testando a aplicação percebemos que tudo funciona como o esperado.
+
+7.) Mas, e se usarmos o método Adicionar mais de 5 vezes? Vimos que o array utilizado pela ListaDeContaCorrente suporta apenas 5 posições. Vamos precisar verificar a capacidade antes de realizar uma nova adição. Para isto, crie o método VerificarCapacidade com o tamanho necessário como argumento:
+
+private void VerificarCapacidade(int tamanhoNecessario)
+{
+}
+8.) O caso mais simples do VerificarCapacidade é quando o array atual já possui um tamanho que suporte o valor em tamanhoNecessario. Vamos escrever primeiro esta condição e retornar o mais cedo possível:
+
+if(_itens.Length >= tamanhoNecessario)
+{
+    return;
+}
+9.) Se a condição acima não for satisfeita, isto significa que precisaremos criar um novo array para comportar a quantidade de itens necessária. Para o tamanho deste novo array, vamos criar uma variável novoTamanho com o dobro do tamanho atual:
+
+int novoTamanho = _itens.Length * 2;
+Ainda para acompanharmos o comportamento desta classe, adicione um Console.WriteLine:
+
+int novoTamanho = _itens.Length * 2;
+Console.WriteLine("Aumentando capacidade da lista!");
+10.) Caso um array com o dobro da capacidade atual ainda não seja o suficiente, vamos então atribuir o tamanho necessário em nossa variável novoTamanho:
+
+if (novoTamanho < tamanhoNecessario)
+{
+    novoTamanho = tamanhoNecessario;
+}
+11.) Beleza! Agora vamos criar nosso novo array:
+
+ContaCorrente[] novoArray = new ContaCorrente[novoTamanho];
+12.) Com este novo array criado, é necessário copiar todas as referências do array antigo para o novo array:
+
+for(int indice = 0; indice < _itens.Length; indice++)
+{
+    novoArray[indice] = _itens[indice];
+}
+13.) Maravilha, agora basta atribuir esta nova referência em _itens:
+
+_itens = novoArray;
+14.) Com esta lógica criada, vamos invocar o VerificarCapacidade no começo de nosso método Adicionar, indicando que precisamos de um array com _proximaPosicao + 1 posições:
+
+public void Adicionar(ContaCorrente item)
+{
+    VerificarCapacidade(_proximaPosicao + 1);
+
+
+    _itens[_proximaPosicao] = item;
+    _proximaPosicao++;
+}
+Teste novamente a aplicação, desta vez, adicionando 15 ou mais contas e verifique o comportamento da nossa classe ListaDeContaCorrente!
+
+15.) Por mais que estejamos abstraindo a implementação interna com arrays, é interessante oferecer uma forma opcional de se definir o tamanho inicial do array _itens. Para isto, podemos alterar o construtor e adicionar o argumento capacidadeInicial:
+
+public ListaDeContaCorrente(int capacidadeInicial)
+{
+    _itens = new ContaCorrente[capacidadeInicial];
+    _proximaPosicao = 0;
+}
+16.) Desta forma, nosso argumento capacidadeInicial é obrigatório. Podemos o tornar um argumento opcional, com a sintaxe de atribuição:
+
+public ListaDeContaCorrente(int capacidadeInicial = 5)
+{
+    _itens = new ContaCorrente[capacidadeInicial];
+    _proximaPosicao = 0;
+}
+17.) Perceba que agora podemos instanciar objetos deste tipo tanto com a chamada new ListaDeContaCorrente() quanto informando o valor para capacidadeInicial com new ListaDeContaCorrente(10). A diferença, quando não informamos um valor, é que o compilador coloca o valor padrão - o 5 - para nós!
+
+
+
+Porém, podemos fazer essa construção de outra forma, utilizando foreach() - ou seja, "para cada". Vamos preencher esse método com o tipo (ContaCorrente) e com a nossa variável (conta), mas ainda precisaremos apontar qual array estamos verificando. Para isso, vamos escrever in (outra palavra reservada do C#) e o nome do nosso array (itens).
+
+foreach(ContaCorrente conta in items) 
+{ 
+
+} 
+Dado que temos um array como argumento, o foreach() será compilado de maneira muito semelhante ao for(). Já que não estamos nos preocupando com índices nesse momento, podemos usar essa construção.
+
+De agora em diante, sempre que tivermos a oportunidade de lidar com um array sem nos preocuparmos com índices, usaremos o foreach(), que é uma construção bem mais simples.
+
+
+
+
+
+
+
+
+
+

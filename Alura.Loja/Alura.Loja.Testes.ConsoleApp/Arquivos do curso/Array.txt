@@ -1,0 +1,156 @@
+Sobre array:
+
+	
+
+static void TestaArrayDeContaCorrente()
+{ 
+    ContaCorrente[] contas = new ContaCorrente[]
+    {
+        new ContaCorrente(874, 5679787),
+        new ContaCorrente(874, 4456668),
+        new ContaCorrente(874, 7781438)
+    };
+    //...
+}
+ 
+	Dessa forma, criamos um array com 3 posições, com essas contas instanciadas em cada posição, sem que precisássemos nos preocupar em acessar o índice diretamente 
+	e criar várias linhas de código para isso. O array nos ajudou a solucionar muitos problemas, mas ainda tivemos algumas dificuldades, principalmente em relação ao 
+	tamanho fixo que ele possui.
+
+	Foi por isso que criamos nossa própria lista. Começamos com uma ListaDeContaCorrente, na qual treinamos bastante a lógica com arrays. Estudamos o método Adicionar()
+	 e o método Remover(), cuja lógica dependia do deslocamento de vários itens após o item que queríamos excluir.
+
+	Outro exercício bem importante que fizemos foi o método VerificarCapacidade(), com o qual verificamos quando e o quanto deveríamos aumentar o tamanho do array.Além 
+	disso, criamos uma ListaDeObject, pois não queríamos uma lista somente para ContaCorrente, mas também uma lista que comportasse qualquer outro tipo.
+
+	Também tivemos a oportunidade de usar vários outros recursos da linguagem C#, como os argumentos opcionais:
+
+	public ListaDeObject(int capacidadeInicial = 5)
+	{ 
+	    _itens = new object[capacidadeInicial];
+	    _proximaPosicao = 0;
+	}
+ 
+	Aqui, temos uma ListaDeObject com o argumento opcional capacidadeInicial. Como aprendemos, se instanciamos a partir do construtor ListaDeObject sem passarmos 
+	um argumento, o próprio compilador irá atribuir o valor 5. Já se quisermos criar uma ListaDeObject com capacidadeInicial = 10, o compilador irá respeitar essa 
+	instrução e passará esse valor para nosso argumento.
+
+	Nas listas, também conseguimos ver um recurso muito útil da linguagem C#, que são os argumentos params que utilizamos no método AdicionarVarios().Nesse método, 
+	fizemos chamadas que recebem, como argumento, 1, 2 ou vários itens, como se houvessem diversas sobrecargas suportando várias quantidades de argumentos, e vimos que 
+	o próprio compilador criará um array que vai comportar todos esses itens. Quando temos um método com o argumento params, o compilador passa uma referência do nosso 
+	array.
+
+	Além dos valores opcionais e do argumento params, nós vimos que é possível nomear argumentos.Para qualquer método que exija um argumento, podemos fazer a chamada 
+	normalmente, da forma que estamos acostumados (por exemplo, listaDeIdades.Adicionar(10)), ou colocar o nome desse argumento para tornar bastante explícito o que está
+	 acontecendo no nosso código (por exemplo, listaDeIdades.Adicionar(item :10)).
+
+	Esse recurso é muito útil quando temos um método com muitos argumentos, já que podemos nos confundir em relação aos valores e suas posições.Por mais que tenhamos 
+	explorado todos esses recursos da ListaDeObject, acabamos tendo um problema quando criamos uma listaDeIdades, já que conseguíamos adicionar uma string nessa 
+	lista (que só deveria admitir valores numéricos). Para contarmos com o apoio do compilador para fazer a verificação desses tipos nos argumentos, utilizamos os tipos 
+	genéricos. Então, criamos uma classe genérica (Lista) com um tipo que denominamos T.
+
+	Também aprendemos que, no nosso código, não podemos armazenar null (nulo) em uma referência de T, pois não sabemos se T é um tipo de valor, que não admite 
+	valores nulos, ou um tipo de referência, que admite null.
+
+
+
+	Vamos voltar a falar de membros estáticos? Para começar, criei esta classe de teste:
+
+	class MinhaClasse
+	{
+	    public static int ContadorEstatico;
+	}
+	Podemos incrementar o ContadorEstatico algumas vezes e exibir o resultado na tela:
+
+	static void Main(string[] args)
+	{
+	    MinhaClasse.ContadorEstatico++;
+	    MinhaClasse.ContadorEstatico++;
+	    MinhaClasse.ContadorEstatico++;
+
+	    Console.WriteLine(MinhaClasse.ContadorEstatico);
+	    Console.ReadLine();
+	}
+
+	Qual será a saída? Incrementamos ContadorEstatico 3 vezes e seu valor inicial é 0. Então, nada de inesperado, a saída deste código é 3.
+
+	Mas, e se MinhaClasse for genérica?
+
+	class MinhaClasse<T>
+	O código de acesso ao ContadorEstatico deixa de compilar, precisamos especificar o argumento de tipo antes:
+
+	MinhaClasse<int>.ContadorEstatico++;
+	MinhaClasse<int>.ContadorEstatico++;
+	MinhaClasse<int>.ContadorEstatico++;
+
+	Console.WriteLine(MinhaClasse<int>.ContadorEstatico);
+	Aqui eu usei o argumento de tipo <int>. Bora executar? A saída será a mesma: 3. Mas, e se mudarmos este argumento genérico na hora de mostrar na tela?
+
+	Console.WriteLine( MinhaClasse<string>.ContadorEstatico );
+	Intuitivamente, o que você acha que acontece?
+
+	Executando o código veremos que a saída dessa vez é 0.	Com isso verificamos que uma variável estática declarada em uma classe genérica é compartilhada entre todas 
+	as classes de mesmo tipo genérico. Mas, não é compartilhada entre classes de tipo genérico diferente.
+
+	Vale reforçar que essa regra se aplica independente do tipo genérico utilizado:
+
+	MinhaClasse<Funcionario>.ContadorEstatico = 200;
+		Console.WriteLine(MinhaClasse<Diretor>.ContadorEstatico); // Imprime 0
+		Console.WriteLine(MinhaClasse<Funcionario>.ContadorEstatico); // Imprime 200
+
+
+	Agora esta sendo criaco uma lista genérica usando o tipo object para as operações de acesso, adição e remoção. Contudo, usar o tipo object não é bacana, porque o 
+	compilador permite a compilação de código incorreto, como o abaixo:
+
+		ListaDeObject listaDeIdades = new ListaDeObject();
+
+		listaDeIdades.AdicionarVarios(12, 42, 15, "ops, não devia estar aqui");
+
+		for (int i = 0; i < listaDeIdades.Tamanho; i++)
+		{
+    			int idade = (int)listaDeIdades[i];
+    			Console.WriteLine(idade);
+		}
+
+
+	Na verdade, a ListaDeObject não é uma classe genérica. É apenas uma lista de object. Para termos, de fato, uma classe genérico, é necessário usarmos o argumento
+	 de tipo.
+
+
+	public class Lista
+	{
+	    private T[] _itens;
+	    ...
+	    public Lista(int capacidadeInicial = 5)
+	    {
+	        _itens = new T[capacidadeInicial];
+	        ...
+	    }
+	    ...
+	    public void Adicionar(T item)
+	    ...    
+	    public void AdicionarVarios(params T[] itens)
+	    {
+	        foreach(T conta in itens)
+	        ...
+	    }
+	    ...
+	    public void Remover(T item)
+	    {
+	        int indiceItem = -1;
+	
+	        for(int i = 0; i < _proximaPosicao; i++)
+	        {
+	            T itemAtual = _itens[i];
+	    ...
+	    public T GetItemNoIndice(int indice)    
+	    ...
+	    private void VerificarCapacidade(int tamanhoNecessario)
+	    {
+	        ...
+	        T[] novoArray = new T[novoTamanho];
+	        ...
+	    }    
+	    public T this[int indice]
+	    ...
+	}
