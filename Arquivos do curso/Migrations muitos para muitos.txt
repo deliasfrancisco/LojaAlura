@@ -1,0 +1,4 @@
+
+
+	Qunado utilizado o entity no Visual Studio, quando há tabelas de relação de muitos para muitos ele não cria o INNER JOIN, que tem que ser feito na mão (Criar uma
+	classe)  

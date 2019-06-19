@@ -19,6 +19,14 @@ namespace Alura.Loja.Testes.ConsoleApp
                 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<PromocaoProduto>()
+                .HasKey(pp => new {pp.PromocaoId, pp.ProdutoId}); //aqui esta dizendo paras o construtor de modelo que para a entidade promocaoProduto tem como chave a composiçãodas duas chaves, produtoId e PromocaoId
+            base.OnModelCreating(modelBuilder);
+        }
+
         public LojaContext(DbContextOptions<LojaContext> options) : base (options)
         {
 
