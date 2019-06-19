@@ -11,6 +11,8 @@ namespace Alura.Loja.Testes.ConsoleApp
     public class LojaContext : DbContext //1º Criação do contexto e permite fazer uso da API do Entity herdando de DbContext()
     {
         public DbSet<Produto> Produtos { get; set; }// 2º Criação da propriedade para a persistencia da classe Produto
+        public DbSet<Compra> Compra { get; set; }
+        public DbSet<Promocao> promocoes { get; set; }
 
         public LojaContext()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,55 +11,90 @@ namespace Alura.Loja.Testes.ConsoleApp
     {
         static void Main(string[] args)
         {
-            //GravarUsandoAdoNet();
-            //GravarUsandoEntity();
-            RecuperarProdutos();
+
+            var promocaoDePascoa = new Promocao();
+            promocaoDePascoa.Descricao = "";
+            promocaoDePascoa.DataInicio = DateTime.Now;
+            promocaoDePascoa.DataFim = DateTime.Now.AddMinutes(3);
+            promocaoDePascoa.Produto.Add(new Produto()); 
+            promocaoDePascoa.Produto.Add(new Produto()); 
+            promocaoDePascoa.Produto.Add(new Produto());
+
+
+
+            //compra de 6 paes franceses
+            //var paoFrances = new Produto();
+            //paoFrances.Nome = "pao Frances";
+            //paoFrances.Categoria = "Padaria";
+            //paoFrances.PrecoUnitario = 0.32;
+            //paoFrances.Unidade = "Unidade";
+
+            //var compra = new Compra();
+            //compra.Quantidade = 6;
+            //compra.Produto = paoFrances;
+            //compra.Preco = (paoFrances.PrecoUnitario * compra.Quantidade);
+
+
+            //using (var contexto = new LojaContext()) //criando um onjeto para acessar a classe Context
+            //{
+            //    contexto.Compra.Add(compra); //estou adicionando a compra na tabela de compra
+
+            //    contexto.SaveChanges();
+
+            //    ExibeEntries(contexto.ChangeTracker.Entries());
+
+            //}
+
+            Console.ReadLine();
+
+
+            //    using (var contexto = new LojaContext())
+            //    {
+            //        var produtos = contexto.Produtos.ToList();// faz o select no banco
+
+            //        ExibeEntries(contexto.ChangeTracker.Entries()); //exibe uma lista de produtos juntamente com seu estado
+
+            //        var novoProduto = new Produto()
+            //        {
+            //            Nome = "São em Po",
+            //            Categoria = "Limpeza",
+            //            Preco = 4.99
+            //        };
+            //        contexto.Produtos.Add(novoProduto); // esta adicionando uma novo produto
+
+            //        ExibeEntries(contexto.ChangeTracker.Entries());
+
+            //        contexto.Produtos.Remove(novoProduto);
+
+            //        ExibeEntries(contexto.ChangeTracker.Entries()); //exibe
+            //        contexto.SaveChanges();//salva as mudancas
+
+            //        var entry = contexto.Entry(novoProduto);
+
+            //        ExibeEntries(contexto.ChangeTracker.Entries()); //exibe
+            //        Console.WriteLine(entry.Entity.ToString() + "-" + entry.State);
+            //    }
+            //    Console.ReadLine();
+            //}
+
+            //private static void ExibeEntries(IEnumerable<EntityEntry> entries)
+            //{
+            //    Console.WriteLine("###################################");
+            //    foreach (var c in entries)
+            //    {
+            //        Console.WriteLine(c.Entity.ToString() + "-" + c.State);
+            //    }
+            //}
         }
 
-        private static void RecuperarProdutos()
+        private static void ExibeEntries(IEnumerable<EntityEntry> entries)
         {
-
-            using (var repo = new ProdutoDAO())
+            Console.WriteLine("###################################");
+            foreach (var c in entries)
             {
-                IList<Produto> produtos = repo.Produto.ToList();
+                Console.WriteLine(c.Entity.ToString() + "-" + c.State);
             }
         }
 
-        private static void GravarUsandoAdoNet()
-        {
-            Produto p = new Produto();
-            p.Nome = "Harry Potter e a Ordem da Fênix";
-            p.Categoria = "Livros";
-            p.Preco = 19.89;
-
-            using (var repo = new ProdutoDAO())
-            {
-                repo.Adicionar(p);
-            }
-        }
-
-        private static void GravarUsandoEntity()
-        {
-            var p = new Produto();
-            p.Nome = "Harry Potter e a Ordem da Fênix";
-            p.Categoria = "Livros";
-            p.Preco = 19.89;
-
-            var p2 = new Produto();
-            p2.Nome = "Senhor dos Anéis 1";
-            p2.Categoria = "Livros";
-            p2.Preco = 19.89;
-
-            var p3 = new Produto();
-            p3.Nome = "O Monge e o Executivo";
-            p3.Categoria = "Livros";
-            p3.Preco = 19.89;
-
-            using (var contexto = new LojaContext())
-            {
-                contexto.Produtos.AddRange(p, p2, p3);
-                contexto.SaveChanges();
-            }
-        }
     }
 }
