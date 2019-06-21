@@ -1,0 +1,122 @@
+O que significa expôr essa lista no navegador? Significa que, ao invés de ler as informações no terminal, iria acessá-las pelo navegador. Então eu vou abrir um navegador. As informações já estão aqui? Não né. O que eu preciso fazer? Colocar o endereço de onde espero encontrar essas informações. Por exemplo se eu quisesse conhecer quais os cursos disponíveis na Alura, eu escreveria o endereço alura.com.br aqui na barra, certo?
+
+Percebam que o navegador está utilizando o modelo HTTP. Nesse modelo, toda comunicação começa com um pedido, e quem fez o pedido fica esperando uma resposta. Só que pro navegador não interessa saber quem vai responder a ele. A única coisa que ele precisa saber é o endereço do pedido. Na especificação HTTP, esse endereço é chamado de URI.
+
+Então para mostrar a lista de leitura basta eu saber qual o endereço que devo colocar no navegador. Mas peraí, eu ainda não mudei minha aplicação para exibir a lista no navegador. Minha aplicação ainda exibe as informações no terminal. Relembrando a especificação HTTP, a parte que responde uma requisição é chamada de servidor. E a parte que faz o pedido é chamada de cliente.
+
+Para transformar minha aplicação atual em um servidor HTTP usando o AspNet.Core, vou ter que criar um objeto que vai hospedar todos os pedidos da aplicação. Vou criar uma variável para esse objeto e vou chamá-la de host. E a gente sabe que todo objeto no C# é de algum tipo. Qual é o tipo de um objeto que hospeda chamadas web? WebHost! Só que vamos usar sua interface. Então o tipo que queremos é IWebHost.
+
+Perceba que o compilador não reconhece esse tipo, e mesmo o VS não consegue achar o namespace para esse tipo. Veja que todas as suas sugestões são para criar uma classe chamada IWebHost. Isso acontece porque nosso projeto não tem o pacote com a referência para esse tipo. E que pacote é esse? Ganhou um doce quem respondeu AspNet Core. Vamos instalá-lo usando o Nuget. Então vou abrir o console do gerenciador de pacotes clicando em Ferramentas, Gerenciador de Pacotes, Console do …, e vou colocar o comando que copiei da área de transferência. O comando é esse aqui:
+
+Install-Package Microsoft.AspNetCore -Version 2.0.1
+Pressiono Enter e o VS vai começar a instalar o pacote no projeto. Lembre-se que você precisa estar conectado na internet para instalar. Pronto! Agora podemos usar o Quick Fix para usar o namespace referente ao tipo IWebHost, que é o ... A construção de um host web é bastante complexa porque podemos definir uma série de opções (para esse host). Uma das opções será o servidor web adotado pela sua aplicação, que no caso será o Kestrel, que é um servidor web já implementado pela galera do AspNet.Core.
+
+Quando a construção de um objeto é complexo, isolamos essa complexidade em uma classe, seguindo um padrão famoso chamado Builder. Então usaremos um objeto da classe WebHostBuilder para criar esse objeto IWebHost pra gente. Então fazemos new WebHostBuilder. Em seguida podemos construir o host usando o método Build(). Se você quiser economizar linhas de código pode fazer diretamente assim (mostrando o uso desnecessário da váriavel builder). Por fim, subimos o servidor usando o método Run().
+
+Mas se fosse só isso a gente não precisaria de um builder não é? A documentação sobre essa parte de hosting é bastante completa (mostrar neste momento), com todas as possibilidades de configuração do seu servidor de host. Pra gente rodar nossa aplicação na web agora, o mínimo que precisaremos configurar é 1) dizer qual a implementação do servidor web utilizado (novamente, Kestrel), e 2) o que o servidor vai fazer quando chegarem as requisições. Ou seja, como responder as requisições que chegarem nele.
+
+Vamos lá.
+
+Para dizer que usaremos o Kestrel, chamamos um método de extensão UseKestrel(). Quando executarmos o programa, o Kestrel já estará quase pronto para atender pedidos HTTP. Mas ainda vai dar erro. Vamos analisar com calma. Repare na pilha de erros o método que está sendo chamado.
+
+O que está acontecendo é que o AspNet.Core chama um estágio de inicialização do servidor. No inglês, Startup. E por enquanto não fizemos qualquer implementação. A implementação disso é através de uma classe. Essa classe não precisa herdar de ninguém ou mesmo implementar qualquer interface. Basta que informemos qual é a classe durante a construção do objeto-host usando o método de extensão UseStartup<>(), passando por generics a classe a ser utilizada. Por convenção, o nome da classe é Startup, mas você pode escolher o nome que achar melhor.
+
+Se eu rodar a aplicação agora vou tomar outro tipo de erro. Veja. Está dizendo que a classe Startup deve ter um método ConfigureProduction() ou Configure(). Então vamos criar ué.
+
+Pronto, se eu rodar a aplicação agora não vou receber mais erro. Legal! E olha só o que está escrito. Está dizendo que está escutando requisições no endereço http://localhost:5000. Vamos (no navegador) conferir! Ops, quando eu coloco esse endereço… nada. Porquê?
+
+
+O que significa expôr essa lista no navegador? Significa que, ao invés de ler as informações no terminal, iria acessá-las pelo navegador. Então eu vou abrir um navegador. As informações já estão aqui? Não né. O que eu preciso fazer? Colocar o endereço de onde espero encontrar essas informações. Por exemplo se eu quisesse conhecer quais os cursos disponíveis na Alura, eu escreveria o endereço alura.com.br aqui na barra, certo?
+
+Percebam que o navegador está utilizando o modelo HTTP. Nesse modelo, toda comunicação começa com um pedido, e quem fez o pedido fica esperando uma resposta. Só que pro navegador não interessa saber quem vai responder a ele. A única coisa que ele precisa saber é o endereço do pedido. Na especificação HTTP, esse endereço é chamado de URI.
+
+Então para mostrar a lista de leitura basta eu saber qual o endereço que devo colocar no navegador. Mas peraí, eu ainda não mudei minha aplicação para exibir a lista no navegador. Minha aplicação ainda exibe as informações no terminal. Relembrando a especificação HTTP, a parte que responde uma requisição é chamada de servidor. E a parte que faz o pedido é chamada de cliente.
+
+Para transformar minha aplicação atual em um servidor HTTP usando o AspNet.Core, vou ter que criar um objeto que vai hospedar todos os pedidos da aplicação. Vou criar uma variável para esse objeto e vou chamá-la de host. E a gente sabe que todo objeto no C# é de algum tipo. Qual é o tipo de um objeto que hospeda chamadas web? WebHost! Só que vamos usar sua interface. Então o tipo que queremos é IWebHost.
+
+Perceba que o compilador não reconhece esse tipo, e mesmo o VS não consegue achar o namespace para esse tipo. Veja que todas as suas sugestões são para criar uma classe chamada IWebHost. Isso acontece porque nosso projeto não tem o pacote com a referência para esse tipo. E que pacote é esse? Ganhou um doce quem respondeu AspNet Core. Vamos instalá-lo usando o Nuget. Então vou abrir o console do gerenciador de pacotes clicando em Ferramentas, Gerenciador de Pacotes, Console do …, e vou colocar o comando que copiei da área de transferência. O comando é esse aqui:
+
+Install-Package Microsoft.AspNetCore -Version 2.0.1
+Pressiono Enter e o VS vai começar a instalar o pacote no projeto. Lembre-se que você precisa estar conectado na internet para instalar. Pronto! Agora podemos usar o Quick Fix para usar o namespace referente ao tipo IWebHost, que é o ... A construção de um host web é bastante complexa porque podemos definir uma série de opções (para esse host). Uma das opções será o servidor web adotado pela sua aplicação, que no caso será o Kestrel, que é um servidor web já implementado pela galera do AspNet.Core.
+
+Quando a construção de um objeto é complexo, isolamos essa complexidade em uma classe, seguindo um padrão famoso chamado Builder. Então usaremos um objeto da classe WebHostBuilder para criar esse objeto IWebHost pra gente. Então fazemos new WebHostBuilder. Em seguida podemos construir o host usando o método Build(). Se você quiser economizar linhas de código pode fazer diretamente assim (mostrando o uso desnecessário da váriavel builder). Por fim, subimos o servidor usando o método Run().
+
+Mas se fosse só isso a gente não precisaria de um builder não é? A documentação sobre essa parte de hosting é bastante completa (mostrar neste momento), com todas as possibilidades de configuração do seu servidor de host. Pra gente rodar nossa aplicação na web agora, o mínimo que precisaremos configurar é 1) dizer qual a implementação do servidor web utilizado (novamente, Kestrel), e 2) o que o servidor vai fazer quando chegarem as requisições. Ou seja, como responder as requisições que chegarem nele.
+
+Vamos lá.
+
+Para dizer que usaremos o Kestrel, chamamos um método de extensão UseKestrel(). Quando executarmos o programa, o Kestrel já estará quase pronto para atender pedidos HTTP. Mas ainda vai dar erro. Vamos analisar com calma. Repare na pilha de erros o método que está sendo chamado.
+
+O que está acontecendo é que o AspNet.Core chama um estágio de inicialização do servidor. No inglês, Startup. E por enquanto não fizemos qualquer implementação. A implementação disso é através de uma classe. Essa classe não precisa herdar de ninguém ou mesmo implementar qualquer interface. Basta que informemos qual é a classe durante a construção do objeto-host usando o método de extensão UseStartup<>(), passando por generics a classe a ser utilizada. Por convenção, o nome da classe é Startup, mas você pode escolher o nome que achar melhor.
+
+Se eu rodar a aplicação agora vou tomar outro tipo de erro. Veja. Está dizendo que a classe Startup deve ter um método ConfigureProduction() ou Configure(). Então vamos criar ué.
+
+Pronto, se eu rodar a aplicação agora não vou receber mais erro. Legal! E olha só o que está escrito. Está dizendo que está escutando requisições no endereço http://localhost:5000. Vamos (no navegador) conferir! Ops, quando eu coloco esse endereço… nada. Porquê?
+
+Já subimos um host que atende requisições web através da implementação Kestrel, que está escutando no endereço xyz. Ok. Porém, quando colocamos o endereço lá no nav nada é mostrado. Porque está faltando definir como esse servidor vai responder as requisições que chegarem!
+
+O que queremos fazer quando a requisição chegar? Nessa primeira versão da aplicação, vamos fazer com que o servidor SEMPRE retorne os livros para ler, mas logo em seguida vamos evoluir essa ideia.
+
+public void LivrosParaLer()
+{
+    var _repo = new LivroRepositorioCSV();
+    _repo.ParaLer.ToString();
+}
+Mas esse código ainda não escreve na resposta da requisição. No ASP.NET Core toda informação referente às requisições está representada na classe HttpContext e para escrever uma resposta para a requisição que chegar ao servidor, usamos o método WriteAsync() na propriedade Response.
+
+public void LivrosParaLer(HttpContext context)
+{
+    var _repo = new LivroRepositorioCSV();
+    context.Response.WriteAsync(_repo.ParaLer.ToString());
+}
+Como fazemos o vínculo entre o evento de chegada da requisição a esse o código que queremos executar? Está faltando definir qual será o fluxo requisição-resposta dentro do servidor. Esse fluxo é chamado Request Pipeline e pode ter vários estágios em aplicações web mais complexas e ele vai ser configurado justamente no método Configure(). O tipo que é utilizado para definir o fluxo requisição-resposta da aplicação é a interface IApplicationBuilder. Então para eu configurar um request pipeline na minha aplicação eu tenho que receber como argumento de entrada um objeto do tipo IApplicationBuilder.
+
+Finalizo o vínculo através do método Run() disponível na váriavel app. Esse método exige como argumento de entrada um outro método do tipo RequestDelegate. Esse tipo identifica todos os métodos que possuam como retorno um objeto do tipo Task (usado para trabalhar com paralelismo) e aceita como argumento de entrada um objeto do tipo HttpContext.
+
+Faça o curso sobre paralelismo com C#!
+
+C#: Paralelismo no mundo real
+Depois de vincularmos o método LivrosParaLer() ao pipeline de requisição, o código final da classe Startup fica assim:
+
+public class Startup
+{
+    public void Configure(IApplicationBuilder app)
+    {
+        app.Run(LivrosParaLer);
+    }
+
+    public Task LivrosParaLer(HttpContext context)
+    {
+        var _repo = new LivroRepositorioCSV();
+        return context.Response.WriteAsync(_repo.ParaLer.ToString());
+    }
+}
+Vou rodar aqui o Executar Sem Depurar. O terminal vai aparecer, a aplicação vai rodar e o servidor vai subir. Beleza! Agora ao solicitar a URL localhost:5000 no navegador recebo a lista de livros para ler, confirmando que meu código foi executado.
+
+HttpContext
+
+ 
+Isso aí! Um objeto desta classe é passado como argumento de entrada do delegate RequestDelegate para escrever as respostas das requisições.
+
+Escolha a alternativa com a melhor definição para Request Pipeline.
+
+Termo usado pelo ASP.NET Core para representar o fluxo que uma requisição HTTP percorre dentro de sua aplicação até que a resposta seja entregue ao cliente.
+
+ 
+Isso aí! O código que escrevemos nesse pipeline é chamado Middleware. Veja essa definição na documentação da Microsoft.
+
+Chegamos ao fim da primeira aula, e fica a sugestão de um exercício mental: tente lembrar de todos os conceitos abordados, sem recorrer à anotações ou aos vídeos. Pause o vídeo, faça este esforço, pois será muito útil para o seu aprendizado.
+
+Recapitulando, começamos entendendo que para transformar nossa aplicação console em um servidor web, precisaríamos instalar o Asp.NET Core, que possui um tipo que representa o hospedeiro web, uma interface chamada IWebHost. E para criar um objeto que a implementa, usamos um builder padrão.
+
+Ele, por sua vez, é representado pela classe Web Host Builder, para o qual passamos apenas duas opções, importantes para conseguirmos subir a aplicação: por meio do método UseKestrel(), que indica que utilizaremos, para este host, o servidor Kestrel, e UseStartup<>(), para indicar a classe de inicialização do servidor web.
+
+Esta classe de inicialização tem um código pequeno, para "amarrar" a chegada da requisição com o código de atendimento, com a resposta que queremos escrever. E este código é isolado em um método de tipo específico, um Delegate, chamado Request Delegate, sobre o qual ainda veremos bastante.
+
+Para trasformar uma aplicação console em 
+
+Nessa aula vimos que a classe Startup é usada para realizar a inicialização do nosso servidor, mais especificamente no método Configure().
+
+Você sabia que é possível configurar diferentes ambientes usando métodos Configure diferentes? Por convenção, o ASP.NET Core permite que você configure o ambiente de desenvolvimento através de um método ConfigureDevelopment(). O mesmo pode ser feito para o ambiente de produção com ConfigureProduction() e o de testes com ConfigureStaging().
+
+E mais: é possível criar classes específicas para cada ambiente. Como? Usando os nomes StartupDevelopment, StartupStaging e StartupProduction. Legal né?
