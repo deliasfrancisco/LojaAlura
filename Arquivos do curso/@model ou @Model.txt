@@ -1,0 +1,26 @@
+Numa view Razor, qual a diferença entre @model (com inicial em minúscula) e @Model (com inicial em maiúscula)?
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+As duas formas tem uma utilização bem específica:
+
+1) Para declarar com qual qual modelo a página Razor irá trabalhar, utilizamos a diretiva @model (inicial em minúscula):
+
+@model Cadastro
+Nesse caso, Cadastro é a classe que serve de modelo para a view.
+
+2) Para acessar as propriedades do modelo, precisamos utilizar o objeto Model (inicial em maiúscula):
+
+<input type="text" class="form-control" id="nomeCliente" placeholder="Nome do Cliente"
+       asp-for="@Model.Nome">
+Mas por que nesse caso também foi usado o símbolo de arroba (@) ? Porque ele sempre demarca o início de código C# dentro do HTML numa view Razor.
+
+Note que nem sempre o objeto Model é precedido pelo arroba (@): Ele só é necessário quando você está inserindo o Model diretament num código HTML. Se você utilizar o Model dentro de um bloco C#, não se usa o arroba (@):
+
+    <div class="carousel-inner" role="listbox">
+        @{
+            const int TAMANHO_PAGINA = 4;
+
+            int paginas = (int)Math.Ceiling((double)Model.Count() / TAMANHO_PAGINA);
+        }

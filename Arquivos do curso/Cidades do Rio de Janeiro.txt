@@ -1,0 +1,32 @@
+Considere a seguinte classe, que modela o conceito de Cidade.
+
+namespace Alura.Banco.Modelo
+{
+    public class Cidade
+    {
+        public int Id { get; set; }
+        public string Nome  { get; set; }
+        public int Populacao  { get; set; }
+        public string Estado { get; set; }
+    }
+}
+Considere também que o contexto BancoContext está gerenciando a persistência de objetos do tipo Cidade:
+
+namespace Alura.Banco.Entity
+{
+    public class BancoContext : DbContext
+    {
+        public DbSet<Cidade> Cidades { get; set; }
+
+        //...outras propriedades aqui...
+    }
+}
+Selecione a alternativa que faz o seguinte SQL:
+
+SELECT * From Cidades WHERE Estado = 'RJ' AND Populacao > 50000
+
+var cidades = contexto.Cidades
+  .Where(c => c.Estado == "RJ" && c.Populacao > 50000)
+  .ToList();
+ 
+Mandou bem!

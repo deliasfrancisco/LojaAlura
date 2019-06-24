@@ -1,0 +1,21 @@
+No vídeo anterior, você viu que o SELECT gerado pelo Entity para recuperar o endereço de entrega foi parecido com o SQL abaixo:
+
+SELECT TOP 1 c.*, e.*
+FROM Clientes c LEFT JOIN Enderecos e ON e.ClienteId = c.Id
+Porque o Entity optou por gerar um join com a cláusula LEFT JOIN, ao invés de INNER JOIN?
+
+Alternativa correta
+O Entity otimiza o SELECT a partir das estatísticas que possui no banco de dados. Naquele momento ele optou pelo LEFT JOIN para otimizar a query.
+
+ 
+Errado! A opção pelo LEFT JOIN está relacionada à obrigatoriedade no relacionamento um para um entre as entidades.
+
+Alternativa correta
+Porque esse é o comportamento padrão para relacionamentos um para um.
+
+ 
+Alternativa correta
+Porque Endereco não é obrigatório, e o uso da cláusula INNER JOIN faria com que clientes sem endereços fossem rejeitados pelo SELECT.
+
+ 
+Isso aí!

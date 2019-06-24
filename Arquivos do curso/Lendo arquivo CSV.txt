@@ -1,0 +1,47 @@
+Temo na tela as informações da conta, como agência, número da conta e saldo. Resta imprimirmos também os titulares das respectivas contas. Em nosso laço while, escreveremos o nome do titular na variável msg.
+
+using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+        using (var leitor = new StreamReader(fluxoDeArquivo))
+        {
+            while (!leitor.EndOfStream)
+            {
+                var linha = leitor.ReadLine();
+                var contaCorrente = ConverterStringParaContaCorrente(linha);
+
+                var msg = ${contaCorrente.Titular.Nome} : "Conta número {contaCorrente.Numero}, ag. {contaCorrente.Agencia}, Saldo                         {contaCorrente.Saldo}");
+                Console.WriteLine(msn);
+                //Console.WriteLine(linha);
+            }
+        }
+        Console.ReadLine();
+Dessa forma, o nome do titular é exibido após executarmos a aplicação:
+
+Katia: Conta número 8428, ag. 161, Saldo: 1778,42
+Perceba que é apenas exibido o primeiro nome do titular, como consta no arquivo contas.txt. Mas se formos ao arquivo base e incluirmos o sobrenome de um titular, por exemplo, 375 4644 2483.13 Jonathan Silva. Ao executarmos a aplicação, teremos o seguinte resultado:
+
+Jonathan: Conta número 4644, ag. 375. Saldo: 2483,13
+Mesmo com a nova informação do sobrenome adicionada no arquivo base, ela é suprimida na aplicação. Isso corre porque no caso de nomeTitular, estamos coletando apenas a palavra que se encontra na terceira posição [3]. Logo Silva não fará parte, pois ele se encontra no próximo índice.
+
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    string[] campos = linha.Split(' ');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2].Replace('.', ' ,');
+                    var nomeTitular = campos[3];
+Talvez utilizar o caractere de espaço como separador não seja uma boa escolha, pois podemos perder informações a respeito do nome do titular. No arquivo base conta.txt, trocarmos o caractere de espaço pela vírgula , de forma que o novo paradigma de organização dos conteúdos da conta seja: 375,4644,2483.13,Jonatan Silva. Em nosso código, trocaremos o argumento de Split() para ','.
+
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    string[] campos = linha.Split(',');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2].Replace('.', ' ,');
+                    var nomeTitular = campos[3];
+Ao executarmos novamente a aplicação, o sobrenome do titular é exibido na tela, além das numerações da conta não sofrerem qualquer modificação.
+
+O formato de arquivo que utilizamos é conhecido exatamente por "arquivo de valores separados por vírgula", em inglês teremos o acrônimo CSV - Comma separated values.
+
+Até o presente momento estamos apenas consumindo um arquivo de texto, como podemos coletar as contas e salvá-las em um novo arquivo?

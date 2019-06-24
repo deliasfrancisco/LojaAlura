@@ -1,0 +1,4 @@
+O método Include possui uma segunda sobrecarga, que permite informarmos como argumento de entrada uma string com o nome da propriedade de navegação a ser incluída no join. A vantagem dessa abordagem é que não precisamos usar outros métodos ThenInclude para continuar a navegação em outras entidades. Por exemplo, para o exemplo Cliente x Conta, poderíamos fazer:
+
+var lista = contexto.Clientes.Include("Contas.Conta");
+A desvantagem é que se o nome da propriedade mudar, teremos que lembrar todos os lugares onde fizemos isso, porque não teremos ajuda do compilador.

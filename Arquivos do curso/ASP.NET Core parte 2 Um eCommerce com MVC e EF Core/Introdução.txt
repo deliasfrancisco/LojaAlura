@@ -1,0 +1,23 @@
+Olá!
+
+Sou Marcelo Oliveira, bem-vindo ao curso Asp.NET Core 2.0 parte II da Alura. Nesse curso, continuaremos incrementando o e-commerce do nosso cliente "Casa do Código" com a ajuda dos recursos do Asp.NET Core 2.0. Começaremos implementando o clique dos botões "+" e "-" do carrinho de compras, para adicionar ou remover itens.
+
+Dois livros à venda e ícones de "+" e "-" ao lado que cada um deles 
+
+Essa implementação irá nos proporcionar muitos conhecimentos novos, por exemplo, chamar uma função JavaScript pelo evento do clique no clique do HTML. Selecionaremos elementos do HTML por meio do plug-in do Jquery. Aprenderemos a diferença entre uma requisição com método post() e get(). Veremos como realizar uma requisição através do método httppost(), com a ajuda da função ajax() do Jquery.
+
+Aprenderemos a organizar melhor nosso código por meio de uma classe do JavaScript, e começaremos a lidar com o evento de digitação da quantidade de elementos no carrinho de compras.
+
+Ainda, prepararemos no servidor o recebimento da função ajax() pelo controller, em segida guardaremos as informações no banco de dados. Aprenderemos a implementar um padrão chamado view model, isto é, um modelo específico para fornecer informações para a <view>. Retornaremos um objeto específico para a requisição ajax(), e por meio da resposta obtida atualizaremos toda a <view>.
+
+Posteriormente, trabalharemos com os campos de cadastro. Aprenderemos a redirecionar o usuário para outra action caso tenhamos algum problema de validação nos campos, assim garantimos que todos eles estejam preenchidos e com dados corretos, pois criaremos validações customizadas para cada item.
+
+campos de cadastro - serie de campos a serem preenchidos pelo usuário, são eles "Nome do Cliente", "Email", "Telefone", "Endereço", "Complemento", "Bairro", "Município", "UF" e "CEP".
+Criaremos um formulário no Razor por meio de uma TagHelper. Pegaremos a informação que foi enviada para o servidor e gravar no banco de dados, e depois veremos como proteger nossa action contra acessos indevidos utilizando o recurso de validação do tolken. Iremos aprender a proteger o método que receberá a chamada ajax() contra acessos maliciosos.
+
+Finalmente, renderizaremos a <view> de resumo com os dados de cadastro do usuário.
+
+Espero que vocês gostem do curso e não deixem de participar do fórum!
+
+Vamos lá?!
+

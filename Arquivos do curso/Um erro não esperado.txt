@@ -1,0 +1,27 @@
+Joana seguiu o vídeo deste capítulo e criou um relacionamento um para um entre a classe Cliente com a classe Endereco. Contudo, ao executar o processo de migration recebeu a seguinte mensagem de erro no console:
+
+The entity type "Endereco" requires a primary key.
+Partindo da ideia de que a classe Cliente já funcionava corretamente na aplicação, Marque a opção que explica o problema ocorrido:
+
+Alternativa correta
+Quando o entity começa a mapear as classes a partir das suas propriedades, ele também navega por essas propriedades. No caso a classe Endereco envolvida no relacionamento não definiu sua chave primária.
+
+ 
+Correto!
+
+Selecione as alternativas que estejam relacionadas ao conceito de Shadow Properties para o Entity.
+
+Alternativa correta
+Shadow properties são propriedades que não existem na classe que representa sua entidade, mas existem na tabela.
+
+ 
+Correta!
+
+Alternativa correta
+Para criar a shadow property UltimoLogin do tipo DateTime na classe Usuario, colocamos o código abaixo no método OnModelCreating.
+
+modelBuilder
+  .Entity<Usuario>()
+  .Property<DateTime>("UltimoLogin");
+ 
+Isso aí! Lembre-se de definir o tipo da propriedade (no caso DateTime).

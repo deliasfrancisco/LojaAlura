@@ -1,0 +1,60 @@
+Para descobrirmos o erro que está acontecendo, eu vou habilitar uma funcionalidade no AspNet Core para mostrar as informações de erro do servidor. Mas cabe ressaltar que ela só pode ser usada em ambientes de desenvolvimento, porque justamente mostra várias informações sensíveis, que podem ser utilizadas para o mal. Então, reforçando: só use essa funcionalidade em ambientes que não sejam de produção, ok?
+
+Onde habilito essa funcionaldade? Na classe de inicialização, Startup. Vou no método Configure() e chamo o método UseDeveloperExceptionPage(), que vai mostrar uma página bonitinha com as informações do erro. Então vou subir o servidor e verificar o erro.
+
+Veja que a página informa que não foi possível encontrar formulario.html.
+
+Repara que o framework procura especificamente em uma pasta chamada Views, e dentro dela em uma subpasta com o nome de nosso controlador! E gente, isso é uma regra do framework, tá? Então vamos nos adequar a essas regras. Vou renomear a pasta HTML para Views, e criar uma subpasta Cadastro dentro dela, movendo o arquivo pra lá. Agora acho que vai achar. Ops, mesmo erro. Estranho. Peraí, olha aqui. Ele está buscando um arquivo com extensão CSHTML. Já vamos ver que extensão é essa, mas primeiro quero botar pra funcionar. E se eu mudar a extensão do arquivo para essa aí? Vamos ver. Também tenho que mudar o código. E outra coisa que temos que fazer é informar que esse arquivo deve ser copiado para o diretório de saída quando for mais novo. Vamos testar agora!
+
+Agora o erro mudou. Olha essa mensagem: An error occurred during the compilation of a resource required to process this request.
+
+Não sei se você observou, então vou destacar a palavra pra você. “Compilation”. Ué, compilação? A gente não já compilou o código antes de executar?
+
+Mas antes de falarmos sobre isso, vamos resolver esse problema. Descobri que isso é um bug reportado para projetos que usam o .NET Standard 2.0 e a solução é a seguinte. Me sigam aí:
+
+vou abrir o arquivo do projeto usando o botão direito e selecionando Editar Alura.ListaLeitura.App.csproj.
+dentro desse arquivo XML, vou colocar mais uma tag aqui na tag chamada PreserveCompilationContext, com valor igual a true. O código que vocês devem colocar é o seguinte:
+<PropertyGroup>
+ <OutputType>Exe</OutputType>
+ <TargetFramework>netcoreapp2.0</TargetFramework>
+ <PreserveCompilationContext>true</PreserveCompilationContext>
+</PropertyGroup>
+em seguida você vai precisar limpar a solução e recompilá-la. Agora vamos testar novamente e se tudo der certo, o formulário será exibido!
+Ufa! Funcionou! Então, recapitulando, o que fizemos foi:
+
+criamos um objeto ViewResult que representa o resultado de actions que vão retornar HTML
+o arquivo deve ter extensão cshtml e ficar dentro da pasta Views e subpasta com nome do prefixo do controlador
+sua action deve retornar esse objeto para o estágio Execute Result
+Vamos continuar com as outras actions que retornam HTML.
+
+Essas ficam no controlador de LivrosController. Então o que eu preciso fazer é retornar um IActionResult e criar um objeto do tipo ViewResult, com ViewName igual a “lista”. Mas para isso preciso criar uma subpasta chamada Livros (lembram da convenção né?) e copiar o arquivo aqui pra dentro, mudando sua extensão e indicando que ele será copiado para a saída.
+
+Vamos testar e ver o que aconteceu. Funcionou, mas o problema é que esqueci de substituir #NOVO-ITEM#. Só que agora não tenho mais acesso a string do conteúdo para substituir. Como o framework resolve isso? Vamos ver esse assunto no próximo vídeo.
+
+Gabriela começou a testar a leitura de arquivos com C# e criou o arquivo teste.txt abaixo:
+
+Arquivo para ser lido com código C#.
+Para ler e exibir o documento na tela, criou o código abaixo:
+
+var fs = new FileStream("c:/temp/teste.txt", FileMode.Open);
+
+var buffer = new byte[1024];
+var encoding = Encoding.ASCII;
+
+var bytesLidos = fs.Read(buffer, 0, 1024);
+var conteudoArquivo = encoding.GetString(buffer, 0, bytesLidos);
+
+
+Console.Write(conteudoArquivo);
+Contudo, a saída não foi o que ela esperava. Marque as alternativas corretas: (Faça o teste em sua máquina!)
+
+ 	Se o arquivo possuísse mais de 1024 bytes, o restante não seria impresso.
+
+ 
+Correta! Como não reutilizamos o buffer, e é feita somente 1 chamada ao método Read, então a saída não possuirá o final do arquivo!
+
+Alternativa correta
+A saída foi Arquivo para ser lido com c?digo C#..
+
+ 
+Correta! O caractere ó não possui representação no encoding ASCII, por isto o resultado da chamada encoding.GetString foi este. 	

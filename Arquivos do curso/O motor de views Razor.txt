@@ -1,0 +1,23 @@
+Reparem que não temos acesso a string para fazer a substituição no HTML. Como o framework resolve isso? E a resposta está associada ao fato de que precisamos tornar nossa página dinâmica. Para isso, o framework delegou a responsabilidade para uma entidade específica chamada View Engine, ou seja, um motor que se encarrega de juntar o HTML com o código necessário para tornar a página dinâmica. Cada view engine tem suas próprias regras e padronizações.
+
+E quem é a view engine padrão? Uma implementação chamada Razor. Quais são suas regras? As views devem ter extensão cshtml, e você pode escrever código C# dentro do arquivo. Eita, como assim? Isso mesmo, vc pode colocar código csharp dentro da view. Essa é a razão de termos visto um erro de compilação quando chamamos a view do formulário no vídeo anterior, lembram? O Razor compila as views quando são invocadas.
+
+Então já que posso colocar código aqui na view lista, vou transferir esse código que manipula a lista de livros para lá. Assim. Não precisamos mais substituir nada, então vou remover esse código de replace. Só que agora temos uma confusão entre o que é HTML e o que é C#? Como o Razor sabe qual é qual? Ele sabe porque vamos usar um símbolo para identificar o que é código. Esse símbolo é o arroba. Assim. Tanto no foreach quanto na variável livro.
+
+@foreach (var livro in livros)
+{
+    <li>@livro.Titulo - @livro.Autor</li>
+}
+Mas olha o que está acontecendo. O Razor está reclamando da lista livros. Com toda razão, né? Afinal, onde ela está sendo declarada? Eu poderia declarar a variável aqui, já que posso escrever código na view, mas lembrem-se que já discutimos que é má prática juntar código com HTML. Claro que não vamos evitar completamente, mas se pudermos minimizar, tanto melhor. Então como o Razor faz para transportar objetos do estágio de execução da action para o estágio de execução da view, e por consequência, da action para a view?
+
+Pra quem respondeu OO, muito bem! Repare que o framework tem acesso a instância do controlador. Se definirmos uma propriedade para guardar a lista de livros, o framework pode repassá-la para o Razor. Contudo, o framework não conhece essa propriedade. Então o próprio framework criou uma classe com propriedades para transporte de objetos e basta que nossos controladores herdem dessa classe. O nome dessa classe é Controller. Então vou fazer LivrosController herdar de Controller, e em vez de criar minha propriedade para transporte da lista, vou usar uma já existente chamada ViewBag, que representa o objeto a ser consumido pela view. Então eu passo a lista para ViewBag.Livros e na view eu pego essa informação dentro do foreach.
+
+Desse jeito eu já consigo rodar minha aplicação para testar se fiz as modificações. Contudo, quando chamamos a rota desejada temos o erro NullReferenceException. Isso acontece porque a ViewBag da view não foi inicializada. Veja que em nosso código apenas criamos um objeto ViewResult e setamos a propriedade ViewName. Não definimos mais nada. Para inicializar a ViewBag de ViewResult usaremos o método View(), definido na classe-pai Controller, passando como argumento de entrada o nome da view desejada. O código da action ParaLer() fica assim:
+
+public IActionResult ParaLer()
+{
+    var _repo = new LivroRepositorioCSV();
+    ViewBag.Livros = _repo.ParaLer.Livros;
+    return View("lista");
+}
+Ok, tá tudo funcionando. Vou fazer o mesmo para as outras duas actions Lendo e Lidos. Testo de novo e pronto. Terminei de substituir minha implementação do MVC pelo AspNet Core MVC!

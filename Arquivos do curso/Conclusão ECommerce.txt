@@ -1,0 +1,22 @@
+Criação do projeto
+Utilizando o Visual Studio, aprendemos a criar um projeto com template do MVC, padrão que envolve três componentes: o model, o view e o controller. Vimos como trabalhar com cada um deles de forma detalhada e modificamos a rota padrão do MVC para que pudéssemos navegar para cada uma das páginas da nossa aplicação.
+
+Banco de dados
+Vimos como criá-lo a partir do conceito de Model First, ou Code First, para inicialmente criarmos as nossas classes em C#, após o qual foram migradas para o banco de dados SQL Server. Para isso, utilizamos o Entity Framework Core, que fez esta migração, ou mapeamento, para o banco de dados.
+
+Também vimos como trabalhar com relacionamentos para ligar cada uma das entidades da nossa aplicação utilizando as propriedades de navegação. Além disso, lidamos com o conceito de migração, que são pacotes usados para pequenas atualizações do banco de dados, como tabelas, colunas, índices, e outros. São atualizações feitas inicialmente no nosso código do modelo em C#.
+
+Catálogo de produtos
+Lidamos com o catálogo de produtos importando-os a partir de um arquivo JSON, depois convertendo este texto em dados que são gravados na tabela de produtos. Em seguida, aprendemos como exibir estes produtos na nossa tela de carrossel, de quatro em quatro, utilizando-se uma técnica de paginação feita na nossa view de carrossel com código C# e LINQ.
+
+Por falar nisso, vimos que para combinarmos o código C# com HMTL em uma view, é possível utilizarmos um motor de renderização chamado Razor.
+
+Session
+Trabalhamos com um padrão denominado Pattern Repository, que permite que cada uma das entidades do nosso modelo tenha uma classe dedicada para o acesso aos dados. Vimos o Tag Helper, uma série de componentes executados no servidor, que se assemelham a elementos do HTML, utilizados para gerar o código HTML de forma dinâmica e fácil.
+
+Vimos como acessar o código do produto pelo carrossel e passar à página seguinte utilizando a rota, e como manter a informação do id do pedido ao longo da navegação do usuário por meio de sessões, os quais configuramos e com que conseguimos ler as informações de pedido.
+
+Carrinho e resumo de pedido
+Trabalhamos com o carrinho e com a tela de resumo, e aprendemos a criar pedido, obtendo-o do banco de dados com o Entity Framework, e gravamos os itens selecionados na tabela, para depois os exibirmos na tela de carrinho. Por fim, aprendemos a finalizar o pedido para exibir os itens em forma de resumo na última tela da aplicação.
+
+Espero que tenha gostado do curso, e que deixe sua avaliação para podermos melhorá-lo ainda mais. Caso haja dúvidas, consulte o fórum, não deixe de participar.

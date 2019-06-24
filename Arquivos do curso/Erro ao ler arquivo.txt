@@ -1,0 +1,42 @@
+Pedro criou o arquivo "nomes.txt" abaixo:
+
+Jonatan Debora Leonardo Angela Charles Rosane Marcio
+Samara Joao Joana Jorge Nair Danilo Celia Mauro
+Isabel Valdir Jaqueline Rodrigo Tereza Marcio Nair
+Israel Luana Nilson Aline Michel Vitoria Paulo
+Neusa Edivaldo Marli Manuel Michele
+Seu objetivo é recuperar todos os nomes e adicionar em uma lista. Para isto, usou o código abaixo:
+
+using(var fs = new FileStream("c:/temp/nomes.txt", FileMode.Open))
+{
+    var buffer = new byte[128]; // Buffer de 128 bytes
+    var encoding = Encoding.UTF8;
+
+    var bytesLidos = -1;
+
+    while(bytesLidos != 0)
+    {
+        bytesLidos = fs.Read(buffer, 0, 128);
+        var conteudo = encoding.GetString(buffer, 0, 128);
+        Console.Write(conteudo);
+    }
+}
+Porém, será que o código está correto? Marque as alternativas corretas:
+
+Alternativa correta
+O bloco using faz a chamada para o método Dispose e este chama o método Close.
+
+ 
+Correta! Usando este padrão, não será necessário chamar o método Close manualmente.
+
+Alternativa correta
+O 128 cravado na chamada encoding.GetString deve ser substituído por bytesLidos.
+
+ 
+Correta! Não é sempre que o método Read fará a leitura de 128 bytes. Se usarmos sempre 128, é possível que o encoding encontre dados antigos e já processados.
+
+Alternativa correta
+Ao executar a aplicação, haverá duplicação nos nomes impressos na tela.
+
+ 
+Correta! Isto é sinal de erro na utilização do buffer.

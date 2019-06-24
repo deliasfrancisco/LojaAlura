@@ -1,0 +1,134 @@
+Para escrevermos o código que nos ajudará a não lidarmos diretamente com bytes no momento de criação do arquivo, precisaremos escrever um método separado.
+
+Em 3_CriandoArquivo.cs, criaremos um método estático chamado arquivoComWriter(). Precisaremos estabelecer o caminho do novo arquivo, portanto criaremos uma variável chamada contasExportadas.csv, o mesmo nome do arquivo que havíamos criado.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+            {
+                var contaComoString = "456,7895,4785.40, Gustavo Santos";
+                var encoding = Encoding.UTF8;
+
+                var bytes = encoding.GetBytes(contaComoString);
+
+                fluxoDeArquivo.Write(bytes, 0, bytes.Lenght);
+            }
+        }
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+                }
+
+    }
+}
+Faremos um bloco using para FileStream, e em seguida usaremos a variável caminhoNovoArquivo, seguido pelo modo de criação FileMode.Create. Já conhecemos a classe StreamReader, contudo não queremos ler, mas sim, escrever. Portanto usaremos o tipo StreamWriter, uma classe existente no .NET. Guardaremos a classe em um variável escritor.
+
+StreamWriter necessita como argumento fluxoDeArquivo.
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+                    {
+                        var escritor = new StreamWriter(fluxoDeArquivo);
+                    }
+                }
+
+    }
+}
+StreamReader implementa a interface IDisposable, e se formos navegar em StreamWriter veremos que ele também realiza essa implementação, portanto devemos utilizar o recurso de chamar o método Dipose() ou, como já aprendemos, utilizar o bloco using.
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+                    using (var escritor = new StreamWriter(fluxoDeArquivo))
+                    {
+
+                    }
+                }
+
+    }
+}
+Usaremos a variável escritor associada ao método Write(), que por sua vez receberá como argumento a string "456,65465,456.0,Pedro"
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+                    using (var escritor = new StreamWriter(fluxoDeArquivo))
+                    {
+                        escritor.Write("456,65465,456.0,Pedro");
+                    }
+                }
+
+    }
+}
+Em Program.cs, chamaremos o método CriarArquivoComWriter(). Por fim, adicionaremos o Console.WriteLine() com a mensagem Aplicação finalizada... o que deixará mais claro o processo sendo executado.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program
+    { 
+        static void Main(string[] args)
+        {
+
+            CriarArquivoComWriter();
+            Console.WriteLine("Aplicação finalizada...");
+
+
+            Console.ReadLine();
+        }
+    }
+}
+Ao executarmos a aplicação, veremos e mensagem exibida na tela, como esperávamos. Ao acessarmos o arquivo contasExportadas.csv no bloco de notas, veremos o conteúdo 456,65465,456.0,Pedro. Contudo, dessa forma não estamos lidando com a complexidade dos bytes.
+
+Qual é o Encoding que o Writer() utilizou para a criação do arquivo? Perceba que em StreamWriter não especificamos em nenhum ponto qual seria o Encoidng a ser usado, portanto o uso é o padrão.
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+                    using (var escritor = new StreamWriter(fluxoDeArquivo))
+                    {
+                        escritor.Write("456,65465,456.0,Pedro");
+                    }
+Se queremos especificar qual o Encoding a ser usado, teremos outro construtor que recebe o argumento Encoding, seguido de UTF8.
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+                    using (var escritor = new StreamWriter(fluxoDeArquivo))
+                    {
+                        escritor.Write("456,65465,456.0,Pedro");
+                    }
+Ao executarmos a aplicação, o mesmo comportamento ocorre: a mensagem Aplicação finalizada é exibida na tela. No arquivo contasExportadas.csv, teremos o mesmo conteúdo visto anteriormente 456,65465,456.0,Pedro, afinal o bolco de notas lê documentos com o Enconding UTF-8.
+
+Perceba que temos um comportamento curioso na aplicação: No momento de criação do FileStream, estamos declarando que FileMode é Create, mas o arquivo contasExportadas.csv já existe. Temos a opção de utilizar o CreateNew, uma sugestão apresentada pelo Visual Studio. Aplicaremos essa sugestão em nosso código e averiguaremos o resultado.
+
+                static void CriarArquivoComWriter();
+                {
+                    var caminhoNovoArquivo = "contasExportadas.csv"
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+                    using (var escritor = new StreamWriter(fluxoDeArquivo))
+                    {
+                        escritor.Write("456,65465,456.0,Pedro");
+                    }
+Ao inicializarmos, tivemos uma exceção nos notificando que o arquivo contasExportadas.csv já existe. Tentaremos executar o mesmo código com o arquivo apagado, iremos até a pasta Debug e o deletaremos. Nessa circunstância não tivemos uma exceção, e o arquivo foi criado.
+
+A diferença entre Create e CreateNew: no primeiro caso, é apagado o arquivo existente e criado um outro. Já em CreateNew, é feita a verificação da existência do arquivo, e se ele já existe, será lançada uma exceção.

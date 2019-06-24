@@ -1,0 +1,51 @@
+Queremos saber porque os produtos da promoção não estão sendo recuperados, quando buscamos com outro contexto do Entity. Na verdade, esse tipo de comportamento de não recuperar as entidade relacionadas junto com o SELECT é padrão em várias ferramentas de ORM.
+
+Se as ferramentas de ORM não tivessem esse tipo de comportamento, seria buscado para a memória todas as entidades relacionadas a classe, o que poderia trazer problemas de performance. Temos que informar que queremos entidades relacionadas explicitamente por meio de métodos.
+
+Antes começarmos a trabalhar na busca, extrairemos todo o código que insere a promoção no banco para um método chamado IncluirPromocao(). Deixaremos no Main() apenas o código onde buscamos pelos produtos da promoção:
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        using(var contexto2 = new LojaContext())
+        {
+            var promocao = contexto2.Promocoes.FirstOrDefault();
+            Console.WriteLine("\nMotrando os produtos da promoção...");
+            foreach(var item in promocao.Produtos)
+            {
+                Console.WriteLine(item.Produto);
+            }
+        }
+    }
+
+    // ...
+}
+O método que precisamos invocar é o Include(), que incluirá a entidade relacionada. Porém como queremos os produtos, precisamos chamar a entidade PromocaoProduto. Para inclui-lá usaremos o método ThenInclude(), ou seja, buscaremos uma Promocao que busca uma PromocaoProduto, onde podemos acessar o Produto. A busca será feita da seguinte forma:
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        using(var contexto2 = new LojaContext())
+        {
+            var promocao = contexto2
+                .Promocoes
+                .Include(p => p.Produtos)
+                .ThenInclude(pp => pp.Produto)
+                .FirstOrDefault();
+
+            Console.WriteLine("\nMotrando os produtos da promoção...");
+            foreach(var item in promocao.Produtos)
+            {
+                Console.WriteLine(item.Produto);
+            }
+        }
+    }
+
+    // ...
+}
+Executaremos a aplicação. Como resultado, veremos um SELECT em Promocoes, mas além disso, temos outro SELECT para trazer os produtos. É dessa forma que o Entity utiliza para buscar entidades relacionadas e manter a performance.
+
+Veremos como fazer essas buscas com relacionamentos um para um e um para muitos.
+

@@ -1,0 +1,15 @@
+Nessa aula você conheceu dois recursos muito importantes do framework AspNet Core MVC para renderizar suas views: o estágio ExecuteResult, que é onde o framework escreve a resposta HTTP a partir da view que você montou. E o motor de renderização de views Razor, que é a implementação padrão.
+
+Essa também foi a última aula! Como falei no começo do curso, agora você tem uma base sólida para entender o porquê de cada parte dessa estrutura que o VS criou quando criamos um novo projeto usando AspNet Core com MVC. E vai ser uma boa oportunidade para fazer uma revisão de um projeto assim.
+
+A pasta Controllers estão os controladores de nossa aplicação. O nome de um controlador termina com o sufixo Controller e herda da classe base Controller. Seus métodos são actions e retornam implementações de IActionResult.
+
+Para gerar as views temos uma estrutura de pastas que começa em Views e subpastas respectivas aos prefixos dos nomes dos controladores. Dentro de cada subpasta temos arquivos com extensão cshtml e neste projeto aqui existe uma correspondência entre a action e a view.
+
+Na pasta Models estão os modelos da aplicação.
+
+A classe de inicialização da aplicação. Ela possui os métodos ConfigureServices(), que adiciona o serviço MVC, e o método Configure(), que além de outras coisas define o roteamento padrão do framework MVC.
+
+A classe Program tem o código que sobe o host a partir das configurações do hospedeiro web (usando Kestrel e classe de inicialização Startup).
+
+Agora tá na hora de você continuar seu aprendizado em outros cursos. Quem sabe não nos encontramos aí pela Alura? Boa sorte. Fique em paz!

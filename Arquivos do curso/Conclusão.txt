@@ -1,0 +1,85 @@
+Parabéns! Você concluiu mais um curso da série C#. Nesta edição, já começamos com a parte prática: criamos o FileStream por meio do modo Open, e para fazer a leitura criamos o buffer, que foi passado para o método Read(). Ao fazer essa passagem, tomamos cuidado com os intervalos que esse método deve usar para gravar os dados no buffer.
+
+Nesse processo tivemos acesso à vários bytes, o que não era muito útil em nossa aplicação, que estava voltada para texto, isto é, strings.
+
+Para realizar a conversão entre uma cadeia de bytes para uma string, conhecemos o Unicode e o conceito de code point. Nos aprofundamos nos formatos de transformação, e utilizamos o UTF-8, UTF-32 e o Encoding Default do sistema operacional a partir da classe Ecoding com seus membros estáticos.
+
+Com o método GetString() conseguimos realizar a conversão da cadeia de bytes para a string.
+
+Mais adiante, utilizamos o StreamReader() , para que não tenhamos de nos preocupar com buffer, intervalos e realizar o encoding. Ele foi utilizamos para ler linha por linha do nosso documento, e com os dados de agência, conta, saldo e o nome do titular conseguimos realizar a conversão dessa linha para um objeto de fato.
+
+Parte da informação contida nas linhas era numérica, para trocar o texto por uma variável de inteiro e double, conhecemos o método Parse() do int e do double.
+
+Criamos um novo arquivo usando o FileStream, e realizamos o processo inverso: ao invés de converter uma sequência de bytes em uma string, transformamos uma string em uma série de bytes, utilizando o método GetBytes().
+
+Como sabemos, não é interessante para o nosso projeto trabalhar com bytes diretamente, por isso utilizamos o método StreamWriter(), em que simplesmente passamos uma string.
+
+Aprendemos que ao escrevermos várias linhas e não realizarmos o fechamento do arquivo, não teremos as informações despejadas no destino, isto é, os dados ficarão no buffer interno da classe StreamWriter. Para realizar o despejo das informações, usamos o método Flush().
+
+Conhecemos, ainda, outros tipos de writers, como BinaryWriter e BinaryReader, que realiza a leitura. Utilizamos esse conhecimento com outros tipos de Streams, como a de entrada da console.
+
+Além disso, aprendemos como funcionam os métodos auxiliares como File.WriteAllText(), Console.WriteLine() e Console.ReadLine().
+
+Caso você tenha ficado com alguma dúvida, não deixe de utilizar nosso fórum!
+
+1.) Nesta aula começamos usando um stream diferente do FileStream. O Stream de entrada da Console:
+
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+{
+}
+Para trabalhar com este stream, vamos criar um buffer de 1kb:
+
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+{
+    var buffer = new byte[1024]; // 1 kb
+Agora, em um laço While vamos verificar o que o usuário digita na Console:
+
+while(true)
+{
+    var bytesLidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+    Console.WriteLine($"Bytes lidos da console: {bytesLidos}");
+}
+Teste a aplicação. Digite na console, dê enter e observe a saída! Note que estamos trabalhando diretamente com o stream de entrada da Console.
+
+2.) Podemos ainda redirecionar a entrada da Console para a saída em um arquivo, basta criarmos um FileStream e reutilizar o buffer:
+
+using (var fluxoDeEntrada = Console.OpenStandardInput())
+using (var fs = new FileStream("entradaConsole.txt", FileMode.Create))
+{
+    var buffer = new byte[1024]; // 1 kb
+
+    while (true)
+    {
+        var bytesLidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+        fs.Write(buffer, 0, bytesLidos);
+
+        Console.WriteLine($"Bytes lidos da console: {bytesLidos}");
+    }
+}
+Contudo, para nosso arquivo ser atualizado, é preciso liberar o buffer interno da FileStream com o uso do método Flush:
+
+... 
+fs.Write(buffer, 0, bytesLidos);
+fs.Flush();
+3.) Mas, para obter informações da Console, raramente utilizamos o Stream. Usamos o retorno do método Console.ReadLine(); - uma string:
+
+Console.WriteLine("Digite seu nome:");
+string nome = Console.ReadLine();
+
+Console.WriteLine($"Olá, {nome}");
+4.) Uma forma de trabalhar com arquivos pequenos com mais agilidade e facilidade, é por meio dos métodos auxiliares da classe File:
+
+File.WriteAllText("escrevendoComAClasseFile.txt", "Testando File.WriteAllText");
+Console.WriteLine("Arquivo escrevendoComAClasseFile.txt criado!");
+
+var bytesArquivo = File.ReadAllBytes("contas.txt");
+Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Length} bytes");
+
+var linhas = File.ReadAllLines("contas.txt");
+Console.WriteLine(linhas.Length);
+Para mais tarefas comuns com entrada e saída, usando a classe File e outros tipos do .Net, existe um ótimo artigo na documentação da Microsoft aqui.
+
+Bons estudos,
+
+Guilherme.

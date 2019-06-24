@@ -1,0 +1,5 @@
+ 	Pesquisando nas issues relacionadas ao AspNet Core descobri que a opção PreserveCompilationContext é uma configuração exigida para compilar as views. Quando ela está habilitada indicamos que nossas views serão compiladas em tempo de execução. Ela pode ser desligada e usada em conjunto com outras opções para pré-compilar as views e assim diminuir o tempo de espera do usuário ao solicitar aquela view específica.
+
+Mais detalhes (em inglês) aqui.
+
+PS.: agradecimentos ao Thiago por postar essa dúvida no fórum.

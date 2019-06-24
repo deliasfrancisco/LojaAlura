@@ -1,19 +1,39 @@
-O que significa expôr essa lista no navegador? Significa que, ao invés de ler as informações no terminal, iria acessá-las pelo navegador. Então eu vou abrir um navegador. As informações já estão aqui? Não né. O que eu preciso fazer? Colocar o endereço de onde espero encontrar essas informações. Por exemplo se eu quisesse conhecer quais os cursos disponíveis na Alura, eu escreveria o endereço alura.com.br aqui na barra, certo?
 
-Percebam que o navegador está utilizando o modelo HTTP. Nesse modelo, toda comunicação começa com um pedido, e quem fez o pedido fica esperando uma resposta. Só que pro navegador não interessa saber quem vai responder a ele. A única coisa que ele precisa saber é o endereço do pedido. Na especificação HTTP, esse endereço é chamado de URI.
+	O que significa expôr essa lista no navegador? Significa que, ao invés de ler as informações no terminal, iria acessá-las pelo navegador. Então eu vamos abrir o 
+	navegador. As informações já estão aqui? Não né. O que eu preciso fazer? Colocar o endereço de onde espero encontrar essas informações. Por exemplo se eu quisesse 
+	conhecer quais os cursos disponíveis na Alura, eu escreveria o endereço alura.com.br aqui na barra, certo?
 
-Então para mostrar a lista de leitura basta eu saber qual o endereço que devo colocar no navegador. Mas peraí, eu ainda não mudei minha aplicação para exibir a lista no navegador. Minha aplicação ainda exibe as informações no terminal. Relembrando a especificação HTTP, a parte que responde uma requisição é chamada de servidor. E a parte que faz o pedido é chamada de cliente.
+	Percebam que o navegador está utilizando o modelo HTTP. Nesse modelo, toda comunicação começa com um pedido, e quem fez o pedido fica esperando uma resposta. Só que 
+	para navegador não interessa saber quem vai responder a ele. A única coisa que ele precisa saber é o endereço do pedido. Na especificação HTTP, esse endereço é chamado 
+	de URI.
 
-Para transformar minha aplicação atual em um servidor HTTP usando o AspNet.Core, vou ter que criar um objeto que vai hospedar todos os pedidos da aplicação. Vou criar uma variável para esse objeto e vou chamá-la de host. E a gente sabe que todo objeto no C# é de algum tipo. Qual é o tipo de um objeto que hospeda chamadas web? WebHost! Só que vamos usar sua interface. Então o tipo que queremos é IWebHost.
+	Então para mostrar a lista de leitura basta eu saber qual o endereço que devo colocar no navegador. Mas peraí, eu ainda não mudei minha aplicação para exibir a lista no
+	 navegador. Minha aplicação ainda exibe as informações no terminal. Relembrando a especificação HTTP, a parte que responde uma requisição é chamada de servidor. E a 
+	parte que faz o pedido é chamada de cliente.
 
-Perceba que o compilador não reconhece esse tipo, e mesmo o VS não consegue achar o namespace para esse tipo. Veja que todas as suas sugestões são para criar uma classe chamada IWebHost. Isso acontece porque nosso projeto não tem o pacote com a referência para esse tipo. E que pacote é esse? Ganhou um doce quem respondeu AspNet Core. Vamos instalá-lo usando o Nuget. Então vou abrir o console do gerenciador de pacotes clicando em Ferramentas, Gerenciador de Pacotes, Console do …, e vou colocar o comando que copiei da área de transferência. O comando é esse aqui:
+	Para transformar minha aplicação atual em um servidor HTTP usando o AspNet.Core, vou ter que criar um objeto que vai hospedar todos os pedidos da aplicação. Vou criar 
+	uma variável para esse objeto e vou chamá-la de host. E a gente sabe que todo objeto no C# é de algum tipo. Qual é o tipo de um objeto que hospeda chamadas web? 
+	WebHost! Só que vamos usar sua interface. Então o tipo que queremos é IWebHost.
 
-Install-Package Microsoft.AspNetCore -Version 2.0.1
-Pressiono Enter e o VS vai começar a instalar o pacote no projeto. Lembre-se que você precisa estar conectado na internet para instalar. Pronto! Agora podemos usar o Quick Fix para usar o namespace referente ao tipo IWebHost, que é o ... A construção de um host web é bastante complexa porque podemos definir uma série de opções (para esse host). Uma das opções será o servidor web adotado pela sua aplicação, que no caso será o Kestrel, que é um servidor web já implementado pela galera do AspNet.Core.
+	Perceba que o compilador não reconhece esse tipo, e mesmo o VS não consegue achar o namespace para esse tipo. Veja que todas as suas sugestões são para criar uma classe
+	 chamada IWebHost. Isso acontece porque nosso projeto não tem o pacote com a referência para esse tipo. E que pacote é esse? Ganhou um doce quem respondeu AspNet Core.
+	 Vamos instalá-lo usando o Nuget. Então vou abrir o console do gerenciador de pacotes clicando em Ferramentas, Gerenciador de Pacotes, Console do …, e vou colocar o 
+	comando que copiei da área de transferência. O comando é esse aqui:
 
-Quando a construção de um objeto é complexo, isolamos essa complexidade em uma classe, seguindo um padrão famoso chamado Builder. Então usaremos um objeto da classe WebHostBuilder para criar esse objeto IWebHost pra gente. Então fazemos new WebHostBuilder. Em seguida podemos construir o host usando o método Build(). Se você quiser economizar linhas de código pode fazer diretamente assim (mostrando o uso desnecessário da váriavel builder). Por fim, subimos o servidor usando o método Run().
 
-Mas se fosse só isso a gente não precisaria de um builder não é? A documentação sobre essa parte de hosting é bastante completa (mostrar neste momento), com todas as possibilidades de configuração do seu servidor de host. Pra gente rodar nossa aplicação na web agora, o mínimo que precisaremos configurar é 1) dizer qual a implementação do servidor web utilizado (novamente, Kestrel), e 2) o que o servidor vai fazer quando chegarem as requisições. Ou seja, como responder as requisições que chegarem nele.
+							Install-Package Microsoft.AspNetCore -Version 2.0.1
+
+
+	Pressiono Enter e o VS vai começar a instalar o pacote no projeto. Lembre-se que você precisa estar conectado na internet para instalar. Pronto! Agora podemos usar o 
+	Quick Fix para usar o namespace referente ao tipo IWebHost, que é o ... A construção de um host web é bastante complexa porque podemos definir uma série de opções (para
+	 esse host). Uma das opções será o servidor web adotado pela sua aplicação, que no caso será o Kestrel, que é um servidor web já implementado pela galera do AspNet.Core.
+	
+	Quando a construção de um objeto é complexo, isolamos essa complexidade em uma classe, seguindo um padrão famoso chamado Builder. Então usaremos um objeto da classe 
+	WebHostBuilder para criar esse objeto IWebHost pra gente. Então fazemos new WebHostBuilder. Em seguida podemos construir o host usando o método Build(). Se você quiser 
+	economizar linhas de código pode fazer diretamente assim (mostrando o uso desnecessário da váriavel builder). Por fim, subimos o servidor usando o método Run().
+	
+	Mas se fosse só isso a gente não precisaria de um builder não é? A documentação sobre essa parte de hosting é bastante completa (mostrar neste momento), com todas as 
+	possibilidades de configuração do seu servidor de host. Pra gente rodar nossa aplicação na web agora, o mínimo que precisaremos configurar é 1) dizer qual a implementação do servidor web utilizado (novamente, Kestrel), e 2) o que o servidor vai fazer quando chegarem as requisições. Ou seja, como responder as requisições que chegarem nele.
 
 Vamos lá.
 
@@ -120,3 +140,352 @@ Nessa aula vimos que a classe Startup é usada para realizar a inicialização do n
 Você sabia que é possível configurar diferentes ambientes usando métodos Configure diferentes? Por convenção, o ASP.NET Core permite que você configure o ambiente de desenvolvimento através de um método ConfigureDevelopment(). O mesmo pode ser feito para o ambiente de produção com ConfigureProduction() e o de testes com ConfigureStaging().
 
 E mais: é possível criar classes específicas para cada ambiente. Como? Usando os nomes StartupDevelopment, StartupStaging e StartupProduction. Legal né?
+
+Até agora o que fizemos foi responder todas as requisições a nosso servidor com uma lista de livros para ler. Isso está horrível né? Queremos que nossa aplicação mostre os livros para ler, os livros que estamos lendo, os livros já lidos, e até mesmo outras funcionalidades, por exemplo o cadastro de um novo livro.
+
+Se formos olhar no site da Alura, existem várias páginas, cada uma com seu próprio endereço. Aqui eu estou vendo a página do cursos de programação, olha o endereço. Já nesta aqui estou vendo a página das carreiras. Veja que o endereço mudou. Então, recapitulando, cada requisição que o navegador faz possui um endereço, uma URI. E dependendo da URI, (vou chamar de endereço a partir de agora tá), o servidor responde de maneira diferente. Queremos o mesmo comportamento em nossa aplicação!
+
+Por exemplo se o usuário colocar o endereço http://localhost:5000/Livros/ParaLer, devo mostrar a lista que fizemos. Se ele colocar o endereço http://localhost:5000/Livros/Lendo, devo mostrar a lista de livros em leitura. E se ele colocar o endereço http://localhost:5000/livros/Lidos, mostraremos os livros já lidos.
+
+Como fazer isso?
+
+Qual é a classe que vincula o evento de chegada de requisições ao código que queremos executar? Muito bem! Uma bala pra quem respondeu a classe Startup. Vamos abrir essa classe. É aqui que vamos implementar essa distinção de código para cada endereço. Damos o nome dessa distinção de código por endereço de roteamento.
+
+Repare que para qualquer endereço estou escrevendo a lista de livros para ler. Agora quero analisar o endereço da requisição. Onde tenho essa informação? Na aula anterior eu havia falado que o argumento de um RequestDelegate é um objeto do tipo HttpContext, que contém toda a informação necessária pra tratar uma requisição. Então é aqui que vamos olhar para descobrir o endereço da requisição. Veja que no objeto context temos uma propriedade Request, que encapsula uma requisição. E dentro desta propriedade temos uma propriedade do tipo string chamada Path. É nela que vamos encontrar a informação do endereço da requisição.
+
+Não precisa acreditar em mim. Vamos testar! Vou substituir a string aqui no método WriteAsync por context.Request.Path, subir o servidor e chamar um endereço qualquer no navegador. Veja, se eu coloco X recebo X, etc. (testar para vários endereços). Repare que ele não mostra o nome do servidor e a porta. Isso é importante.
+
+Então o que eu preciso fazer é verificar se o endereço da requisição está dentro dos caminhos que o meu servidor vai atender. Quais são eles mesmo?
+
+/livros/paraler,
+/livros/lendo,
+/livros/lidos,
+Agora fica a seu critério fazer o código que vai testar essa condição. Eu cheguei em uma lógica aqui, que é a seguinte: vou criar um dicionário cuja chave é uma string com o caminho a ser atendido, e o valor será a lista de livros.
+
+var _repo = new LivroRepositorioCSV();
+var caminhosAtendidos = new Dictionary<string, RequestDelegate>
+{
+    { "/Livros/ParaLer", _repo.ParaLer.ToString() },
+    { "/Livros/Lendo", _repo.Lendo.ToString() },
+    { "/Livros/Lidos", _repo.Lidos.ToString() }
+};
+Em seguida em faço o teste se context.Request.Path está dentro das chaves do dicionário. Se a condição for verdadeira, eu retorno a lista de livros associada aquela chave do dicionário. E se a condição for falsa? Daí eu escrevo uma mensagem dizendo que o servidor não atende o caminho especificado.
+
+if (caminhosAtendidos.ContainsKey(context.Request.Path))
+{
+    return context.Response
+        .WriteAsync(caminhosAtendidos[context.Request.Path]);
+}
+
+return context.Response.WriteAsync("Caminho inexistente.");
+Vamos testar? Vou subir o servidor e testar os endereços desejados. Ok, listou os livros de cada lista. Show de bola! E se eu colocar um endereço inválido? Legal, vai mostrar a mensagem que eu defini.
+
+Então nesse vídeo a gente tratou requisições diferentes a partir do seu endereço. Para isso conhecemos as propriedades Request e Path que contém o caminho da requisição a ser tratada.
+
+
+Até agora temos três tipos de requisição sendo tratadas, uma para listar os livros para ler, outra para os livros que estou lendo e mais uma para os livros já lidos. Tratei esses tipos com um dicionário onde a chave é uma string representando o caminho e o valor é uma string com a resposta, certo? Se eu quiser atender um novo tipo de requisição, basta eu ir lá no dicionário, colocar o caminho que desejo atender como chave e a resposta como string. Tranquilo e favorável né?
+
+Mas imagina se o código pra mostrar a resposta fosse um pouco mais elaborado? Se eu tivesse que fazer acesso a algum recurso, ou verificar alguma regra de negócio? Por exemplo, se eu quisesse acessar um banco de dados para recuperar ou atualizar os dados. Onde esse código iria ficar?
+
+O que está acontecendo é que essa estrutura de dados no dicionário está tornando minha implementação difícil. Vamos repensá-la aqui. Se em vez de string eu tiver como valor a própria função de tratamento da requisição seria ideal né? Que tipo de função é essa? Uma RequestDelegate! Vamos fazer a modificação.
+
+Vou definir que o dicionário vai ter o valor com o tipo RequestDelegate. O compilador vai começar a reclamar, com razão, né? Vamos mudar o código para criar métodos específicos para cada requisição.
+
+public Task LivrosParaLer(HttpContext context)
+{
+    var _repo = new LivroRepositorioCSV();
+    return context.Response.WriteAsync(_repo.ParaLer.ToString());
+}
+
+public Task LivrosLendo(HttpContext context)
+{
+    var _repo = new LivroRepositorioCSV();
+    return context.Response.WriteAsync(_repo.Lendo.ToString());
+}
+
+public Task LivrosLidos(HttpContext context)
+{
+    var _repo = new LivroRepositorioCSV();
+    return context.Response.WriteAsync(_repo.Lidos.ToString());
+}
+Agora vou colocar os métodos no lugar dos valores do dicionário. Beleza. Falta apenas eu chamar o método armazenado no dicionário, usando o método Invoke(), passando como argumento o objeto context.
+
+var caminhosAtendidos = new Dictionary<string, RequestDelegate>
+{
+    { "/Livros/ParaLer", LivrosParaLer },
+    { "/Livros/Lendo", LivrosLendo },
+    { "/Livros/Lidos", LivrosLidos }
+};
+
+if (caminhosAtendidos.ContainsKey(context.Request.Path))
+{
+    var metodo = caminhosAtendidos[context.Request.Path];
+    return metodo.Invoke(context);
+}
+Vamos testar? Subo o servidor e testo todos os caminhos, inclusive algum não atendido, e tudo certo! O que fizemos aqui foi isolar o código de tratamento de cada requisição em seu próprio método, para que, se houver alguma necessidade futura, possamos modificá-los sem influenciar nos outros.
+
+A classe HttpRequest possui várias informações sobre a requisição enviada pelo cliente, a saber:
+
+dados do formulário, caso exista
+dados da query string, caso exista
+dados do cabeçalho da requisição
+dados sobre cookies da requisição
+qual método HTTP foi utilizado
+se a requisição é segura ou não
+e outras!
+
+a classe HttpContext tem as propriedade Request e Response com diversas informações sobre a requisição e oportunidades de tratar a resposta
+HttpRequest tem uma propriedade Path que informa o caminho da requisição
+HttpResponse tem uma propriedade StatusCode para definir o código de retorno na resposta da requisição
+podemos tratar requisições diferentes através de métodos específicos que são capturados pelo delegate RequestDelegate
+
+Pessoal, nossa aplicação está atendendo 3 requisições diferentes, a saber:
+
+/livros/paraler
+/livros/lendo
+/livros/lidos
+Agora eu preciso atender uma nova requisição assim:
+
+/Cadastro/NovoLivro/{nome}/{autor}
+Onde vou incluir um livro na lista Para Ler. Sendo que {nome} será o nome do livro e {autor} o nome do autor. Por exemplo, o caminho...
+
+/Cadastro/NovoLivro/Codigo Da Vinci/Dan Brown
+...deverá incluir o livro Código Da Vinci, cujo autor é Dan Brown, na lista Para Ler.
+
+Como faço isso usando a lógica que tenho atualmente? Se eu tentar colocar no dicionário a string /Cadastro/NovoLivro/{nome}/{autor}, só requisições com literalmente esse caminho serão atendidas. Não é o que desejamos. Agora essa estrutura deve possuir a flexibilidade de direcionar caminhos sob determinado padrão em um método específico. A verificação de adequação de uma string específica em determinado padrão é tarefa das expressões regulares.
+
+Mas peraí, será que o meu trabalho é ficar criando expressões regulares que se adequem aos caminhos que tiver que atender? Na verdade toda essa lógica já foi criada e pensada para nós no framework AspNet.Core e está disponível no pacote Routing.
+
+O AspNet.Core chama os caminhos de rotas. Esse é o termo que vamos passar a usar agora, beleza? Como modificamos nossa aplicação para usar a partir de agora a estrutura de rotas do AspNet Core? Você vai ver que não muda muita coisa não. Olha só.
+
+Cada requisição que precisar ser tratada deve ser encapsulada numa rota. Para montar as rotas vou precisar de um construtor de rotas, um RouteBuilder. E depois vou criar 3 rotas, um para cada tipo de requisição, livros para ler, livros lendo e livros lidos, usando o método MapRoute() do builder. Lembre-se que isso precisará ser feito no método Configure(), ok?
+
+Perceba que como argumento do método MapRoute() vou passar duas informações. Justamente o caminho que desejo atender e o um objeto do tipo RequestDelegate. Como eu já tenho isso, fica muito simples!
+
+Para finalizar eu crio a coleção de rotas usando o builder, que era o nosso dicionário anterior, através do método Build(), e uso essa coleção na minha aplicação. Também não preciso mais usar o método Run() para passar o delegate AtendeRequisicao, porque isso tudo está na coleção de rotas.
+
+Fica assim o código completo:
+
+var routeBuilder = new RouteBuilder(app);
+routeBuilder.MapRoute("/livros/paraler", LivrosParaLer);
+routeBuilder.MapRoute("/livros/lendo", LivrosLendo);
+routeBuilder.MapRoute("/livros/lidos", LivrosLidos);
+var rotas = routeBuilder.Build();
+
+app.UseRouter(rotas);
+Vamos testar pra ver se está tudo certo? Opa, deu erro! Qual?
+
+Essa mensagem está dizendo que é para adicionarmos o serviço de roteamento na aplicação. E isso é feito no método ConfigureServices() da própria classe Startup. Então vamos fazer isso. É nesse método que configuramos todos os serviços necessários para a aplicação rodar. O código fica assim:
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddRouting();
+}
+Vamos testar! Novo erro! Agora a mensagem é diferente: “An error occurred while creating the route with name '' and template '/livros/para-ler'. ---> System.ArgumentException: The route template cannot start with a '/' or '~' character.” Esta é uma restrição da configuração de roteamento. Vamos remover a barra invertida das rotas e testar novamente.
+
+Pronto! Agora migramos o tratamento de rotas de nossa aplicação para utilizar o serviço de roteamento do AspNet Core. Já posso inclusive apagar o método AtendeRequisicao, porque ele não será mais utilizado.
+
+context.GetRouteValue("categoria")
+ 
+Isso aí! Não se esqueça que esse método retorna um tipo object. Então você ainda vai precisar converter esse valor retornado para o tipo específico que deseja utilizar, ok?
+
+No vídeo anterior você aprendeu a enviar dados em uma requisição através do endereço usando as Routes Templates, ou rotas com templates. Do lado do servidor nós tratamos a requisição no método NovoLivroParaLer() e dentro dele criamos um objeto Livro com os valores disponíveis na rota com o método GetRouteValue().
+
+Em seguida nós testamos a inclusão e verificamos o novo livro na lista ParaLer, certo?
+
+Mas e se quisermos ver outras informações do livro? Como sei que ele foi armazenado corretamente? Vamos implementar uma funcionalidade para ver os detalhes de um livro. Informações como seu Título, Autor e a lista onde ele atualmente está registrado. Dessa maneira vou aproveitar para revisar o que aprendemos em relação às rotas com templates.
+
+Para isso vou configurar minha aplicação para atender uma requisição cujo endereço será formado pela rota Livros/Detalhes/{id}.
+
+Agora vamos implementar nossa rota.
+
+Primeiro definimos o delegate responsável por tratar a requisição. Dentro do código será necessário recuperar o valor da chave id passada via route data, lembrando que preciso converter o valor passado como um object para inteiro. Daí fica fácil. Recupero uma instância de livro a partir do repositório usando Linq e exibo seus detalhes através do método Detalhes(). O código final do delegate fica assim:
+
+public Task ExibeDetalhes(HttpContext context)
+{
+    int id = Convert.ToInt32(context.GetRouteValue("id"));
+    var _repo = new LivroRepositorioCSV();
+    var livro = _repo.Todos.First(l => l.Id == id);
+    return context.Response.WriteAsync(livro.Detalhes());
+}
+Por fim temos que amarrar esse delegate à rota especificamente. O que eu preciso fazer mesmo? Muito bem, fazemos isso através do método MapRoute do RouteBuilder.
+
+A configuração de todas rotas com a inclusão dessa nova fica assim:
+
+routeBuilder.MapRoute("Livros/ParaLer", LivrosParaLer);
+routeBuilder.MapRoute("Livros/Lendo", LivrosLendo);
+routeBuilder.MapRoute("Livros/Lidos", LivrosLidos);
+routeBuilder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", NovoLivroParaLer);
+routeBuilder.MapRoute("Livros/Detalhes/{id}", ExibeDetalhes);
+Subimos o servidor e pronto! Verificamos que a nova rota está trazendo os detalhes de cada livro.
+
+Mas tem um problema. Se eu colocar um valor que não é inteiro (lixo, por exemplo), vai acontecer um erro 500, que é justamente uma exceção lançada na tentativa de conversão do id para inteiro.
+
+Na documentação sobre o roteamento no Asp.NET também temos a possibilidade de adicionar restrições às rotas mapeadas. São as chamadas Route Constraints. As restrições limitam o mapeamento e fazem com que o ASP.NET só execute determinado request delegate se a restrição for atendida.
+
+No nosso caso, queremos que apenas valores do tipo inteiro sejam atendidos na rota de exibição de detalhes. Para implementar essa restrição modificamos o mapeamento da rota assim:
+
+Livros/Detalhes/{id:int}
+Testo novamente a aplicação (não se esqueça de reiniciar o servidor) com a rota informando um id igual a lixo por exemplo, e verifico que agora recebo um código de status 404, indicando que o método não foi executado.
+
+Gente, até agora toda a nossa interação com a aplicação é feita somente através do endereço do navegador. Você sabe que isso não é viável no mundo real. Os sites possuem milhares maneiras de obter feedback do usuário. Botões, animações, efeitos, listas, etc. Tudo é uma maneira de fazer com que o usuário se sinta bem no seu site, aumentando assim seu tempo ali. Vamos atacar esse problema nessa aula.
+
+A primeira coisa que vamos fazer é permitir que o usuário digite as informações de um livro para inclusão através de um formulário. Para renderizar controles visuais na página do navegador, usaremos uma nova linguagem, que é a famosa linguagem HTML. Essa linguagem é descrita e explorada em detalhes no curso de HTML/CSS que coloquei como pré-requisito. O principal objetivo dela é marcar o que cada parte de uma página significa, bastante parecido com um documento do Word. Essa marcação (daí o M do HTML, que vem de markup) é feita através de delimitadores de início e fim chamados tags. Em geral uma tag de início começa com o símbolo < seguido do nome da tag, terminando com o símbolo >. E uma tag de final começa com os dois caracteres </ seguido do nome da tag e por fim o caracter >. Como ficaria uma marcação HTML para renderizar um formulário?
+
+Usamos as tags <form> e </form> como delimitadores. Dentro do formulário queremos colocar 2 campos de entrada e 1 botão para enviar o formulário. O comportamento do navegador é que quando o formulário é submetido, um requisição é disparada para o servidor. Um campo de entrada é renderizado pela tag <input> (sem fechamento). E o botão é delimitado pela tag <button>. Assim:
+
+<form>
+    <input />
+    <input />
+    <button>Gravar</button>
+</form>
+Para mostrar o formulário vamos disponibilizar uma rota que mostra um formulário para o usuário. Crio o delegate e em seguida, vinculo usando o MapRoute().
+
+builder.MapRoute("Cadastro/NovoLivro", ExibeFormulario);
+Mas o que vou colocar no código desse delegate? Vamos colocar aquele HTML que mostramos anteriormente. Crio uma string do tipo html e escrevo lá.
+
+private Task ExibeFormulario(HttpContext context)
+{
+    var html = @"<form>
+        <input />
+        <input />
+        <button>Gravar</button>
+    </form>";
+    return context.Response.WriteAsync(html);
+}
+Subo servidor e testo o endereço /novo-livro. Opa, não funcionou! Mostrou as tags como se fossem texto puro. Porque? Precisamos ainda marcar o formulário como sendo um documento HTML. Então em volta dos delimitadores do formulário insiro a tag <html> e </html> que vão informar ao navegador para renderizar essa resposta como HTML. Será? Deixa eu ver...
+
+Quando voce submete um formulario (clicar em um botão) o navegador envia uma requisação para o endereço que estiver no formulario
+
+Só para melhorar um pouco mais a experiência do usuário, vou colocar um rótulo dizendo que o primeiro campo é para o Tìtulo e o segundo é para o Autor. Quero também pular de linha em cada campo.
+
+Mãos à obra. Para colocar um rótulo em cada campo utilizo uma tag delimitada com <label> e </label>.
+
+E para pular de linha a cada campo eu uso uma tag simples (sem fechamento) chamada <br/>. Nosso código fica assim:
+
+var html = @"<html><form>
+
+    <label>Título:</label>
+    <input name='titulo' />
+    <br/>
+
+    <label>Autor:</label>
+    <input name='autor' />
+    <br/>
+
+    <button>Gravar</button>
+</form></html>";
+Perceba que cada mudança no HTML torna mais difícil sua manipulação dentro do código C#... o que podemos fazer para melhorar isso? Reflita sobre essa questão e vamos até o próximo vídeo para debater isso.
+
+No vídeo anterior, ficou uma pulga atrás da orelha quando começamos a colocar nossas respostas com HTML. Usar o próprio código C# para gerar isso não está parecendo uma boa ideia.
+
+Até porque uma página de um site tem um código bem mais elaborado que o que fizemos até agora. Para podermos focar no formulário, nós ignoramos uma série de coisas fundamentais na montagem do HTML. Veja por exemplo o código fonte desta página da Alura. Olha quanta coisa tem aqui nesse HTML!! (abrir uma página e rolar o código fonte pra ver a qtde de coisas)
+
+E tem mais. Atualmente o fluxo de trabalho de um site ou aplicação web envolve vários profissionais. Tem o profissional de UX que faz o levantamento junto do usuário e define como o site vai ser disponibilizado. Depois aparece o profissional de design, que traduz essas necessidades em um desenho em alto nível e depois monta um wireframe a partir destes desenho. Em seguida tem o profissional de front-end que gera o HTML e suas tecnologias relacionadas para implementar esse desenho. Em paralelo o profissional de backend (você) vai implementando o código necessário para tornar as páginas dinâmicas.
+
+Repare que na maioria das vezes não é você quem vai mexer no HTML! Você vai pegar um arquivo e usá-lo para sua funcionalidade! Do jeito que está o profissional de frontend vai ter que abrir seu código e jogar lá dentro o HTML. Muito bizarro!
+
+Outro problema que posso citar é o da geração do HTML e sua sintaxe. Imagina se eu esqueço algum caracter ou coloco algo em locais diferentes? Como o código está dentro de uma string, eu não tenho qualquer auxílio do editor para ajudar a gerar uma sintaxe válida, ou pelo menos com poucos problemas.
+
+Então chega de mimimi e vamos ver o que podemos fazer para resolver esses problemas. A causa principal do problema é que estamos misturando C# com HTML aqui. Então vamos separá-los em arquivos diferentes e quando eu precisar carregar o html eu abro esse arquivo e pronto.
+
+Você já deve imaginar que uma aplicação vai ter muitos arquivos HTML. E o que costumo fazer quando tenho muitos arquivos em um mesmo diretório? Separo-os em outras pastas né? Então, para separar os arquivos HTML dos outros arquivos vou criar uma pasta chamada HTML e criar meu primeiro arquivo lá. Vou dar o nome de formulario.html, ok? Usando o VS pra criar esse arquivo html ele já me coloca uma série de tags obrigatórias. Olha só que legal!
+
+Agora copio as tags do formulário pra cá.
+
+Olha que interessante. O editor do VS já corrigiu algumas coisas pra mim! Essa é uma das vantagens da gente colocar o HTML separado. Vou corrigir algumas coisas aqui. O código final fica assim:
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <form action="/Cadastro/Incluir" method="post">
+
+        <label>Título:</label>
+        <input name="titulo" />
+        <br />
+
+        <label>Autor:</label>
+        <input name="autor" />
+        <br />
+
+        <button>Gravar</button>
+    </form>
+</body>
+</html>
+Agora preciso achar uma maneira de carregar o conteúdo desse arquivo toda vez que for usá-lo. Vamos voltar ao código. O que preciso fazer é criar um método que vai isolar a responsabilidade de abrir determinado arquivo e ler seu conteúdo e depois vou substituir no delegate ExibeFormulario().
+
+private string CarregaArquivoHTML(string nomeArquivo)
+{
+    var nomeCompletoArquivo = $"HTML/{nomeArquivo}.html";
+    using (var arquivo = File.OpenText(nomeCompletoArquivo))
+    {
+        return arquivo.ReadToEnd();
+    }
+}
+
+private Task ExibeFormulario(HttpContext context)
+{
+    var html = CarregaArquivoHTML("formulario");
+    return context.Response.WriteAsync(html);
+}
+Vamos testar e olha lá, que beleza! Agora eu tenho o código C# e o código HTML separados em arquivos diferentes. Se eu visualizar o código-fonte da página já vou ver aquelas tags que o editor criou pra mim automaticamente.
+
+Na aula anterior reforçamos a idéia básica do HTML, que é de marcar regiões e elementos em uma página. Reforçamos também que o navegador é especializado em renderizar HTML. No entanto, temos várias rotas implementadas em nossa aplicação que não retornam HTML. Por exemplo, as funcionalidades que mostram as listas Para Ler, Lendo e Lidos. Vou executar aqui a aplicação e repare a resposta é um texto sem nenhuma formatação!
+
+Uma aplicação que se preze deve mostrar a lista de livros formatada com HTML. Vamos ver como fazer isso nesse vídeo. A marcação HTML para indicar uma lista emprega duas tags. A primeira é usada para delimitar a lista, e seu código é <ul>. A segunda é usada em cada item da lista, e o código é <li>.
+
+Então vamos criar um arquivo HTML igual ao que fizemos para definir o formulário HTML. Vou chamar esse arquivo de para-ler.html, colocar o HTML específico para representar uma lista lá, e no atendimento da requisição associada à rota livros/paraler eu vou usar esse arquivo.
+
+E quando eu executar a aplicação, vou emitir agora uma resposta HTML! Olha só.
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <ul>
+        <li>A Arte da Procrastinação - John Perry</li>
+        <li>It, A Coisa - Stephen King</li>
+        <li>Carrie, A Estranha - Stephen King</li>
+    </ul>
+</body>
+</html>
+O problema é que esse arquivo é estático. Ou seja, ele não muda se um livro mudar de lista, ou um livro for adicionado. Continua sempre com os mesmos três livros para sempre. (Essa é a diferença entre URLs estáticas e dinâmicas. A URL estática não muda seu conteúdo sem que exista uma intervenção humana direta ou indiretamente. Já a URL dinâmica pode mudar seu conteúdo sem qualquer intervenção. O próprio software vai se encarregar de processar os dados e exibir informações diferentes para a mesma URL.)
+
+E isso não é o que a gente quer. Queremos que essa lista seja montada a partir dos livros que estão armazenados no repositório de livros! Como fazer isso?
+
+Você que é um cara observador já percebeu que cada livro deve gerar uma tag <li>, certo? Então eu posso fazer um código em meu método ListaLivrosParaLer() que vai percorrer a lista de leitura ParaLer e colocar uma tag <li> via código.
+
+Preciso indicar no HTML que vou substituir um determinado símbolo por cada livro. No nosso exemplo estou usando o símbolo #NOVO-ITEM#.
+
+Daí em cada iteração do foreach, eu uso o método Replace() da classe String para isso, não esquecendo de colocar de volta o símbolo. Depois do loop eu removo o símbolo, porque já não existem mais livros para colocar na lista. O código final do método fica assim:
+
+public Task LivrosParaLer(HttpContext context)
+{
+    var _repo = new LivroRepositorioCSV();
+    var conteudoArquivo = CarregaArquivoHTML("para-ler");
+
+    foreach (var livro in _repo.ParaLer.Livros)
+    {
+        conteudoArquivo = conteudoArquivo
+            .Replace("#NOVO-ITEM#", $"<li>{livro.Titulo} - {livro.Autor}</li>#NOVO-ITEM#");
+    }
+    conteudoArquivo = conteudoArquivo.Replace("#NOVO-ITEM#", "");
+
+    return context.Response.WriteAsync(conteudoArquivo);
+}
+Vou executar a aplicação e agora a lista está sendo exibida por completo. E reparem na característica dinâmica da URL: mesmo que eu adicione um livro o conteúdo para a mesma URL é alterado, sem nenhuma intervenção externa.
+
+Essa solução ainda não é a ideal, mas meu objetivo é demonstrar que para uma página se tornar dinâmica ela precisa ser manipulada por algum código no servidor. Beleza, pessoal? Agora você vai fazer a mesma coisa para as outras duas listas que estão faltando nos exercícios. E compara seu código com o meu para ver se ficou tudo certo.
+
+
+
+

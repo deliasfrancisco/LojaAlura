@@ -1,0 +1,118 @@
+Escreveremos o código responsável pela criação de um novo arquivo. Para esta aula, organizamos um pouco mais os elementos do projeto: movemos o código de StremReader() para o arquivo 2_UsandoStreamReader.cs. Também criamos um arquivo denominado 3_CriandoArquivo.cs. Nele, criaremos um método estático chamado CriarArquivo().
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+
+        }
+
+    }
+}
+O primeiro passo é estipular qual será o nome do novo arquivo que estamos criando. Para isso, faremos uma variável caminhoNovoArquivo. Trocamos o termo nome, por caminho porque dessa forma poderemos averiguar se começaremos a nomear esse arquivo do diretório "C:" ou se usaremos a solução relativa ao local onde o executável está armazenado.
+
+Já sabemos que a solução relativa é o mais coerente com o projeto, portanto escreveremos o nome como contasExportadas.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+            var caminhoNovoArquivo = "contasExportadas";
+        }
+
+    }
+}
+Está faltando a extensão do arquivo. Na prática, quando usamos uma stream de arquivo não faz diferença se criamos um arquivo .txt, .csv ou qualquer outra extensão, essa é apenas uma preocupação para exibirmos ao sistema operacional para que este possa mostrar para o usuário o arquivo com a pré-visualização correta. Usaremos o arquivo separado por vírgulas, isto é, o formato .csv.
+
+Precisamos criar um fluxo de arquivo que nos permita colocar os bytes neste novo arquivo que criamos, logo, precisaremos de um stream de arquivo. Adicionaremos uma diretiva using ao código, seguida de uma variável fluxoDeArquivo que receberá new FileStream. Já criamos um FileStream anteriormente e o percurso que seguiremos será parecido. Adicionaremos como argumentos caminhoNovoArquivo e FileMode, mas dessa vez não usaremos o .Open, pois não queremos abrir um arquivo e sim criar, por isso neste caso usaremos .Create.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+            {
+
+            }
+        }
+
+    }
+}
+Dentro do bloco using criaremos uma conta correte hipotética que será gravada dentro do novo arquivo. Faremos uma variável contaComoString que receberá "456,7895,4785.40, Gustavo Santos, o padrão de um arquivo .csv.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+            {
+                var contaConmoSting = "456,7895,4785.40, Gustavo Santos";
+            }
+        }
+
+    }
+}
+Anteriormente utilizamos o fluxo de arquivo para fazer a leitura por meio do método Read(), agora queremos fazer o contrário, isto é, escrever em um arquivo. Para isso, usaremos o método Write() que exige como argumentos um array de bytes, um número inteiro offset e outro count. São exatamente o mesmos argumentos exigidos pelo Read(); o offset indica qual índice o método deve olhar no buffer, count mostra quantos bytes devem ser olhados a partir do array.
+
+Precisamos de um array de bytes que represente a string. Para fazer a transformação de uma cadeia de bytes para uma string, usamos o Encoding, o mesmo vale para o procedimento inverso.
+
+Criaremos uma variável encodign, que guarda Encoding.UTF8, um dos mais utilizados. O próximo passo é obter os bytes por meio da string, logo, escreveremos a variável bytes que guardará encoding.GetBytes(). Estávamos utilizando o getString() para obter strings, agora, utilizaremos o getBytes(), que tem uma sobrecarga que possui como argumento uma string, portanto passaremos contaComoString.
+
+Assim feito, usaremos fluxoDeArquivo associado ao método Write(), que receberá como argumentos bytes, o índice de array 0 e bytes.Length, já que não sabemos quantos bytes serão criados com o Encoding UTF8 a partir da string 456,7895,4785.40, Gustavo Santos.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+
+        static void CriarArquivo()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+            {
+                var contaComoString = "456,7895,4785.40, Gustavo Santos";
+                var encoding = Encoding.UTF8;
+
+                var bytes = encoding.GetBytes(contaComoString);
+
+                fluxoDeArquivo.Write(bytes, 0, bytes.Lenght);
+            }
+        }
+
+    }
+}
+Em Program.cs chamaremos CriarArquivo().
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    { 
+        static void Main(string[]) args)
+        {
+            CriarArquivo();
+
+
+            Console.ReadLine();
+        }
+    }
+}
+Estamos prontos para testar a aplicação. Nada surgirá na tela, afinal não colocamos um WriteLine, mas esperamos que o arquivo contasExportadas.csv tenha sido criado. Portanto acessaremos o diretório do executável(Debug) e veremos que de fato o arquivo está lá. Ao abrirmos com o bloco de notas veremos o texto 456,7895,4785.40, Gustavo Santos.
+
+Novamente estamos lidando com bytes. Anteriormente usamos o StreamReader para não termos de nos preocuparmos em trocar os bytes por string, será que não existe uma classe que possa realizar o trabalho inverso, isto é, realizando a escrita e não a leitura de bytes?

@@ -1,0 +1,248 @@
+Em 3_CriandoArquivo.cs Estamos usando no StreamWriter método WriteLine():
+
+static void TestaEscrita() 
+                {
+                    var caminhoArquivo = "teste.txt";
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+                    using (var escritor = new.StreamWriter(fluxoDeArquivo))
+                    {
+                        for (int = 0; i < 1000000000; i++)
+                        {
+                            escritor.Flush(); // Despeja o buffer para o Stream
+
+                            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!");
+                            Console.ReadLine();
+                        }
+                    }
+                }
+        }
+O métoro WriteLine() é semelhante ao WriteLine() da Console, que conhecemos: possui sobrecarga para int, booleano e outros tipos definidos no .NET. Vejamos algumas informações ao navegar pelo método:
+
+public virtual void WriteLine(car value);
+public virtual void WriteLine(string value);
+public virtual void WriteLine(bool value);
+public virtual void WriteLine(char[] buffer);
+public virtual void WriteLine(long value);
+Podemos fazer um teste com esses tipos em Program.cs. Ciaremos o FileStream, e usaremos a variável fs para representá-lo. Chamaremos esse arquivo de testaTipos.txt, e usaremos o FileMode.Create. Em seguida, criaremos a variável escritor, que receberá StreamWriter(fs).
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    {
+        static void Main(string[] args)
+        {
+
+
+            using (var = new FileStream("testaTipo.txt", FileMode.Create))
+            uisng (var escritor = new StreamWriter(fs))
+            {
+            }
+Usaremo o escritor e chamaremos os métodos para averiguar como é escrito um booleano true, um false e um número inteiro grande. Trata-se de um teste muito simples. Removeremos a chamada TestaEscrita() e estamos prontos para executar a aplicação.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    {
+        static void Main(string[] args)
+        {
+
+
+            using (var = new FileStream("testaTipo.txt", FileMode.Create))
+            uisng (var escritor = new StreamWriter(fs))
+            {
+                escritor.WriteLine(true);
+                escritor.WriteLine(false);
+                escritor.WriteLine(56465445645);
+
+            }
+
+            Console.WriteLine("Aplicação Finalizada...";)
+
+            Console.ReadLine();
+
+        }
+    }
+} 
+É exibida na tela a mensagem Aplicação Finalizada... como esperávamos. Em seguida, abriremos o novo arquivo criado testaTipos.txt:
+
+True
+False
+56465445645
+No arquivo encontramos o valor literal True e False, além o número inteiro. Na memória do computador, o true o false ocupam espaços muito pequenos, 1 byte apenas, já o número inteiro ocupa 4 bytes. Estamos utilizando muito mais espaço do que o necessário, pois estamos representando as informações com texto puro, seria mais interessante utilizarmos a forma binária para otimização do arquivo.
+
+Para realizaremos teste, faremos um novo arquivo. Primeiramente, criaremos um nova classe que chamaremos de 4_StreamBinário. Incluiremos o partial class Program e criaremos um método estático chamado EscritaBinaria(). Precisaremos de um FileStream, portanto criaremos um bloco using com a variável fs que o receberá. O nome do arquivo será contaCorrente.txt, e será criado via FileMode.Create.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    { 
+
+        static void EscritaBinaria()
+        { 
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+            {
+
+            }
+            }
+
+            }
+    }
+}
+Como não queremos lidar com buffer, podemos utilizar o StreamWriter(), mas neste caso estaremos lidando com texto e não com a representação binária. Portanto, usaremos algo diferente neste caso:
+
+Criaremos a variável escritor que receberá o BinaryWriter(), que produz representações de maneira binária em nosso stream. Passaremos como argumento o fs.
+
+Em seguida, escreveremos escritor.Write. Perceba que em BinaryWriter não temos a opção WriteLine, apenas Write, o que faz sentido, uma vez que "linha" é referente ao texto e não a representações binárias. Passaremos para o Write o número da nossa agência. Em seguida, escreveremos novamente o Write e passaremos o número da conta e, finalmente, o double que representa o saldo - ao navegarmos na definição de Write verificaremos que estamos utilizando aquele que escreve um double ( Write(double value)).
+
+Para finalizar, escreveremos o nome do titular da conta, no caso, Gustavo Braga.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    { 
+
+        static void EscritaBinaria()
+        { 
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+            using (var escritor = BinaryWriter(fs))
+            {
+                escritor.Write(456);//número da Agência
+                escritor.Write(546544);//número da conta
+                escritor.Write(4000.5o;)//Saldo
+                escritor.Wrute("Gustavo Braga");
+            }
+            }
+
+            }
+    }
+}
+Checaremos o método EscritaBinaria() em Program.cs e estamos prontos para executar a aplicação.
+
+partial class Program
+{
+    static void Main(string[] args)
+    {
+        EscritaBinaria();
+
+        Console.WriteLine("Aplicação finalizada...");
+
+        Console.ReadLine();
+    }
+} 
+Executamos a aplicação, agora iremos averiguar o conteúdo do arquivo criado. Ao abrirmos o arquivo utilizando o NotePad++ teremos o seguinte resultado:
+
+
+
+Gustavo Braga
+O conteúdo do arquivo está em formato estranho. Não estamos escrevendo em uma codificação como UFT-8 ou UTF-7, mas sim uma representação binária. O NotePad++ tenta realizar a transformação dos bytes para um texto a ser exibido ao usuário. Em nosso código, escreveremos um número inteiro,um double e uma string, e o NotPad não conseguiu decodificar as outras informações além da string.
+
+Precisamos escrever na aplicação como ler este arquivo em formato binário. Criaremos um método estático que chamaremos de LeituraBinaria(). Precisaremos do FileStream, e leremos o mesmo arquivo ContaConrrete.txt, mas dessa vez oFileMode será Open.
+
+Em seguida, trabalharemos com a leitura. Criaremos a variável leitor que receberá BinaryReader, cujo argumento será fs.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    { 
+
+        static void EscritaBinaria()
+        { 
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+            using (var escritor = BinaryWriter(fs))
+            {
+                escritor.Write(456);//número da Agência
+                escritor.Write(546544);//número da conta
+                escritor.Write(4000.5o;)//Saldo
+                escritor.Wrute("Gustavo Braga");
+            }
+        }
+
+        static void LeituraBinaria() 
+        {
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+                using(var leitor = new BinaryReader(fs))
+                {
+
+                }
+
+        } 
+    }
+}
+Precisamos ler exatamente o que está escrito no arquivo, isto é, dois números inteiros, um double e uma string. Criaremos uma variável agencia, que receberá o é lido em leitor. Em seguida, usaremos o Read, neste ponto precisamos nos atentar: existem diferentes tipos de Read, como ReadBooelan, ReadByte , ReadDecimal e assim por diante. Como no caso de agencia temos um número inteiro, usaremos o ReadInt, que ainda se desdobra em variantes como ReadInt16 e ReadInt32, por exemplo.
+
+Quando escrevemos int ou inserimos o literal numérico , na realidade o compilador interpreta essas informações como int32, portanto é essa especificação que inseriremos em nosso código.
+
+namespace ByteBankImportacaoExportacao
+{ 
+    partial class Program 
+    { 
+
+        static void EscritaBinaria()
+        { 
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Create))
+            using (var escritor = BinaryWriter(fs))
+            {
+                escritor.Write(456);//número da Agência
+                escritor.Write(546544);//número da conta
+                escritor.Write(4000.5o;)//Saldo
+                escritor.Wrute("Gustavo Braga");
+            }
+        }
+
+        static void LeituraBinaria() 
+        {
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+                using(var leitor = new BinaryReader(fs))
+                {
+                    var agencia = leitor.ReadInt32();
+                }
+
+        } 
+    }
+}
+O BinaryReader lê o ReadInt32, o FileStream mudou a posição para depois dos 4 bytes que representam esse int. Em seguida, leremos o número da conta, outro int. Feito isso, leremos o saldo, um double. Por último, temos o titular, uma string, portanto ReadString.
+
+        static void LeituraBinaria() 
+        {
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+                using(var leitor = new BinaryReader(fs))
+                {
+                    var agencia = leitor.ReadInt32();
+                    var numeroConta = leitor.ReadInt32();
+                    var saldo = leitor.ReadDouble();
+                    var titular = leitor.ReadString(); 
+
+                }
+Como neste caso não estamos lidando com texto, não existe o Parse, afinal estamos trabalhando diretamente com representação binária e utilizamos métodos especializados para cada tipo. Escreveremos essas informações na tela por meio de Console.WriteLine($"{agencia}/{numeroConta} {titular} {saldo}")
+
+        static void LeituraBinaria() 
+        {
+            using (var fs = new FileStream("contaCorrente.txt", FileMode.Open))
+                using(var leitor = new BinaryReader(fs))
+                {
+                    var agencia = leitor.ReadInt32();
+                    var numeroConta = leitor.ReadInt32();
+                    var saldo = leitor.ReadDouble();
+                    var titular = leitor.ReadString(); 
+
+                    Console.WriteLine($"{agencia}/{numeroConta} {titular} {saldo}");
+                }
+Em Program.cs inseriremos o método LeituraBinária(), ao invés de EscritaBinária().
+
+partial class Program
+{ 
+    static void Main(string[] args)
+    {
+        LeituraBinaria();
+
+        Console.WriteLine("Aplicação finalizada...");
+
+        Console.ReadLine();
+    }
+} 
+Fecharemos o arquivo aberto contaCorrente.txt para evitar erro com o sistema operacional e executaremos a aplicação. Teremos a seguinte mensagem:
+
+456/546544 Gustavo Braga 4000,5
+Aplicação finalizada...
+Quando fazemos a leitura respeitando a ordem da escrita, a informação é exibida claramente e sem problemas. Neste caso não faz sentido utilizarmos o bloco de notas.

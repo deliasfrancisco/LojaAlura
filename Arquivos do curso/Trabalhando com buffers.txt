@@ -1,0 +1,125 @@
+Antes de prosseguirmos para o próximo tópico, verificaremos se o conteúdo exibido em nossa console é coerente com o do arquivo contas.txt. As três primeiras contas bancárias impressas pela aplicação são:
+
+375 4644 2483.13 Jonatan
+234 4020 2822.52 Debora
+316 3254 3350.37 Leonardo
+Ao conferirmos com o arquivo original, temos coerência. Em seguida, verificaremos as últimas contas impressas pela aplicação, que foram:
+
+240 3705 795.56 Julio
+397 8270 907.50 Marcela
+408 2132 2294.76 Milt
+Milt parece um nome estranho. Ao verificarmos o arquivo original teremos algumas diferenças:
+
+150 3752 1361.72 Priscilla 
+332 8365 1199.58 Joel
+223 1223 1833.99 Josiane
+Contudo, essas contas se encontram impressas na aplicação, contudo em pontos diferentes. O que parece acontecer é que as informações estão sendo repetidas em algum ponto, isto é, há trechos sendo duplicados na console.
+
+Em Program.cs, criamos o buffer, o passamos para a stream e utilizando o método Read(), que possuía como referência o índice 0 até 1024 posições. Contudo, não é sempre que uma stream possuirá 1024 bytes, por isso recuperamos o retorno numeroDeBytesLidos, que inclusive é a condição para nos mantermos no laço while, caso nosso stream não leia mais nada, ou seja, será retornado o valor 0 para numeroDeBytesLidos, significa que chegamos ao final do arquivo.
+
+    var enderecoDoArquivo = "contas.txt";
+
+    using (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    { 
+        var buffer = new byte[1024]; // 1kb
+        var numeroDeBytesLidos = -1
+
+        while (numeroDeBytesLidos !=0)
+        {
+            numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1204);
+            EscreverBuffer(buffer);
+        }
+Se chegamos ao final do arquivo, o stream não fez nenhuma alteração no buffer, portanto os valores continuam os mesmos depois da chamada, os dados se mantém, mesmo assim utilizamos o método EscreverBuffer(). Aparentemente a solução é adicionarmos uma condicional if. Caso o numeroDeBytesLidos seja igual à 0 , o resultado será escrito na tela.
+
+    var enderecoDoArquivo = "contas.txt";
+
+    using (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    { 
+        var buffer = new byte[1024]; // 1kb
+        var numeroDeBytesLidos = -1
+
+        while (numeroDeBytesLidos !=0)
+        {
+            numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1204);
+
+            if(numeroDeBytesLidos = 0)
+            {
+                EscreverBuffer(buffer);
+            }
+        }
+Ao testarmos a aplicação, continuamos a ter dados duplicados. A conta 408 2132 2294.76 Milt é impressa. Para averiguar o problema, escreveremos a quantidade de bytes na tela por meio de Console.WriteLine() e uma string interpolada.
+
+
+        while (numeroDeBytesLidos !=0)
+        {
+            numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1204);
+
+            Console.WriteLine($"Bytes lidos: {numeroDeBytesLidos}");
+
+            if(numeroDeBytesLidos = 0)
+            {
+                EscreverBuffer(buffer);
+            }
+        }
+No final, teremos o seguinte resultado:
+
+240 3705 795.56 Julio
+397 8270 907.50 Marcela
+408 2132 2294.76 MiltBytes lidos: 0
+Mas acima, veremos:
+
+240 3705 795.56 Julio
+397 8270 907.50 Marcela
+408 2132 2294.76 MiltBytes lidos: 584
+Se temos um buffer de 1024 posições e lermos somente 584, teremos ainda 440 posições que se manteram com o valor antigo, portanto estamos reescrevendo na tela dados antigos. Nós não queremos processar duas vezes o mesmo valor, portanto excluiremos a condicional if e adotaremos uma nova estratégia.
+
+Passaremos para EscreverBuffer() a quantidade bytes lidos(numeroDeBytesLidos), dessa forma no momento de fazer o encoding saberemos qual o ponto em que devemos avançar.
+
+    var enderecoDoArquivo = "contas.txt";
+
+    using (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    { 
+        var buffer = new byte[1024]; // 1kb
+        var numeroDeBytesLidos = -1
+
+        while (numeroDeBytesLidos !=0)
+        {
+            numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1204);
+
+            if(numeroDeBytesLidos = 0)
+            {
+                EscreverBuffer(buffer, numeroDeBytesLidos);
+            }
+        }
+
+        Console.ReadLine();
+    }
+
+
+static void EscreverBuffer(byte[], buffer, int bytesLidos)
+{
+    var utf8 = Encoding.Default;
+
+    var texto = utf8.GetString(buffer);
+    Console.Write(texto);
+}
+Receberemos o buffer em EscreverBuffer() e sabemos até mesmo até qual posição é seguro ler e realizar o processo de transição de byte para string, que foi delegado para o método GetString(). Ao analisarmos o método GetString(), notaremos que existe a sobrecarga que recebe como argumento um array de byte, o índice(index)e a quantidade de bytes que leremos(count).
+
+public virtual string GetString(byte[] bytes, int index, int count);
+Usaremos esta sobrecarga, afinal ela possui mais informações. Passaremos para GetString() a partir de que ponto a leitura deve ser iniciada, isto é, índice 0 e por fim passaremos a quantidade de bytes para que o Encoding faça o processamento (byteslidos).
+
+static void EscreverBuffer(byte[], buffer, int bytesLidos)
+{
+    var utf8 = Encoding.Default;
+
+    var texto = utf8.GetString(buffer, 0, bytesLidos);
+    Console.Write(texto);
+}
+Ao iniciarmos a aplicação, veremos que a última conta impressa não é mais do titular Milt, mas sim de Josiane, conforme o arquivo original contas.txt.
+
+150 3752 1361.72 Priscila
+332 8365 1199.58 Joel
+223 1223 1833.99 JosianeBytes lidos:0
+Estamos coletando o buffer de 1024 posições e tratando somente o que o stream escreveu nele. Alguns cuidados que sempre precisamos ter ao trabalharmos diretamente com streams são criar o buffer, definir limites de quantidade para gravação e ao realizar o processamento.
+
+Será que não existe uma maneira mais simples de trabalharmos? Por exemplo, utilizando uma classe que seria responsável por realizar todo o processamento, cuidar do buffer e das posições e nos devolver uma stream? Abordaremos essa questão nas próximas aulas.

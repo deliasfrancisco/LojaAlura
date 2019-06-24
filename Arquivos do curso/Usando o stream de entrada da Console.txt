@@ -1,0 +1,199 @@
+Até o presente momento, realizamos muito trabalho com a Stream, usando ora writers ora readers. Mais especificamente, sempre trabalhamos com FileStream. Usaremos um Stream diferente, de forma que possamos avaliar se todo conhecimento que adquirimos até agora pode ser aplicado à outros Streams do .NET.
+
+Executaremos a aplicação. Perceba que a console está apenas esperando o usuário pressionar a tecla "Enter" , para que o método Console.ReadLine() liberar a execução.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            LeituraBinaria();
+
+
+            Console.WriteLine("Aplicação finalizada. . .");
+
+
+            Console.ReadLine();
+        }
+    }
+} 
+Podemos escrever quaisquer outros elementos, a aplicação só irá responder à tecla "Enter". Isso quer dizer que de alguma forma a console observa o comportamento do usuário, e somente quando é apresentada a entrada do caractere especial, o método ReadLine() irá liberar a quebra de linha. Se a console observa a entrada de dados, teremos uma Stream internamente. Trabalharemos com esta Stream e veremos o métodos que são os mesmos do FileStream.
+
+Criaremos um novo arquivo na raiz do projeto, ele se chamará 5_UsandoStreamDeEntradaDaConsole. Inseriremos a partial class Program, e em seguida criaremos o método estático UsarStreamDeEntrada. Como estamos usando uma Stream, precisaremos de um bloco using. Criaremos a variável fluxoDeEntrada, e neste ponto precisamo refletir: como criar o Stream de entrada da console? Na verdade, o Stream de entrada não é criado, ele já existe e foi feito pela console, o que precisamos fazer é acessá-la e recuperar a Stream, portanto digitaremos Console.Input- Input, "entrada" em inglês - , e averiguaremos quais são as opções disponíveis para Input apresentadas pelo Visual Studio.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    {
+        partial class Program
+        {
+            static void UsarStreamDeEntrada()
+            {
+                using(var fluxoDeEntrada = Console.Input)
+            }
+    }
+}
+Teremos as opções InputEncoding, que não nos interessa pois não queremos saber o Encoding de entrada que a console está utilizando; InputRedirect para saber o direcionamento da entrada; o método OpenStandardInput() que retorna um Stream, portanto é esta última opção que usaremos pare recuperar a Stream de entrada.
+
+Em seguida, adicionaremos fluxoDeEntrada e o método Read(), que está definido na classe Stream. Já sabemos como ele opera como esse método opera, pois o usamos em FileStream: precisamos de um buffer, indicar o índice de início e a quantidade de bytes que o Read() usará. Portanto, criaremos a variável buffer que receberá new byte[1024], isto é, 1kb.
+
+Passaremos para o método Read() o buffer e definiremos o uso a partir da posição 0 e os 1024 bytes para gravar a informação. Guardaremos esse conteúdo dentro da variável bytesLidos, em seguida escreveremos na tela o resultado dos bytes lidos por meio de WriteLine(), que receberá uma mensagem Bytes lidos da console: {bytesLidos}.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    {
+        partial class Program
+        {
+            static void UsarStreamDeEntrada()
+            {
+                using(var fluxoDeEntrada = Console.OpenStandardInput())
+                {
+                    var buffer = new byte[1024]; // 1kb
+
+                    var bytesLidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+                    Console.WriteLine($"Bytes lidos na console: {bytesLidos}");
+                }
+            }
+    }
+}
+Assim feito, chamaremos o método UsarStreamDeEntrada() no método main.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            UsarStreamDeEntrada();
+
+            Console.WriteLine("Aplicação finalizada. . .");
+
+
+            Console.ReadLine();
+        }
+    }
+} 
+Ao iniciarmos a aplicação nada acontecerá, isso porque estamos esperando o usuário digitar algo na tela. Escreveremos Alura e pressionaremo "Enter", teremos a seguinte mensagem:
+
+Alura
+Bytes lidos da console: 7
+Aplicação finalizada...
+O método Read() liberou os bytes lidos, que foram 7, usamos o WriteLine(), terminamos de usar o Stream e aplicação foi finalizada. Contudo, o usuário ainda pode escrever caracteres na tela, o que nos permite criar um laço while de repetição e o programa sempre poderá recuperar informação do usuário.
+
+Em 5_UsandoStreamDeEntradaDaConsole, adicionaremos while(true) e inseriremos todo o conteúdo a partir da variável bytesLidos.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    {
+        partial class Program
+        {
+            static void UsarStreamDeEntrada()
+            {
+                using(var fluxoDeEntrada = Console.OpenStandardInput())
+                {
+                    var buffer = new byte[1024]; // 1kb
+
+                    while(true)
+                    {
+
+                        var bytes lidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+                        Console.WriteLine($"Bytes lidos na console: {bytesLidos}");
+
+                    }
+
+                }
+            }
+    }
+}
+Ao executarmos a aplicação, podemos sempre fazer a leitura de novas linhas inseridas, depois de teclarmos "Enter" o método Read() faz a leitura da nova linha digitada, gravamos esse dado no buffer e recuperamos o número de bytes utilizados. Escreveremos primeiro Alura, e em seguida alguns textos aleatórios para testar a leitura de bytes.
+
+Alura
+Bytes lidos da console: 7
+Adjdjlkkjdkjfhkskfjsjfslkskhfksjh
+Bytes lidos da console: 40
+fjgfhlgdf
+Bytes lidos da console:12
+Iremos armazenar essas informações em um novo arquivo. Já fizemos essa tarefa antes: primeiramente precisaremos de um novo Stream, logo criaremos a variável fs- de FileStream -, e faremos como que FileStream grave as informações em um arquivo que chamaremos de entradaConsole.txt. Nosso FileMode será Create. Para evitar erros no compilador adicionaremos a diretiva using SYstem.IO.
+
+Ao invés de chamarmos o Console.WriteLine(), escreveremos em fs. Escreveremos a variável fs, o método Write() que por sua vez receberá como argumento o buffer, a posição 0 até byteslidos.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    {
+        partial class Program
+        {
+            static void UsarStreamDeEntrada()
+            {
+                using(var fluxoDeEntrada = Console.OpenStandardInput())
+                using(var fs = new FileStream("entradaConsole.txt", FileMode.Create))
+                {
+                    var buffer = new byte[1024]; // 1kb
+
+                    while(true)
+                    {
+
+                        var bytes lidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+                        fs.Write(buffer, 0, bytesLidos);
+
+                        Console.WriteLine($"Bytes lidos na console: {bytesLidos}");
+
+                    }
+
+                }
+            }
+    }
+}
+Estamos prontos para testar a aplicação. Digitaremos um texto qualquer na console e pressionar a tecla "Enter". Faremos essas ações algumas vezes.
+
+deijdefheifkeofkfoekfe
+Bytes lidos na console: 30
+gjhgjhgdjgjsdsifsdjf
+Bytes lidos na console: 27
+Feito isso, verificaremos se o arquivo entradaConsole.txt foi criado e contém as informação das linhas que escrevemos. Abriremos o diretório Debug e encontraremos o arquivo procurado. Ao abrirmos o arquivo, perceberemos que ele está totalmente vazio.
+
+O nosso código em 5_UsandoStreamDeEntradaDaConsole, cria o FileStream, e em seguida ficamos presos dentro do laço de repetição, o que significa que o bloco using nunca chegou ao fim, e dessa forma o método Close() não é chamado. Quando fechamo a Stream ela libera o seu buffer interno e o despeja no destino, no caso, o HD do computador.
+
+Já aprendemos a metodologia para despejar uma informação quando utilizamos o ScreenWriter. No arquivo 3_CriandoArquivo, enfrentamos o mesmo problema. Evocamos o método Flush() para que os dados que estão do buffer do ScreenWriter para o Stream.
+
+using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+            using (var escritor = new StreamWriter(fluxoDeArquivo))
+            {
+                for (int i = 0; i < 100000000; i++)
+                {
+                    escritor.WriteLine($"Linha {i}");
+
+                    escritor.Flush(); // Despeja o buffer para o Stream!
+
+                    Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!");
+                    Console.ReadLine();
+                }
+O método Flush() ainda realiza outra ação: chama o Flush() do Stream. Como em 5_UsandoStreamDeEntradaDaConsole não estamos utilizando nenhum ScreenWriter, mas sim manipulando diretamente o FileStream. Não é do nosso interesse utilizar o método Close(), portanto precisaremos nós mesmos acionar o Flush() depois de realizar a escrita do arquivo. Dessa forma, os dados são de fato despejados no destino.
+
+    while(true)
+                    {
+
+                        var bytes lidos = fluxoDeEntrada.Read(buffer, 0, 1024);
+
+                        fs.Write(buffer, 0, bytesLidos);
+
+                        fs.Flush();
+                        Console.WriteLine($"Bytes lidos na console: {bytesLidos}");
+
+                    }
+Testaremos a aplicação digitando alguns textos na console:
+
+Alura
+Bytes lidos da console: 7
+Cursos Online
+Bytes lidos da console: 15
+Em seguida, abriremos o arquivo entradaConsole.txt:
+
+Alura
+Cursos Online
+O arquivo contém as informações que esperávamos.

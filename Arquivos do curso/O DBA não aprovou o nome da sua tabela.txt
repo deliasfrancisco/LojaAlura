@@ -1,0 +1,13 @@
+Imagine a seguinte situação: você cria uma aplicação do zero, sendo que essa aplicação gerencia a persistência de seus objetos através do Entity. Seu sistema tem as seguintes tabelas: Boletos, NotasFiscais e Movimentacoes, que foram mapeadas através de propriedades do tipo DbSet no contexto.
+
+Quando vai promover para o ambiente de homologação, precisa passar por uma verificação da equipe de DBAs da empresa para determinar conformidade com algumas regras. Uma das regras exige que o nome das tabelas comece sempre com um mnemônico de três letras, gerado a partir do código da aplicação.
+
+Selecione a alternativa correta, que explica o que você deve fazer para adequar o nome das três tabelas à regra acima, sabendo que o código de sua aplicação é FIS e o nome das classes é Boleto, NotaFiscal e Movimentacao.
+
+Adicionar o seguinte código no método OnModelCreating:
+
+modelBuilder.Entity<Boleto>().ToTable("FIS_BOLETOS");
+modelBuilder.Entity<NotaFiscal>().ToTable("FIS_NOTAS_FISCAIS");
+modelBuilder.Entity<Movimentacao>().ToTable("FIS_MOVIMENTACOES");
+ 
+Correto!

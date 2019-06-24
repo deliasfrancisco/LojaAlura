@@ -1,0 +1,169 @@
+Está muito mais simples escrever nosso código, afinal não precisamos mais nos preocupar com o buffer, seu tamanho e limite de uso. Toda essa ideia foi abstraída por meio da StreamReader, contudo, precisamos ainda tratar a cadeia de bytes e transformá-los em caracteres. Em Program.cs não estamos utilizando nenhum Encoding objetivo.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            using (var leitor = new StreamReader(fluxoDeArquivo))
+Se queremos definir qual Encoding estamos fazendo uso, temos o construtor StreamReader(fluxoDeArquivo) que usa o Encondig padrão, e exige como argumento o stream de entrada. Se quisermos mudar o Encoding podemos utilizar outro construtor ou outra sobrecarga que receba como argumento um Econdig, comoEcoding.UTF32.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            using (var leitor = new StreamReader(fluxoDeArquivo, Encondig.UTF32))
+Ao executarmos a aplicação não teremos um resultado satisfatório, pois não escrevemos o arquivo com este Encoding especificamente.
+
+Agora que trabalhamos em como recuperar o arquivo do HD por meio do stream, precisamos converter a string para uma conta corrente. Em Program.cs, criaremos um método static ContaCorrente ConverterStringParaContaCorrente, que receberá como argumento uma string linha.
+
+var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            using (var leitor = new StreamReader(fluxoDeArquivo))
+            {
+                while (!leitor.EndOfStream)
+                {
+                    var linha = leitor.ReadLine();
+                    Console.WriteLine(linha);
+                } 
+            }
+
+            Console.ReadLine();
+        }
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+
+    }
+} 
+Antes de escrevermos este código, analisaremos o arquivo conta.txt para definir qual tipo de lógica deverá ser aplicada. Cada linha possui quatro campos: os três primeiros são agência, os outros quatro são número da conta e a última série corresponde ao saldo, seguid por titular.
+
+375 4644 2483.13 Jonatan
+Tendo isso em vista, coletaremos cada linha e a quebraremos, usando o caractere de espaço como marca de divisão dos conteúdos. Para fragmentarmos uma string por um caractere específico, usamos o método Split(), que por sua vez receberá neste caso o caractere espaço. Assim feito, associaremos esse método com linha. Criaremos uma variável campos que armazenará esses conteúdos.
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    var campos = linha.Split(' ');
+                }
+Em tese não abemos qual é o retorno, por isso utilizamos var, mas se estamos quebrando uma string em várias strings diferentes, bem como definindo qual caractere usaremos para quebrá-la, deveremos receber algum tipo de coleção de string.
+
+Resta separmos os campos em agencia, conta, saldo e titular, com seus respectivos índices. Em seguida, criaremos a ContaCorrente como resultado, que receberá como argumento agencia e numero.
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    var campos = linha.Split(' ');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2];
+                    var nomeTitular = campos[3];
+
+                    var resultado = new ContaCorrente(agencia, numero);
+                }
+Ocorreu um erro de compilação em agencia e numero, isso acontece porque estes termos são recuperados a partir de uma array de string - iremos, inclusive, deixar isso em evidência substituindo var campos por string[] campos - e não podemos fazer isso com um construtor que espera um número inteiro.
+
+Precisamos fazer a conversão do número representado dentro da string para um do tipo int. Para isso, usaremos o método estático Parse(), que realizará a transformação de uma string para um número inteiro. Passaremos como argumento agencia e guardaremos esse conteúdo dentro de uma variável agenciaComInt. Realizaremos o mesmo procedimento com numero.
+
+Substituiremos os argumentos de ContaCorrente pelas variáveis agenciaComInt e numeroComInt.
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    string[] campos = linha.Split(' ');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2];
+                    var nomeTitular = campos[3];
+
+                    var agenciaComInt = int.Parse(agencia);
+                    var numeroComInt = int.Parse(numero);
+
+                    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+                }
+O saldo precisará ser convertido para um double, portanto não poderemos mais utilizar o método Parse(), mas sim double.Parsse(), que por sua vez receberá como argumento saldo. Novamente precisamos guardar esse conteúdo em uma variável, a que chamaremos de saldoComoDouble.
+
+Assim feito, coletaremos o resultado e faremos o Depositar(saldoComoDouble). Utilizamos o método Depositar(), pois o saldo posui um setter privado. Resta criar o titular, uma string, e utilizaremos o Cliente() que não possui nenhum argumento no construtor. Definiremos nome que será igual a nomeTitular.
+
+Por fim, atribuiremos Titular em ContaCorrente e retornaremos(return) o resultado
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    string[] campos = linha.Split(' ');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2];
+                    var nomeTitular = campos[3];
+
+                    var agenciaComInt = int.Parse(agencia);
+                    var numeroComInt = int.Parse(numero);
+                    var saldoComoDouble = double.Parse(saldo);
+
+                    var titular = new Cliente();
+                    titular.Nome = nomeTitular;
+
+                    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+                    resultado.Depositar(saldoComoDouble);
+                    resultado.Titular = titular;
+
+                    return resultado; 
+                }
+Em Program.cs chamaremos o ConverterStringParaContaCorrente() sempre que lermos uma linha do arquivo. Portanto, criaremos uma variável contaCorrenteq que recebe como resultado ConverterStringParaContaCorrente() e recebe como argumento linha.
+
+Para termos certeza de que a aplicação está operando, comentaremos a linha Console.WriteLine(linha), e escreveremos o resultado da ContaCorrente, com Numero,Agencia e Saldo, que guardaremos em uma variável msg. Por fim, imprimiremos o resultado na tela.
+
+        using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+        using (var leitor = new StreamReader(fluxoDeArquivo))
+        {
+            while (!leitor.EndOfStream)
+            {
+                var linha = leitor.ReadLine();
+                var contaCorrente = ConverterStringParaContaCorrente(linha);
+
+                var msg = $"Conta número {contaCorrente.Numero}, ag. {contaCorrente.Agencia}, Saldo {contaCorrente.Saldo}";
+                Console.WriteLine(msg);
+                //Console.WriteLine(linha);
+            }
+        }
+        Console.ReadLine();
+Ao executarmos a aplicação, temos quase um resultado perfeito, número da conta e agência estão correntos, mas no caso do saldo temos alguns valores absurdos, pois hão há o ponto que faz a marcação dos centavos.
+
+Conta número 5339, ag. 353. Saldo: 333929
+Para solucionar este problema, ainda em Program.cs, por meio do método Replace() trocaremos em saldo o . por uma ,.
+
+                static ContaCorrente ConverterStringParaContaCorrente(string linha)
+                {
+                    string[] campos = linha.Split(' ');
+
+                    var agencia = campos[0];
+                    var numero = campos[1];
+                    var saldo = campos[2].Replace('.', ' ,');
+                    var nomeTitular = campos[3];
+
+                    var agenciaComInt = int.Parse(agencia);
+                    var numeroComInt = int.Parse(numero);
+                    var saldoComoDouble = double.Parse(saldo);
+
+                    var titular = new Cliente();
+                    titular.Nome = nomeTitular;
+
+                    var resultado = new ContaCorrente(agenciaComInt, numeroComInt);
+                    resultado.Depositar(saldoComoDouble);
+                    resultado.Titular = titular;
+
+                    return resultado; 
+                }
+Ao executarmos novamente a aplicação, teremos os valores de saldo corretos.
+
+Conta número 5287, ag. 419. Saldo: 808,36
+
+

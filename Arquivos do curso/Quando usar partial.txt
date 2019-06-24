@@ -1,0 +1,134 @@
+Neste curso estamos trabalhando sempre na classe Program para criar nossos métodos. Para não termos um arquivo de código gigante e difícil de encontrar o que queremos, estamos dividindo a classe Program em vários arquivos com o modificador partial.
+
+Mas será que isto é uma boa prática? Se estamos trabalhando com uma classe tão grande a ponto de ser difícil encontrar o que desejamos, é sinal de que esta classe possui responsabilidades demais! Será que o correto não seria dividir esta classe em mais classes e distribuir as responsabilidades?
+
+Com certeza! Mas então, por que o C# possui o modificador partial, se isto parece uma má prática?
+
+Será comum encontrarmos geradores de código. Programas que geram código C# para nós! Por exemplo, um programa que abre uma planilha Excel e cria um modelo para nós:
+
+Para o arquivo ContaCorrente.xls abaixo:
+
++---------+-----------------+--------+
+| Agencia | Número da Conta | Saldo  |
++---------+-----------------+--------+
+| 486     | 234552          | 231.50 |
++---------+-----------------+--------+
+| 424     | 432425          | 523.23 |
++---------+-----------------+--------+
+Um gerador de código pode inferir os tipos de cada coluna e gerar a classe abaixo para nós:
+
+// Arquivo "ContaCorrente.cs" gerado automaticamente
+class ContaCorrente
+{
+    public int Agencia { get; set; }
+    public int NumeroDaConta { get; set; }
+    public double Saldo { get; set; }
+}
+Os métodos Sacar, Depositar e Transferir devem ser escritos por nós! Então a partir do arquivo gerado, adicionamos estes métodos:
+
+// Arquivo "ContaCorrente.cs" gerado automaticamente
+class ContaCorrente
+{
+    public int Agencia { get; set; }
+    public int NumeroDaConta { get; set; }
+    public double Saldo { get; set; }
+
+
+    public void Sacar(double valor) { ... }
+    public void Depositar(double valor) { ... }
+    public void Transferir(ContaCorrente destino, double valor) { ... }
+}
+Opa, mas recebemos uma nova planilha e devemos gerar uma nova classe a partir da planilha atualizada:
+
++---------+-----------------+--------+-------------------+
+| Agencia | Número da Conta | Saldo  | Limite de crédito |
++---------+-----------------+--------+-------------------+
+| 486     | 234552          | 231.50 |      1000.00      |
++---------+-----------------+--------+-------------------+
+| 424     | 432425          | 523.23 |      1200.00      |
++---------+-----------------+--------+-------------------+
+E então o gerador irá criar um novo documento ContaCorrente.cs:
+
+// Arquivo "ContaCorrente.cs" gerado automaticamente
+class ContaCorrente
+{
+    public int Agencia { get; set; }
+    public int NumeroDaConta { get; set; }
+    public double Saldo { get; set; }
+    public double LimiteDeCredito { get; set; }
+}
+Com isto, nós perdemos o nosso trabalho! Mas, se o gerador criar uma classe com o modificador partial, nós podemos separar nosso código em outro arquivo e atualizar o arquivo sem medo de perder nosso trabalho:
+
+// Arquivo "ContaCorrente.cs" gerado automaticamente
+partial class ContaCorrente
+{
+    public int Agencia { get; set; }
+    public int NumeroDaConta { get; set; }
+    public double Saldo { get; set; }
+    public double LimiteDeCredito { get; set; }
+}
+e
+
+// Arquivo "ContaCorrente_metodos.cs" gerado por nós!
+partial class ContaCorrente
+{
+    public void Sacar(double valor) { ... }
+    public void Depositar(double valor) { ... }
+    public void Transferir(ContaCorrente destino, double valor) { ... }
+}
+Bons estudos,
+
+Guilherme.
+
+1.) Quando criamos um FileStream o sistema operacional nos dá acesso ao arquivo e mantém este recurso conosco até a notificação de que terminamos nosso trabalho. Para notificar o sistema operacional de que liberamos este recurso, é necessário chamar o método Close:
+
+fluxoDoArquivo.Close();
+2.) E se durante o processamento do arquivo uma exceção for lançada e o método Close não for executado? Para nos assegurarmos que este método é chamado, devemos usar a construção try/finally ou, melhor ainda, usar um bloco using - afinal, o Stream implementa a interface IDisposable:
+
+using (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+{
+    var buffer = new byte[1024]; // 1 kb
+    var numeroDeBytesLidos = -1;
+
+    while (numeroDeBytesLidos != 0)
+    {
+        numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+        EscreverBuffer(buffer);
+    }
+}
+Teste a aplicação! Enquanto a console estiver aberta, agora podemos renomear ou excluir o arquivo contas.txt!
+
+3.) Percebemos que o conteúdo de nosso arquivo está sendo duplicado na Console. Isto acontece porque o Read só escreve em nosso buffer os bytes lidos. Ao chegar no final do arquivo, nosso Stream recupera menos de 1024 bytes e então ficamos com dados antigos no buffer. Para resolver esse problema, precisamos indicar ao método EscreverBuffer quantos bytes de nosso buffer devem ser processados:
+
+static void EscreverBuffer(byte[] buffer, int bytesLidos) { … }
+Ainda no EscreverBuffer, vamos dizer ao Encoding o intervalo de bytes que devem ser usados na transformação:
+
+var texto = utf8.GetString(buffer, 0, bytesLidos);
+Execute o programa! Perceba que agora não temos mais uma duplicação do conteúdo no final.
+
+4.) Ficou evidente, então, que quando trabalhamos com buffers é necessário bastante cuidado com os intervalos utilizado. Ao invés de lidar diretamente com o FileStream e bytes de Stream, podemos usar uma classe que encapsula esta lógica, o StreamReader:
+
+using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+using (var leitor = new StreamReader(fluxoDeArquivo))
+{
+
+}
+Usamos o ReadLine para a leitura de uma linha do arquivo e a propriedade EndOfStream para verificar se chegamos ao fim do stream:
+
+using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+using (var leitor = new StreamReader(fluxoDeArquivo))
+{
+    while (!leitor.EndOfStream)
+    {
+        var linha = leitor.ReadLine();
+        Console.WriteLine(linha);
+    }
+}
+Verifique também os métodos ReadToEnd e Read da classe StreamReader. Enquanto o ReadToEnd retorna o arquivo completo, o Read retorna apenas um byte.
+
+Perceba que apesar do retorno de Read ser um char do arquivo, seu tipo de retorno é int e não byte ou char. Isto é porque o método retorna -1 quando o fim do stream foi atingido.
+
+Bons estudos,
+
+Guilherme
+

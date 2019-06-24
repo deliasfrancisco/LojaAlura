@@ -1,0 +1,110 @@
+Carlos criou um código para criar a cópia de um arquivo, manualmente. Sua estratégia foi criar um stream para a leitura do arquivo original, e outro stream para a escrita do novo arquivo:
+
+var arquivoOriginal = new FileStream("c:/temp/teste.txt", FileMode.Open);
+var arquivoNovo = new FileStream("c:/temp/teste_copia.txt", FileMode.Create);
+var buffer = new byte[1024];
+
+using(arquivoOriginal)
+using(arquivoNovo)
+{
+    var bytesLidos = -1;
+    while(bytesLidos != 0)
+    {
+        bytesLidos = arquivoOriginal.Read(buffer, 0, 1024);
+        arquivoNovo.Write(buffer, 0, bytesLidos);
+    }
+}
+
+var rodape = Encoding.UTF8.GetBytes("Este documento é uma cópia do original");
+arquivoNovo.Write(rodape, 0, rodape.Length);
+Note que o código realiza uma cópia, byte a byte, dentro de um laço while corretamente; ao fim, escreve a nota "Este documento é uma cópia do original" no arquivo novo.
+
+Ao executar, qual o comportamento da aplicação?
+
+A tentativa de escrever o rodapé lançará uma exceção, pois o arquivo foi fechado.
+
+ 
+Correta! O bloco using será o responsável por chamar o método Dispose em nossos streams, e isto fechará o arquivo.
+
+1.) Vamos escrever o código responsável por converter a linha de texto do nosso arquivo para uma instância de ContaCorrente:
+
+static ContaCorrente ConverterStringParaContaCorrente(string linha)
+{
+}
+2.) Em nosso documento, temos os campos separados por um espaço ' '. Então usamos o método Split com o nosso caractere separador para dividir a linha original em um array:
+
+string[] campos = linha.Split(' ');
+Conforme o layout de nosso arquivo, em cada linha temos o formato <agencia> <numero> <saldo> <titular>. Seguindo este padrão, vamos criar uma variável para cada campo:
+
+var agencia = campos[0];
+var numero = campos[1];
+var saldo = campos[2];
+var nomeTitular = campos[3];
+3.) Note que nossas variáveis são todas do tipo string! Precisamos realizar a conversão, o Parse, dos números de agência, conta e saldo:
+
+var agenciaComoInt = int.Parse(agencia);
+var numeroComoInt = int.Parse(numero);
+var saldoComoDouble = double.Parse(saldo);
+Se realizarmos o Parse de double usando o ponto como separador da casa decimal do saldo, não teremos o retorno esperado. Então, vamos dar um Replace do caractere '.' por ',', para o Parse realizar a conversão que esperamos: var saldo = campos[2].Replace('.', ',');.
+
+Agora, basta construir nosso objeto e retornar:
+
+var titular = new Cliente();
+titular.Nome = nomeTitular;
+
+var resultado = new ContaCorrente(agenciaComoInt, numeroComoInt);
+resultado.Depositar(saldoComoDouble);
+resultado.Titular = titular;
+
+return resultado;
+4.) Para testar nosso código, altere o código do bloco using do StreamReader:
+
+while (!leitor.EndOfStream)
+{
+    var linha = leitor.ReadLine();
+    var contaCorrente = ConverterStringParaContaCorrente(linha);
+    var msg = $"{contaCorrente.Titular.Nome} : Conta número {contaCorrente.Numero}, ag. {contaCorrente.Agencia}. Saldo: {contaCorrente.Saldo}";
+    Console.WriteLine(msg);
+}
+Verifique a saída na console. O resultado deverá ser o que esperamos conforme os dados no arquivo de texto!
+
+5.) Usar o espaço como caractere separador nos traz um problema: como tratar os nomes? Eles possuem espaço entre as palavras e a chamada do método Split separa o nome em várias strings diferentes. Para lidar com isto, vamos alterar o arquivo e usar como caractere separador a vírgula ,.
+
+Para isto, abra o arquivo com seu editor de texto preferido e substitua o espaço em branco pela vírgula. No curso, eu abri o bloco de notas do Windows, posicionei o cursor antes do primeiro caractere, usei o atalho CTRL+H, preenchi o campo Localizar com um espaço em branco e o campo Substituir por com uma vírgula. Feito isto, cliquei em Substituir tudo.
+
+Feita esta mudança no documento, vamos alterar a chamada linha.Split(' '); para linha.Split(',');.
+
+Este arquivo com valores separados por vírgula é chamado de CSV. Bastante utilizado na indústria!
+
+6.) Agora que conseguimos ler um arquivo e interpretar seus valores, é o momento de criar nosso próprio arquivo! Crie o método CriarArquivo:
+
+static void CriarArquivo()
+{
+}
+7.) Vamos precisar definir o nome de arquivo e criar um fluxo de arquivo com modo de operação FileMode.Create!
+
+var caminhoNovoArquivo = "contasExportadas.csv";
+using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+{
+}
+Vamos escrever neste arquivo a string abaixo:
+
+var contaComoString = "456,78945,4785.50,Gustavo Santos";
+8.) É necessário transformar a string contaComoString em uma cadeia de bytes. Para tal, precisamos do encoding! No curso, usamos o UTF-8:
+
+var contaComoString = "456,78945,4785.50,Gustavo Santos";
+var encoding = Encoding.UTF8;
+var bytes = encoding.GetBytes(contaComoString);
+Com nosso array de bytes criado, basta usar o método Write para escrever no stream:
+
+fluxoDeArquivo.Write(bytes, 0, bytes.Length);
+Execute a aplicação e verifique o conteúdo do arquivo!
+
+9.) Aprendemos como usar este método, lidando com bytes diretamente, agora podemos usar uma abstração que torna isto mais fácil e simples para nós, o StreamWriter:
+
+using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.Create))
+using (var escritor = new StreamWriter(fluxoDeArquivo, Encoding.UTF8))
+{
+    escritor.Write("456,65465,456.0,Pedro");
+}
+

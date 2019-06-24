@@ -1,0 +1,11 @@
+	Leia as seguintes afirmações e escolha a alternativa correta.
+
+	Pergunta: Um objeto da classe ViewResult representa um resultado HTML
+	A - IActionResult é uma interface que representa o resultado de uma action.
+	B - ViewResult herda de IActionResult para representar um tipo específico de resultado
+	C - Existem vários tipos de resultados de actions. A classe ViewResult é um deles.
+
+	Reposta: Apenas a afirmação 3 está errada.
+
+ 
+	Isso aí! ViewResult implementa a interface IActionResult, não herda.

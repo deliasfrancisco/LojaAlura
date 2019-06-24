@@ -1,0 +1,161 @@
+Trabalhamos bastante até agora: criamos uma Stream, ou mais especificamente FileStream, um fluxo que proveniente do um arquivo. Fizemos o processamento de todo esse arquivo, isto é, até o método Read() nos retornar 0. O resultado é bem simples, queremos realizar o enconding e escrever o resultado na tela.
+
+    class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open);
+
+            var buffer = new byte[1024]; // 1 kb
+            var numeroDeBytesLidos = -1;
+
+            while(numeroDeBytesLidos != 0)
+            {
+                numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+                EscreverBuffer(buffer);
+            }
+
+            Console.ReadLine();
+        }
+
+        static void EscreverBuffer(byte[] buffer)
+        {
+            var utf8 = Encoding.Default;
+
+            var texto = utf8.GetString(buffer);
+            Console.Write(texto);
+
+            //foreach (var meuByte in buffer)
+            //{
+            //    Console.Write(meuByte);
+            //    Console.Write(" ");
+            //}
+        }
+
+    }
+} 
+Como terminados de usar o arquivo, o sistema operacional pode liberá-lo para ser usado por usuários ou outras aplicações, certo? Vamos verificar. A parir do "Gerenciador de Soluções" do Visual Studio, acessaremos "bin > Debug > contas.txt", e tentearemos renomear este arquivo para contas_Ja_importadas, afinal, em tese ele já está liberado para o usuário.O sistema acusou um erro:
+
+A ação não pode ser concluída porque o arquivo está aberto em
+ByteBankImportacaoExportacao.
+
+Feche o arquivo e tente novamente. 
+A aplicação não liberou o recurso pelo sistema operacional. Em nosso código, utilizamos o buffer, concluímos o processamento e depois utilizamos Console.ReadLine(). Em nenhum momento notificamos o sistema operacional que o uso do arquivo foi terminado. Para isso, escreveremos fluxoDoArquivo associado ao método Close(), que indicará o fechamento do arquivo.
+
+while(numeroDeBytesLidos != 0)
+            {
+                numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+                EscreverBuffer(buffer);
+            }
+
+                        fluxoDoArquivo.Close();
+
+            Console.ReadLine();
+        }
+Após executarmos a aplicação e obtermos sucesso em seus resultados, tentearemos novamente renomear o arquivo contas.txt pra contas_Ja_processadas.txt. Dessa vez, o arquivo pôde ser alterado sem problemas. Precisamos sempre utilizar o método Close() quando terminados de usar.um recurso de stream de forma genérica, já que este comportamento não é particular de FileStream, mas de qualquer fluxo de dados.
+
+Como o uso do método Close() é obrigatório, precisamos nos atentar às exceções que podem ocorrer em nosso código, pois em caso alguma exista, a chamada para Close() não acontecerá e aplicação reterá o recurso. Poderíamos inserir algo como try e catch, mas o fluxoDoArquivo pode ser nulo, a instanciação de um objeto (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open)) pode lançar uma exceção, portanto precisaríamos adicionar, também, um if para verificar se o fluxo não é nulo.
+
+
+var endereçoDoArquivo = "contas.txt"
+
+try
+{
+    var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open);
+
+    var buffer = new byte[1024]; // 1 kb
+    var numeroDeBytesLidos = -1;
+
+    while (numeroDeBytesLidos ! =0)
+    {
+        numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0,1024);
+        EscreverBuffer(buffer);
+    }
+
+    fluxoDoArquivo.Close();
+
+}
+catch (Exception)
+{
+    throw;
+}
+O catch não é um bom local para inserirmos o fechamento do arquivo, pois aquele pode não ser executado. Podemos duplicar a chamada do Close().
+
+
+var endereçoDoArquivo = "contas.txt"
+
+try
+{
+    var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open);
+
+    var buffer = new byte[1024]; // 1 kb
+    var numeroDeBytesLidos = -1;
+
+    while (numeroDeBytesLidos ! =0)
+    {
+        numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0,1024);
+        EscreverBuffer(buffer);
+    }
+
+    fluxoDoArquivo.Close();
+
+}
+catch (Exception)
+{
+    fluxoDoArquivo.Close();
+
+    throw;
+}
+Neste caso, seria mais interessante utilizar o finally, e dentro ele inseriremos a condicional if. Para evitar erros neste ponto devido ao fato do escopo estar dentro de try, promoveremos a variável fluxoDoArquivo para o escopo superior.
+
+var endereçoDoArquivo = "contas.txt"
+
+var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open);
+try
+{
+
+    var buffer = new byte[1024]; // 1 kb
+    var numeroDeBytesLidos = -1;
+
+    while (numeroDeBytesLidos ! =0)
+    {
+        numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0,1024);
+        EscreverBuffer(buffer);
+    }
+
+    fluxoDoArquivo.Close();
+
+}
+finally
+{
+    if(fluxoDoArquivo != null)
+    {
+        fluxoDoArquivo.Close();
+    }
+}
+Conhecemos esse caso bagunçado no curso de exceções, assim como conhecemos um padrão para resolver essa questão: o using. Contudo, o using só funciona com objetos que implementam a interface IDisposable. Se navergarmos para FileStream, veremos ele implementa esta interface:
+
+public abstract class Stream :  MarshalByRefObject, IDisposable
+Portanto podemos reformular todo o nosso código, apagar e aplicar using(), que por sua vez receberá entre parênteses o recurso que estamos utilizando e, ao final, queremos chamar o método ()
+
+    var enderecoDoArquivo = "contas.txt";
+
+    using(var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+    {
+        var buffer = new byte[1024] // 1 kb
+        var numeroDeBytesLidos = -1;
+
+        while (nmeriDeBytesLidos !=0)
+        {
+        numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+        EscreverBudder(buffer);
+        }
+    }
+
+    Console.ReadLine();
+}
+Renomearemos o arquivo contas_Ja_processadas.txt para o nome original de contas.txt e executaremos a aplicação mais uma vez. Verificaremos o mesmo comportamento.
+
+Não estamos explicitamente evocando o método Close().Novamente testaremos a modificar o nome do arquivo contas.txt, e o conseguiremos com sucesso, o que indica que aplicação liberou o uso desse recurso. É importante lembrar que quando utilizamos a construção using no C#, será criado o try e o finaly, que verificará se o fluxo é nulo, e caso não seja, chamaremos o método Dispose(), que internamente chamará o método Close().

@@ -1,0 +1,125 @@
+Será que todas as vezes que precisarmos de alguma informação do usuário, como a solicitação de um nome ou data de nascimento, teremos de nos preocupar com o Stream de entrada OpenStandardInput(), usar o bloco using e fazer todos os procedimentos ?
+
+Na verdade, sempre trabalhamo com uma forma simples de obter a entrada do usuário, isto é, utilizando o método Console.ReadLine() que nos retorna uma string.No arquivo Program.cs, usaremo o Console.ReadLine() e guardaremos o resultado em uma variável nome. Em seguida, escreveremos na tela (Console.WriteLine()) a mensagem Digite o seu nome:.
+
+Em seguida, escreveremos novamente Console.WriteLine() que receberá a variável nome.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+            Console.WriteLine("Digite o seu nome:");
+                        var nome = Console.ReadLine(): 
+
+
+            Console.WriteLine("Aplicação finalizada. . .");
+
+
+            Console.ReadLine();
+        }
+    }
+} 
+Executaremos a aplicação, e digitaremos um nome.
+
+Digite seu nome: 
+Guilherme Matheus
+Ao pressionarmos a tecla "Enter", teremos o nome duplicado, afinal este é o valor da variável nome.
+
+Digite seu nome: 
+Guilherme Matheus
+Guilherme Matheus
+Sabemos agora que o ReadLine usará o Stream de entrada da console, e ficará vigilante até o momento que surgir o caractere de quebra de linha, que é o momento em que o usuário pressiona o botão "Enter". Nesse instante, será realizado o Encoding da cadeia de bytes e a string será enviada.
+
+Fizemos esse procedimento com a console, será que o mesmo não pode ser feito com o arquivo? Sempre que formos lidar com arquivos precisaremos criar o Stream ou um BinaryReader()? Não existe uma forma mais simples de lidar com o texto de um determinado arquivo?
+
+Temos uma classe no .NET chamada File. Trata-se de uma classe estática que possui uma série de métodos estáticos que nos ajudam com as tarefas relacionadas aos arquivos. Se queremos, por exemplo, ler todas as linhas de um arquivo, usaremos a classe estática e o método ReadAllFiles(), que como argumento receberá o arquivo contas.txt, e por fim, guardaremos esses conteúdos em uma variável linhas. Em Seguida exibiremos a informação na tela por meio de Console.WriteLine(), que receberá como parâmetro linhas.Length. Para finalizar, travamos a aplicação utilizando Console.ReadLine()
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+
+                var linhas =File.ReadAllLines("contas.txt");
+                Console.WriteLine(linhas.Length);
+
+
+            Console.WriteLine("Digite o seu nome:");
+                        var nome = Console.ReadLine(): 
+
+
+            Console.WriteLine("Aplicação finalizada. . .");
+
+
+            Console.ReadLine();
+        }
+    }
+} 
+Ao iniciarmos a aplicação, veremos o resultado 1000 impresso na tela, isto é, o número total de linhas do arquivo contas.txt. Conseguimos esse resultado por meio do método auxiliar ReadAllLines(), que retornou todas as linhas.
+
+Poderemos adicionar o foreach, de forma que cada linha na coleção de linhas será escrita na tela (Console.WriteLine(linha))
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+
+                var linhas =File.ReadAllLines("contas.txt");
+                Console.WriteLine(linhas.Length);
+
+                foreach (var linha in linhas)
+                {
+                    Console.WriteLine(linha);
+                }
+Ao executarmos a aplicação teremos todas as linhas do arquivo recuperadas e eScritas na console, isto é, as múltiplas contas, agênias e titulares. É importante lembrar que esse recurso deve ser utilizado em arquivos menores, e que não é necessário um ajuste fino de controle de buffer, pois esse método lerá o arquivo inteiro de uma única vez.
+
+Do mesmo modo que utilizamos o ReadAllLines(), existe um outro método no File() chamado ReadAllText(), que retornará uma string com todo o conteúdo do arquivo.
+
+Aprendemos que nem sempre queremos trabalhar com o texto, mas sim com bytes, como é o caso do arquivos binários. Temos na classe File outro método chamado ReadAllBytes(), que retornará um array de bytes.
+
+Usaremos o método ReadAllBytes() no arquivo contas.txt, e guardaremos o resultado em uma variável bytesArquivo e escreveremos isso na tela, exbindo a mensagem Arquivo contas.txt possui{ bytesArquivo.Lenght} bytes.
+
+namespace ByteBankImportacaoExportacao 
+{ 
+    partial class Program 
+    { 
+        static void Main(string[] args) 
+        {
+
+                var bytesArquivo = File.ReadAllBytes("contas.txt");
+                Console.WriteLine($"Arquivo contas.txt possui{ bytesArquivo.Lenght} bytes");
+
+                var linhas =File.ReadAllLines("contas.txt");
+                Console.WriteLine(linhas.Length);
+
+                foreach (var linha in linhas)
+                {
+                    Console.WriteLine(linha);
+                }
+Ao executarmos a aplicação teremos logo no começo da tela a quantidade impressa bytes do arquivo:
+
+Arquivo contas.txt possui 25166 bytes
+É muito importante fazermos isso com arquivos pequenos, para não gerar problemas com a memória do computador.
+
+Conhecemos os métodos que retornam o conteúdo de um arquivo, mas na classe File temos métodos que criam formas de se escrever em um arquivo, tais como WriteAllText() , que recebe como primeiro argumento o nome de um arquivo, que será escrevendoComAClasseFile.txt. O segundo argumento é o conteúdo a ser escrito neste arquivo, como será algo sucinto, escreveremos na mesma linha : Testando File.WriteAllText. Por fim, escreveremos Console.WriteLine("Arquivo escrevendoComAClasseFile criado!") e testaremos a aplicação.
+
+
+File.WriteAllText("escrevendoComAClasseFile.txt", "Testando File.WriteAllText");
+
+Console.WriteLine("Arquivo escrevendoComAClasseFile criado!");
+
+var bytesArquivo = File.ReadAllBytes("contas.txt");
+Console.WriteLine($"Arquivo contas.txt possui {bytesArquivo.Lenght} bytes");
+
+
+
+var linhas = File.ReadAllLines("contas.txt");
+Console.WriteLine(linhas.Lenght);
+O que esperamos é que o arquivo escrevendoComAClasseFile.txt esteja disponível no diretório Debug , o que de fato acorre. E ao abrimos este arquivo encontramos o conteúdo Testando File.WriteAllText.
+
+Quando temos uma tarefa simples como escrever uma linha ou ler arquivos pequenos e recuperar seus bytes, podemos utilizar esses métodos. Sabemos como eles funcionam internamente, se articulando com a Stream, buffer e o Flush().

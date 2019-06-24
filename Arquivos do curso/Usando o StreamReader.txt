@@ -1,0 +1,271 @@
+Organizaremos nosso código de Program.cs, para que tenhamos um conteúdo mais claro de ser estudado. Colocaremos todo o conteúdo abaixo em um novo método estático que chamaremos de LidandoComFileStreamDiretamente.
+
+static void Main(String[]  args)
+{
+    var enderecoDoArquivo = "contas.txt";
+
+    using enderecoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+  {
+        var buffer = new byte[1024]; // 1kb
+        var numeroDeBytesLidos = -1
+
+        while (numeroDeBytesLidos !=0)
+        {
+            numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+            Console.WriteLine($"Bytes lidos: {numeroDeBytesLidos}");
+            EscreverBuffer(buffer, numeroDeBytesLidos);
+        }
+    }
+Seria ainda mais interessante criarmos arquivos que armazenassem os métodos. Na área "Gerenciador de Soluções" do Visual Studio, adicionaremos um novo item ao projeto ByteBankImportacaoExportacao. Esse novo arquivo de código se chamará 1_LidandoComStreamDiretamente, dessa forma ele estará ordenado dentro da pasta.
+
+Dentro do arquivo, adicionaremos namespace e as diretivas using que possuímos em Program.cs, inclusive a própria classe e os métodos:
+
+using System ByteBankImportacaoExportacao.Modelos;
+using System System;
+using System System.Collections.Generic;
+using System System.Linq;
+using System System.Text;
+using System System.Threading.Tasks;
+
+using System.IO; // IO = Input e Output
+
+namespace ByteBankImportacaoExportacao
+{
+    class Program
+    {
+        static void LidandoComFileStreamDiretamente()
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDoArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                var buffer = new byte[1024]; // 1 kb
+                var numeroDeBytesLidos = -1;
+
+                while (numeroDeBytesLidos != 0)
+                {
+                    numeroDeBytesLidos = fluxoDoArquivo.Read(buffer, 0, 1024);
+                    Console.WriteLine($"Bytes lidos: {numeroDeBytesLidos}");
+                    EscreverBuffer(buffer, numeroDeBytesLidos);
+                }
+            }
+        }
+
+        static void EscreverBuffer(byte[] buffer, int bytesLidos)
+        {
+            var utf8 = Encoding.Default;
+
+            var texto = utf8.GetString(buffer, 0, bytesLidos);
+            Console.Write(texto);
+
+            //foreach (var meuByte in buffer)
+            //{
+            //    Console.Write(meuByte);
+            //    Console.Write(" ");
+            //}
+        }
+    }
+Perceba que o Visual Studio está acusando um erro de compilação em class Program. Ao posicionarmos o mouse sobre a classe, veremos a seguinte mensagem de erro O namespace "ByteBankImportacaoExportacao" já contém uma definição para "Program", isto é, já existe uma classe Program neste namespace. O que estávamos fazendo é uma duplicação, e isto não é permitido.
+
+Nosso interesse é ter uma classe em que possamos distribuir métodos, membros e propriedades em dois arquivos diferentes, mas que o computador enxergue essa variedade como uma classe só, e não como uma duplicação. Para isso, incluiremos o modificador partial em class Program de 1_LidandoComStreamDiretamente. Dessa forma, o computador entenderá que está classe é desenvolvida em uma série de arquivos separados, mas ao final ela será trabalhada na aplicação de forma unitária.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void LidandoComFileStreamDiretamente()
+        {
+            var enderecoDoArquivo = "contas.txt";
+Precisamos fazer a mesma indicação de partial em todos os arquivos que utilizam métodos e propriedades da classe Program, portanto em Program.cs acrescentaremos essa informação. Não estamos trabalhando com orientação a objetos ou algum tipo de herança, temos, literalmente, uma classe com métodos separados em vários arquivos.
+
+Dentro deste arquivo, evocaremos o método LidandoComFileStreamDiretamente(), apenas como teste:
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            LidandoComFileStreamDiretamente;
+
+            Console.ReadLine();
+        }
+    }
+}
+Ao acionarmos "F12" para realizar a exploração do método LidandoComFileStreamDiretamente, o Visual Studio nos direcionará para o arquivo 1_LidandoComStreamDiretamente.
+
+Trabalharemo no problema de leitura do arquivo contas.txt, não queremos ter complicações com buffer ou em lidar com seus limites. Deletaremo o método LidandoComFileStreamDiretamente() de Program.cs, e escreveremos um código bem simples de criação de FileStream: criaremos um variável fluxoDeArquivo que recebe um novo FileStream, que recebe como parâmetros enderecoDoArquivo e FileMode associado ao modo de operação Open.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
+Não iremos lidar com os bytes diretamente, mas sim utilizar uma classe intermediária que fará toda a manipulação de bytes e a leitura da stream. Criaremos uma nova variável chamada leitor, que receberá uma nova StreamReader. Precisamos indicar para qual o stream utilizado como origem dos dados, no caso fluxoDoArquivo.
+
+Em seguida, precisamos utilizar o StreamReader de alguma maneira, como ler linhas do texto, fragmentos ou mesmo o arquivo inteiro. Escreveremos leitor.ReadLine(), e guardaremos essa informações dentro de uma variável linha.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                var leitor = new StreamReader(fluxoDeArquivo);
+
+                var linha = leitor.ReadLine()
+            }
+
+            Console.ReadLine();;
+        }
+    }
+}
+Não averiguamos ainda o resultado do ReadLine(), mas estamos nos referindo à uma stream e de sua leitura, o termo line("linha", em inglês) também nos faz entender que como retorno teremos uma string, afinal "linha" é um termo inerente ao texto.Ao navegarmos pelo método, veremos que de fato o retorno é uma string.
+
+public override string ReadLine();
+Imprimiremos o resultado da aplicação na tela utilizando o método WriteLine():
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                var leitor = new StreamReader(fluxoDeArquivo);
+
+                var linha = leitor.ReadLine()
+                Console.WriteLine(linha);
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
+Ao executarmos a aplicação, teremos na tela a primeira linha do arquivo contas.txt, exatamente o comportamento que esperávamos de ReadLine():
+
+375 4644 2483.13 Jonatan
+Existem outros métodos que podemos utilizar, como ReadToEnd(), que lerá o arquivo até o final, guardando todos os bytes e criará uma string gigante que nos será retornada. Já tivéssmos essa discussão: se temos um arquivo de texto muito grande, a aplicação se tornará lenta e talvez não haja memória disponível no computador para trabalhar com este tamanho de uma única vez.
+
+Temos outro método interessante, o Read(). Contudo, ele não retorna uma string, mas sim um int. Portanto será impresso em nossa tela o primeiro byte.
+
+Em nosso caso, o método mais interessante é o ReadLine(), dessa forma exibiremos uma linha por vez. Precisamos colocar esse conteúdos em um laço de repetição, primeiramente inseriremos white(true), e enquanto não chegamos ao final da stream a próxima linha deve ser exibida na tela.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                var leitor = new StreamReader(fluxoDeArquivo);
+
+                while(true)
+                {
+                    var linha = leitor.ReadLine()
+                    Console.WriteLine(linha);
+                }
+
+
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
+Não estamos mais lidando diretamente com fluxoDeArquivo, dessa forma, também não trabalhamos com o método Read() do FileStream, que nos retorna a quantidade de bytes lidos, mas sim com o leitor, que por sua vez possuí um método chamado leitor. e o StreamReader possui uma propriedade que indica se chegamos ao final do arquivo(EndOfStream). Substituiremos o true do while por esses recursos, com uma exclamação (!) no começo. Enquanto não chegamos no final da stream teremos a próxima linha e a exibiremos na tela.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                var leitor = new StreamReader(fluxoDeArquivo);
+
+                while(!leitor.EndOfStream)
+                {
+                    var linha = leitor.ReadLine()
+                    Console.WriteLine(linha);
+                }
+
+
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
+Ao executarmos a aplicação teremos todas as linhas exibidas na tela por meio do método ReadLine() ao invés de ReadToEnd(), que carregaria todos os conteúdos de uma só vez na memória do computador. Não lidamos mais com limite de buffer, mas sabemos como o StreamReader opera internamente: ele possui um buffer, executa a verificação de quebra de linha e assim por diante.
+
+O StreamReader também usa recursos do sistema operacional, e ao inspecionarmos, veremos que ele deriva de TextReader, que por sua vez implementa a interface IDisposable, portanto precisamos evocar o método Dispose() depois de utilizar a classe.
+
+Testemunharemos o mesmo problema das aulas passadas, teremos de utilizar um try e Catch, verificar no finaly se a referência é nula. Já sabemos o que fazer nesse caso: usaremos novamente o bloco using.
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    {
+        static void Main(string[] args)
+        {
+            var enderecoDoArquivo = "contas.txt";
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            {
+                using (var leitor = new StreamReader(fluxoDeArquivo))
+                {
+
+                    while(!leitor.EndOfStream)
+                    {
+                        var linha = leitor.ReadLine()
+                        Console.WriteLine(linha);
+                    }
+                }
+            }
+            Console.ReadLine();
+        }
+    }
+}
+Temos dois blocos using alinhados. Quando isso ocorre, podemos remover as chaves ({) do bloco mais externo, e temos um código válido. Por organização, removemos o espaço entre as linhas e mudamos a orientação:
+
+
+            using (var fluxoDeArquivo = new FileStream(enderecoDoArquivo, FileMode.Open))
+            using (var leitor = new StreamReader(fluxoDeArquivo))
+            {
+                    while(!leitor.EndOfStream)
+                    {
+                        var linha = leitor.ReadLine()
+                        Console.WriteLine(linha);
+                    }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}

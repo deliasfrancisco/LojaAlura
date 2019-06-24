@@ -1,0 +1,76 @@
+No sistema bancário que Manoel está produzindo, chegou a hora de relacionar contas a clientes. O requisito que Manoel precisa atender é: uma conta pode estar associada a vários clientes, e um cliente pode ter várias contas.
+
+Suponha que as classes Conta e Cliente estejam especificadas desta maneira:
+
+namespace Alura.Banco.Modelo
+{
+    public class Conta
+    {
+        public int Id { get; set; }
+        public string Numero { get; set; }
+        public double Saldo { get; set; }
+    }
+
+    public class Cliente
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string CPF { get; set; }
+    }
+}
+Para que o Entity consiga mapear o cenário Contas x Clientes (descrito no primeiro parágrafo) no banco de dados, selecione as alternativas que descrevem as mudanças que você vai precisar fazer em seu modelo.
+
+Alternativa correta
+Incluir uma propriedade Clientes do tipo IList<ContaCliente> na classe Conta.
+
+ 
+Isso aí!
+
+Alternativa correta
+Incluir uma propriedade Contas do tipo IList<ContaCliente> na classe Cliente.
+
+ 
+Isso aí!
+
+Alternativa correta
+Incluir uma propriedade Contas do tipo IList<Conta> na classe Cliente.
+
+ 
+Alternativa correta
+Incluir uma propriedade Clientes do tipo IList<Cliente> na classe Conta.
+
+ 
+Alternativa correta
+Criar uma classe ContaCliente para representar a tabela de join entre conta e cliente.
+
+ 
+Isso aí!
+
+O código da solução deve ficar parecido com:
+
+namespace Alura.Banco.Modelo
+{
+    public class Conta
+    {
+        public int Id { get; set; }
+        public string Numero { get; set; }
+        public double Saldo { get; set; }
+        public IList<ContaCliente> Clientes { get; set; }
+    }
+
+    public class Cliente
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string CPF { get; set; }
+        public IList<ContaCliente> Contas { get; set; }
+    }
+
+    public class ContaCliente
+    {
+        public int IdConta { get; set; }
+        public int IdCliente { get; set; }
+        public Conta Conta { get; set; }
+        public Cliente Cliente { get; set; }
+    }
+}

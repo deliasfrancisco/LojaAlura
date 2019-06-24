@@ -1,0 +1,140 @@
+Conhecemos o StreamWriter, que foi muito útil em nosso trabalho, pois não precisamos lidar com os bytes, a chamada para Encoding e os limites e intervalos de array.
+
+Em 3_CriadoArquivo.cs temos uma chamada para o método Write(), de escritor. Será que imediatamente após a chamada, o arquivo já foi atualizado e contém a informação 456,65465,456.0,Pedro registrada?
+
+static void CriarArquivoComWriter()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+            using (var escritor = new StreamWriter(fluxoDeArquivo, Encoding.UTF8))
+            {
+                escritor.Write("456,65465,456.0,Pedro");
+            }
+        }
+Façamos um teste: para termos certeza do momento em que aparece algo no arquivo, criaremos o método estático TestaEscrita(), em que usaremos um arquivo que chamaremos de teste.txt. Em seguida, faremos uma estrutura de código bem familiar: criaremos a variável fluxoDeArquivo, seguido pelo FileStream, bem como FileMode.Create.
+
+Como não queremos ter o trabalho de lidar com bytes, usaremos escritor que receberá o StreamWriter() para trabalharmos com fluoDeArquivo
+
+static void CriarArquivoComWriter()
+        {
+            var caminhoNovoArquivo = "contasExportadas.csv";
+
+            using (var fluxoDeArquivo = new FileStream(caminhoNovoArquivo, FileMode.CreateNew))
+            using (var escritor = new StreamWriter(fluxoDeArquivo, Encoding.UTF8))
+            {
+                escritor.Write("456,65465,456.0,Pedro");
+            }
+        }
+
+
+                static void TestaEscrita() 
+                {
+                    var caminhoArquivo = "teste.txt";
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+                    using (var escritor = new.StreamWriter(fluxoDeArquivo))
+                    {
+
+                    }
+                }
+        }
+}
+Faremos uma chamada do escritor para o método WriteLine(), em que escreveremos a mensagem Linha 0. Testaremos se é possível fazer várias chamadas do WriteLine() e abrir o arquivo de texto enquanto a aplicação é executada.
+
+                static void TestaEscrita() 
+                {
+                    var caminhoArquivo = "teste.txt";
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+                    using (var escritor = new.StreamWriter(fluxoDeArquivo))
+                    {
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+                        escritor.WriteLine("Linha 0")
+
+                    }
+                }
+        }
+}
+Há um problema: o método WriteLine() será executado muito rápido, antes de abrirmos o arquivo no diretório a aplicação terá finalizado a tarefa. Entre uma chamada do WriteLine() e outra, precisamos travar a aplicação, para isso usaremos Console.ReadLine(), pois sabemos que esse método só apresenta um retorno caso o usuário pressiona o "Enter" na console.
+
+Para não precisarmos repetir diversas vezes escritor.WriteLine(), criaremos um laço de repetição que irá variar de 0 até 1000000. Em Seguida, mudaremos a menagem de Linha 0 para $"Linha {i}", isto é, uma string interpolada, com o conteúdo do índice da linha.
+
+Para fazer a aplicação ser mais amigável, escreveremos na tela o que está acontecendo. Utilizaremos $"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!".
+
+                static void TestaEscrita() 
+                {
+                    var caminhoArquivo = "teste.txt";
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+                    using (var escritor = new.StreamWriter(fluxoDeArquivo))
+                    {
+                        for (int = 0; i < 1000000000; i++)
+                        {
+                            escritor.WriteLine("Linha {i}");
+
+                            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!");
+                            Console.ReadLine();
+                        }
+                    }
+                }
+        }
+}
+Para testarmos a aplicação, voltaremos ao método Program.cs e alteraremos a chamada CriarArquivoComWriter() para TestaEscrita().
+
+namespace ByteBankImportacaoExportacao
+{
+    partial class Program
+    { 
+
+        static void Main(string[] args)
+        {
+
+            TestaEscrita();
+            Console.WriteLine("Aplicação finalizada...");
+
+            Console.ReadLine();
+        }
+    }
+}
+A mensagem Linha 0 foi escrita no arquivo. Tecle enter p adicionar mais uma! é exibida na tela, mas ao acessarmos o arquivo teste.txt no diretório Debug, constataremos que ele está completamente vazio, ainda que tenhamos chamado o método WriteLine(). Portanto em que momento, de fato, a informação é passada para o HD?
+
+Quando estamos escrevendo em um arquivo , o que acontece internamente entre a aplicação, sistema operacional e dispositivo externo? No momento em que escrevemos algo no HD, paramos a aplicação e é enviada uma mensagem para o sistema operacional escrever o número de bytes no HD. Esse tempo entre o envio da mensagem pela aplicação e o recebimento há uma latência muito alta de tempo.
+
+Estamos acostumados até então, a trabalhar com variáveis, buffers, arrays e listas, isto é, estamos sempre utilizando memória RAM, que é bastante rápida. Para escrever em um HD ou mesmo SSD o processo é muito mais lento, ainda mais quando perdemos tempo notificando o sistema operacional da ação a ser executada. Sempre que utilizamos WriteLine() para escrevermos algo em um arquivo, perderemos muito tempo.
+
+O ScreamWriter() possui um buffer, no caso do WriteLine() não estamos de fato escrevendo em um arquivo, mas sim enviando a informação para o buffer. Enquanto não encermos esse "buffer interno" do StreamWriter() a informação não será despejada no FileStream, dessa forma forma economizamos o tempo em que precisávamos sempre chamar o sistema operacional, mas se chamamos uma única vez uma grande quantidade de informação o processo será bem mais rápido.
+
+No caso de precisarmos escrever um arquivo que esteja imediatamente no HD, como por exemplo um arquivo de log - que dita o que a aplicação está fazendo -. Se aplicação quebra em algum momento, poderemos observar o arquivo para saber o que aconteceu e resolver o problema. Se log está apenas no buffer da memória RAM, não teremos a informação necessária para descobrirmos como consertar a aplicação.
+
+Portanto, existem situações em que não queremos que o buffer seja utilizado, de forma que o sistema operacional seja notificado logo, ainda que com um pouco mais de demora.
+
+Nestes casos, precisamos chamar no escritor o método Flush(), que despejará o buffer para a Stream.
+
+                static void TestaEscrita() 
+                {
+                    var caminhoArquivo = "teste.txt";
+
+                    using (var fluxoDeArquivo = new FileStream(caminhoArquivo, FileMode.Create))
+                    using (var escritor = new.StreamWriter(fluxoDeArquivo))
+                    {
+                        for (int = 0; i < 1000000000; i++)
+                        {
+                                escritor.WriteLine("Linha {i}");
+                            escritor.Flush(); // Despeja o buffer para o Stream
+
+                            Console.WriteLine($"Linha {i} foi escrita no arquivo. Tecle enter p adicionar mais uma!");
+                            Console.ReadLine();
+                        }
+                    }
+                }
+        }
+}
+Ao testarmos a aplicação, teremos a mensagem exibida na tela como o esperado. Ao abrirmos o arquivo texte.txt encontremos escrito o conteúdo Linha 0, a medida que pressionamos o botão "Enter", novas linhas surgem no arquivo e ele é atualizado quase instantaneamene. Esse é o resultado do método Flush(), pois como foi dito, a informação será despejada a informação do buffer diretamente para o FileStream.
