@@ -1,0 +1,1237 @@
+neste curso aprenderemos a criar uma aplicação de comércio eletrônico utilizando o ASP.NET Core 2.0.
+
+Iniciaremos pela criação do projeto, no Visual Studio Code, utilizando o padrão MVC. Ele contém três componentes, o model,
+ o view, e o controller. Cada um deles será explorado em detalhes ao longo do curso. Aprenderemos a criar uma rota padrão
+ para acessar cada uma das páginas da nossa aplicação.
+
+Veremos como criar um modelo, que é um conjunto de classes em C# a partir do qual geraremos um banco de dados. Para isso, 
+utilizaremos um componente denominado Entity Framework Core, que converterá nossas classes C# para uma tabela do banco de 
+dados. Estudaremos o relacionamento entre estas entidades por meio de propriedades de navegação do nosso modelo. 
+Conheceremos o conceito de migrações, que permitem a criação de atualizações de tabelas, colunas e outros objetos do 
+banco de dados, por meio das classes do C#.
+
+Aprenderemos a trabalhar com catálogo de produtos, inicialmente lendo um arquivo em formato de texto, armazenando este 
+conteúdo, e posteriormente gravando os produtos do catálogo por meio da tabela de produtos. Exploraremos como consultar 
+esta tabela por meio do Entity Framework Core, para exibir em visualização de carrossel. Para isso, trabalharemos com o 
+conceito de paginação e utilizaremos o motor de renderização chamado razor.
+
+Em seguida, montaremos um pattern repository, que permite que cada uma das entidades do nosso modelo tenha a sua classe 
+específica de acesso a dados. Veremos ainda o conceito de tag helper, que é um componente que roda no servidor e se 
+assemelha a um elemento HTML. Ele é bastante utilizado para a geração dinâmica e fácil de conteúdo HTML. Além disso, 
+passaremos o código do produto que foi selecionado no carrossel, para a próxima página de carrinho, utilizando a rota. 
+Gravaremos o número do pedido em uma sessão, para que possamos acessá-lo durante a navegação do usuário.
+
+Por fim, aprenderemos a criar e obter um pedido do banco de dados, e também como gravar cada item do pedido em uma 
+tabela de item do pedido. Estudaremos como exibir os produtos selecionados pelo usuário em nossa página com a visualização 
+do carrinho. Ao final, teremos o pedido já finalizado, com a página de resumo do pedido.
+
+comando md web -> criação de pasta de craição do projeto
+dotnet new -> comando para listar todos no projetos que podem ser criados
+dotnet new web -> Comando para fazer a craição de um projeto empty "vazio"
+dotnet run -> executa o projeto criado
+
+
+http://localhost:5000/ -> srevidor que serve os dados entra a aplicação e o browser
+
+Configurar o asp.net core para fronecer a instacia de uma deeterminada classe sempre que solicitarmos
+
+Como vimos anteriormente, temos a aplicação rodando no browser, e ela já vem com uma página de modelo. Isso porque o Visual Studio criou a aplicação ASP.NET Core MVC a partir de um template, que contém uma série de conteúdos, como imagens, e outras informações que são úteis para quem está começando a explorar o ASP.NET Core.
+
+Mas o que é o ASP.NET Core? Trata-se de um framework, criado pela Microsoft, a partir do ASP.NET clássico, também chamado de ASP.NET 4.X. A empresa reescreveu esta versão clássica, porém, permitiu que o novo pudesse rodar em outros sistemas operacionais, como Linux e Mac OSx.
+
+Sendo assim, você pode utilizar o projeto ora disponibilizado em outros servidores, e eles serão executados normalmente — algo que não era permitido na versão clássica. Portanto, além de ser multiplataforma, a nova versão é mais modular. Podemos baixar, individualmente, todos os componentes que fazem parte do ASP.NET Core diretamente do gerenciador de pacotes.
+
+Retornaremos ao Visual Studio para descobrirmos a origem da página inicial da aplicação, que estamos observando no navegador. No projeto CasaDoCodigo, temos os componentes que fazem parte da aplicação. Entretanto, não há um arquivo único responsável por fazer o carregamento da página HTML, não temos um arquivo de página. O que temos, na verdade, é a visualização que vimos anteriormente. À ela é dado o nome de view, e ele é um dos componentes do padrão MVC.
+
+No projeto, temos uma pasta chamada "Views", na qual há uma subpasta denominada "Home". Nela, estão agrupadas outras views, ou visualizações, que fazem parte da aplicação. Então, qual é a origem da nossa página inicial? Ela é carregada, por padrão, a partir do arquivo Index.cshtml. Abriremos este arquivo. Veremos o código HTML utilizado para gerar nossa página no browser. Analisaremos a extensão .cshtml — indicativo de que o arquivo é uma mistura de C# com HTML — com mais detalhes em uma oportunidade futura.
+
+Por enquanto, faremos somente uma modificação neste arquivo, removendo uma expressão em Inglês, "Learn how to build ASP.NET apps that can run anywhere.", e trocaremos pela frase em Português, "Aprenda a construir apps ASP.NET que rodam em todo lugar". Rodando a aplicação novamente, veremos que a mensagem foi alterada no browser.
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Aprenda a construir apps ASP.NET que rodam em todo lugar.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    There are powerful new features in Visual Studio for building modern web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Bring in libraries from NuGet and npm, and automate tasks using Grunt or Gulp.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/banner4.svg" alt="Microsoft Azure" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
+                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                        Learn More
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+Assim, vimos como mudar um arquivo no servidor da nossa aplicação, para que isso seja refletido no browser, ou seja, como uma página é carregada a partir de uma view. O HTML é formado a partir de uma view do MVC, e é carregado para o browser. O que mais, além da view, compõe uma página de um padrão MVC? Temos também um outro componente, ao qual damos o nome de modelo, ou model. Ele nos ajuda a gerar uma página dinâmica.
+
+Imaginemos que temos um relatório e, a cada vez que o abrimos, temos dados diferentes. Isso acontece porque as informações são diferentes e fornecidas por componentes chamados de modelos. Além disso, temos o controller. Ele reúne as informações da view e do modelo, para compor uma página HTML pronta para o browser. No navegador, temos um endereço para acessar a página da home, que em nosso caso é localhost:58246, por que conseguimos acessar a partir do localhost mais o número da porta?
+
+Porque, por padrão, caímos sempre na view chamada Index.cshtml, que está dentro da pasta "Home". Contudo, poderíamos inserir no endereço também o localhost:58246/Home/Index, e isso nos trará justamente a visualização da página inicial.
+
+Continuando o que vimos anteriormente, a seguir, veremos outras páginas da nossa aplicação. Na barra de menu superior, temos três links disponíveis: home, about e contact. O primeiro nos leva à página inicial, o segundo traz informações sobre a aplicação, enquanto o terceiro tem informações de contato, como endereço, telefone e CEP. Como o ASP.NET Core fornece estas páginas para o nosso browser?
+
+Ele não vai simplesmente jogar as views no browser. Em vez disso, ele utilizará um intermediário, que é chamado de controller — ou seja, um controlador — que será responsável por administrar o acesso a cada uma das partes da nossa aplicação. Retornaremos ao Visual Studio e, no projeto, abriremos a pasta chamada "Controllers", na qual encontramos o HomeController.cs, arquivo que contém uma classe chamada HomeController.
+
+Mas o que é o HomeController? Trata-se de uma classe C# que herda de uma classe base chamada Controller e contém métodos. Cada um destes fornece uma view para o browser, que tem o nome de cada um dos métodos. Por exemplo, a view Index.cshtml é retornada pelo método Index(), da mesma forma, o método About.cshtml é retornado pelo método About(), e assim por diante. Isto não é uma regra, mas é um padrão. É possível retornar views diferentes.
+
+Como o ASP.NET Core encontra o método correto do controller? No endereço, ele tem as informações localhost:58246/Home/Contact, e identifica Home como o nome do controller. Sendo assim, ele une este nome ao Controller, formando HomeController, e encontra a classe de mesmo nome. Em seguida, ele utiliza o segundo nome, Contact, que se trata de uma ação, ou action, e é traduzida para um método do controller e então retornada pelo método Contact().
+
+Na classe HomeController, podemos observar o método Contact():
+
+namespace CasaDoCodigo.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            ViewData["Message"] = "Your application description page.";
+
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+Colocaremos um ponto de parada na linha ViewData["Message"] = "Your contact page.";, rodaremos novamente a aplicação, utilizando a tecla de atalho "F5". Vemos que o ASP.NET Core redirecionou a chamada para este endereço, HomeContact, encontrando HomeController e, em seguida, Contact(). Assim, o método fornece para a página a informação dentro de um dicionário, chamado de ViewData.
+
+ViewData é um dicionário padrão ao qual podemos atribuir certas informações que são consumidas pela página, ou seja, pela view. No caso, definimos uma informação que tem como chave ["Message"], e que traz em seu conteúdo "Your contact page." (ou "Sua página de contato."). Em seguida, o método Contact() retorna uma view, e esta é a Contact.cshtml, que receberá como informação adicional a ViewData. Por isso, ao atualizarmos, a mensagem é exibida na tela.
+
+Mas por que isso foi montado desta forma? Abriremos o arquivo Contact.cshtml, que está dentro da pasta "Home". Nela, encontramos o @ViewData["Message"], isto é um código C#. O ASP.NET Core monta uma página a partir de um arquivo .cshtml, e esta extensão compreende um arquivo C# HTML, que é convertida na página que é retornada para o browser.
+
+Trocaremos a mensagem do ViewData para "Sua página de contato!". Executaremos novamente a aplicação, abriremos a view de contato e, abrindo a página, veremos a mensagem atualizada.
+
+O ASP.NET Core injetou a informação do modelo do MVC, do ViewData, na view para poder formar a página de contato.
+
+A seguir, faremos uma rápida revisão de como funciona o padrão MVC, no contexto da nossa aplicação. Temos uma página HTML que é montada pela aplicação ASP.NET Core MVC e é mandada para o browser.
+
+Como a página HTML é montada? A partir de componentes individuais, por exemplo, o modelo e a view. O modelo contém os dados brutos, enquanto a view contém o código HTML. Para combiná-los, temos um intermediário, que é o controller, ou controlador.
+
+Como a requisição do browser aciona este mecanismo do MVC? Temos o endereço, que foi chamado no browser localhost:5000/home/about. Então, como localizar o controller, a action e a view, para que retornem ao browser? Ele toma a partícula home e procura o controller equivalente, e isso é encontrado na classe HomeController, localizada na pasta "Controllers".
+
+Além disso, ele precisa encontrar o método, para poder retornar a view. No caso, o método é o About(), que é chamado de ação, ou action. Ela é chamada a partir de um método do controller, ou seja, o próprio About(), que retornará um resultado IActionResult.
+
+Dentro do método, preparamos algumas informações que serão injetadas dentro da view. A isso damos o nome de modelo, que são os dados brutos encaixados dentro da view para podermos montar a página HTML final.
+
+O componente controller é aquele que controla o site. Ele recebe a requisição do browser, e esta por sua vez aciona uma ação, que é o método do controller. Isso é feito a partir do retorno da action, que é uma view. Esta é mandada de volta para o browser. A view pode conter dados que são utilizados para montar a página. Os dados são o modelo, que são combinados pelo controller por meio da action, para poder retornar o HTML final para o browser.
+ model -> dados brutos
+
+ http:// servicoHospedagem/classeController/metodoController
+
+renderBody -> usa a view como template para montar a pagina html
+
+Passando para os detalhes da nossa página, encontramos o nome da aplicação no topo, seguido de um menu, que são os três links para as demais páginas e, no caso, temos o miolo, disponibilizado pela view de Contact(). Além disso, temos também um rodapé.
+
+De onde surgem estas informações? Retornaremos para a view de contato e encontraremos os dados de contato. Não temos o menu superior, com os links, tampouco o rodapé. De onde vêm estas informações? Por padrão, o ASP.NET Core MVC as busca a partir de um arquivo chamado _Layout.cshtml, localizado na pasta Shared (ou Compartilhada), que disponibiliza o padrão comum da aplicação web.
+
+Assim, é possível definirmos um tipo de layout para deixar a aplicação consistente, ou seja, com a mesma cor de fundo, mesmo rodapé, topo, menu lateral e tudo que quisermos deixar padronizado na aplicação.
+
+Abriremos o arquivo _Layout.cshtml, no qual teremos informações do cabeçalho da página HTML, por exemplo:
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Casa do Código</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+Contendo informações do CSS, que é a folha de estilos de uma página HTML, e também o bootstrap, que é uma biblioteca para interface com usuário que foi desenvolvida pelo Twitter. Estes componentes são criados automaticamente com a implementação da página.
+
+Além disso, temos a sessão <body>, que é o corpo da aplicação. Dentro dele, temos o menu com os links para home, about e contact. Adiante, encontramos a marcação @RenderBody(). Trata-se de um método especial do ASP.NET, que tem por função montar a view, para renderizar a página. Em seguida, será montado o resto, que envolve o rodapé e os links para os arquivos de JavaScript.
+
+@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Casa do Código</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"></a>
+            </div>
+            <div class="navbar-collapse collapse">
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - Casa do Código</p>
+        </footer>
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+Portanto, a página em sua versão final deriva do arquivo _Layout.cshtml, e o "miolo" do site deriva de cada uma das views individuais. Adiante, estudaremos como implementar as views da aplicação de e-commerce do nosso cliente, Casa do Código
+
+
+
+
+Vamos dar início à criação da solução para o nosso cliente Casa do Código. Para isso, precisaremos criar uma aplicação com um aspecto profissional, portanto, será necessário um bom layout. Sendo assim, utilizaremos o design responsivo, ou seja, a aplicação terá que rodar bem tanto no desktop, quanto em tablet e celular.
+
+Entretanto, este curso não tem o intuito de ensinar a desenhar layouts, isso fica a cargo do web designer. Ele nos fornecerá o conteúdo para montarmos a página, já finalizado. Caso queira se aprofundar nisso, na Alura, temos o curso de Bootstrap: criação de uma single-page responsiva, desenvolvido pelo instrutor Yuri Padilha.
+
+Continuando, temos algumas páginas e imagens fornecidas pela web designer, para montarmos nossa aplicação. Uma delas é o catálogo, também chamado de carrossel, que exibe os produtos da casa do código, no caso os livros, que ficarão passando pela tela, emulando um carrossel.
+
+A próxima página é a de carrinho. Conforme o cliente escolhe um produto, ele é direcionado para a página de carrinho, para que possa visualizar a compra atual. Feito isso, pode retornar ao carrossel para procurar mais produtos, até finalizar a compra. Neste ponto, o cliente completa um cadastro e então é direcionado à página "resumo do pedido".
+
+Todas as páginas já foram montadas pela web designer, que forneceu os arquivos que serão inseridos na solução. Retornaremos ao Visual Studio, onde temos uma página chamada "Recursos", com as subpastas "css", "dados", "logos", "produtos" e "views-com-bootstrap".
+
+Copiaremos estes arquivos para o nosso projeto, em pastas específicas. Precisamos ter cuidado com o destino dos arquivos; caso contrário, podemos ter um problema em nossa aplicação. Por exemplo, na pasta "css" temos o arquivo site.css, correspondente à folha de estilos, ou como desenhar a tela, cores, posicionamento, entre outras informações de layout.
+
+Copiaremos este arquivo e, com cuidado, localizaremos dentro do projeto CasaDoCodigo uma pasta chamada "wwwroot" e, dentro dela, a pasta "css", onde colaremos o arquivo que acabamos de copiar. O Visual Studio pedirá uma confirmação. Basta clicarmos em "Sim".
+
+Além disso, temos uma pasta chamada "logos", que contém o logotipo da Casa do Código. Copiaremos o arquivo logo.png, localizaremos a pasta "wwwroot > images" e colaremos o arquivo nela.
+
+A seguir, abriremos a pasta "produtos" e notaremos que ela contém uma série de imagens dos produtos disponíveis na loja. Em "wwwroot", dentro da pasta "images", criaremos, uma subpasta chamada "produtos".
+
+O nome da pasta precisa, necessariamente, estar em letras minúsculas.
+
+Selecionaremos os arquivos de imagens que vimos anteriormente, que totalizam 65 arquivos. Os copiaremos e colaremos na pasta "produtos", que acabamos de criar.
+
+Ainda temos uma pasta chamada "views-com-bootstrap", com os arquivos Cadastro.cshtml, Carrinho.cshtml, Carrossel.cshtml e Resumo.cshtml. Primeiro, localizaremos no projeto CadaDoCodigo a pasta "Views". Nela, encontramos as subpastas "Home" e "Shared". Criaremos, neste mesmo nível hierárquico, uma nova pasta chamada "Pedido".
+
+Copiaremos os quatro arquivos .cshtml, Cadastro.cshtml, Carrinho.cshtml, Carrossel.cshtml, Resumo.cshtml, e colaremos nesta página "Pedido" que acabamos de criar.
+
+Por fim, copiaremos o arquivo _Layout.cshtml, e colaremos na pasta "CasaDoCodigo > Views > Shared". Ao fazermos isso, o Visual Studio pedirá uma confirmação. Basta confirmarmos. Rodaremos a aplicação, com a tecla de atalho "F5".
+
+Caímos novamente em nossa página inicial, mas queremos acessar as páginas novas que foram criadas. Para isso, acessaremos a URL localhost:58246/pedido/carrosel, mas quando fazemos isso o ASP.NET Core MVC não consegue encontrar a página. Por quê?
+
+Isso aconteceu porque temos que passar primeiro pelo intermediário — que é o controller — para acessarmos uma view. Só que, neste caso, não temos o controller de pedido, pois ele ainda não foi criado.
+
+Retornaremos ao Visual Studio, pararemos a aplicação e, dentro da página "Controllers", faremos esta adição. Criaremos uma nova classe, nesta pasta, chamada PedidoController, que herdará da classe base Controller:
+
+namespace CasaDoCodigo.Conrtollers
+{
+    public class PedidoController : Controller
+    {
+    }
+}
+Para buscarmos a referência, basta utilizarmos a atalho "Ctrl + ." sobre a palavra Controller. A seguir, criaremos os métodos, que aqui correspondem às actions, ou seja, cadastro, carrinho, carrossel e resumo. Esse método retornará o resultado de uma action, ou seja, um IActionResult. No bloco, teremos a respectiva view:
+
+namespace CasaDoCodigo.Conrtollers
+{
+    public class PedidoController : Controller
+    {
+        public IActionResult Carrossel()
+        {
+            return View();
+        }
+    }
+}
+Rodaremos a aplicação novamente, com o atalho "F5". Acessaremos o mesmo endereço, localhost:58246/pedido/carrosel e, agora sim, temos a visualização do nosso carrossel, com os produtos da Casa Do Código, no caso, os livros que são oferecidos aos clientes.
+
+desenvolver um sistema  - reponsivo
+rota - define qual pagina sera encontrada, geralmente a view e a controller de execução da view esta na classe startup
+
+Continuando, implementaremos as demais views pertinentes ao nosso e-commerce. Para isso, teremos que criar outras actions, dentro do nosso pedido Controller. Vamos copiar a primeira action criada, e colar abaixo da existente, criando um método Carrinho():
+
+namespace CasaDoCodigo.Controllers
+{
+    public class PedidoController : Controller
+    {
+        public IActionResult Carrossel()
+        {
+            return View();
+        }
+        public IActionResult Carrinho()
+        {
+            return View();
+        }
+    }
+}
+Em seguida, criaremos uma nova action, à qual daremos o nome de Cadastro(), que é o espaço onde o usuário preencherá seus dados:
+
+namespace CasaDoCodigo.Controllers
+{
+    public class PedidoController : Controller
+    {
+        public IActionResult Carrossel()
+        {
+            return View();
+        }
+        public IActionResult Carrinho()
+        {
+            return View();
+        }
+        public IActionResult Cadastro()
+        {
+        return View();
+        }
+    }
+}
+Feito isso, o pedido é fechado e o cliente poderá visualizar o resumo do pedido, sendo assim, criaremos um outro método, chamado Resumo():
+
+namespace CasaDoCodigo.Controllers
+{
+    public class PedidoController : Controller
+    {
+        public IActionResult Carrossel()
+        {
+            return View();
+        }
+        public IActionResult Carrinho(), 
+        {
+            return View();
+        }
+        public IActionResult Cadastro()
+        {
+        return View();
+        }
+        public IActionResult Resumo()
+        {
+        return View();
+        }
+    }
+}
+Atualizaremos a aplicação e iremos acessá-la com essas novas páginas. Primeiro, abriremos a URL localhost:58246/pedido/carrossel. Teremos a view de carrossel funcionando perfeitamente. O botão "Adicionar" ainda não está funcionando corretamente, por enquanto, ele apenas nos remete à home page.
+
+Para acessarmos as demais páginas, teremos que alterar diretamente o endereço da URL. Sendo assim, digitaremos localhost:58246/pedido/carrinho para abrir a página de carrinho. Nela, encontraremos os produtos selecionados e dois links: "adicionar produtos" e "preencher cadastro". Ambos não funcionam ainda.
+
+A seguir, o cliente acessará a página de cadastro, sendo assim, acessaremos localhost:58246/pedido/cadastro, onde temos um formulário, para que o usuário complete com os seus dados. Por fim, ele clicará no botão "finalizar pedido", que o remeterá à página localhost:58246/pedido/resumo, com o resumo do pedido.
+
+Todas as views são arquivos cshtml, ou seja, são arquivos estáticos, com quase nenhuma variação baseada nas escolhas do cliente porque nossa web designer criou estas páginas como um modelo somente. Nosso trabalho será transformar o HTML para que possa receber informações que serão enviadas pela aplicação.
+
+Já temos as páginas, e conseguimos acessá-las a partir da URL, agora faremos uma alteração para que a página inicial não seja mais a do padrão ASP.NET Core MVC, e sim a do carrossel, que é o local onde o cliente poderá visualizar os produtos disponíveis. Para que isso aconteça, teremos que modificar a rota padrão.
+
+Uma rota é uma regra que define como as páginas serão encontradas em uma aplicação MVC. No projeto, localizaremos o arquivo Startup.cs. Esta classe contém dois métodos, o primeiro é ConfigureServices(), e serve para a configuração de serviços, e outro chamado Configure(), onde encontramos um trecho de código referente à rota padrão:
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseBrowserLink();
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
+    }
+}
+O routes.MapRoute() define o mapeamento da rota padrão e o template, que contém uma string {controller=Home}/{action=Index}. Portanto, temos a rota padrão quando inserimos o endereço raiz do nosso site, sem mencionar nenhum outro caminho. Mas queremos direcionar o usuário para o carrossel. Sendo assim, substituiremos Home por Pedido, e Index por Carrossel:
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseBrowserLink();
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Pedido}/{action=Carrossel}/{id?}");
+            });
+        }
+    }
+}
+Salvaremos e executaremos a aplicação. Ao fazermos isso, caímos diretamente na página de carrossel. Na sequência, podemos eliminar as páginas de Home, já que não as utilizaremos mais. Especificamente o arquivo Home dentro da pasta "Views", e o arquivo HomeController, na pasta "Controllers". Executaremos novamente, para nos certificarmos de que tudo continua funcionando corretamente.
+
+ASP.NET Core com .NET Core ou .NET Framework? E agora?
+
+
+© 2018 Microsoft
+
+Ao criar um projeto ASP.NET Core, você pode escolher entre dois tipos de compilação: .NET Framework e .NET Core. Embora grande parte do código possa ser o mesmo em ambos os projetos, você precisa saber que existem vantagens e limitações em ambas as opções de compilação. Portanto, é bom conhecer essas diferenças antes de criar seu projeto, caso contrário isso poderá ter um impacto negativo mais tarde em seu projeto.
+
+Crie aplicações ASP.NET Core para .NET Core nas seguintes situações:
+Você quer estender sua aplicação .NET Framework com uma nova área desenvolvida com ASP.NET Core +.NET Core.
+Você precisa desenvolver sua aplicação web em Windows, Linux ou MacOS.
+Você precisa executar sua aplicação web em Windows, Linux ou MacOS.
+Você precisa de microsserviços.
+Você precisa rodar sua aplicação web em contêineres Docker.
+Você precisa de aplicações web escaláveis e de grande performance.
+Você precisa de componentes .NET com versões "lado-a-lado".
+Crie aplicações ASP.NET Core para .NET Framework nas seguintes situações:
+Você já utiliza o .NET Framework na aplicação atual.
+Você utiliza componentes .NET de terceiros.
+Você utiliza pacotes .NET Framework do NuGet que ainda não têm versão .NET Core disponível.
+Você utiliza tecnologias .NET que ainda não existem para o .NET Core.
+
+Contêineres: .NET Core ou .NET Framework?
+
+
+Nos últimos anos houve um grande crescimento na demanda por contêineres no mundo da computação.
+
+Um contêiner é um ambiente virtual isolado onde rodam aplicações. Do ponto de vista dessas aplicações, o contêiner onde elas estão hospedadas funciona como um computador real, com todos os seus recursos. Isso é possível por causa da técnica de virtualização, que faz com que o kernel do sistema operacional permita a existência de várias instâncias isoladas, que são os contêineres.
+
+Enquanto uma aplicação rodando num sistema operacional em uma hospedagem tradicional tem acesso a todos os recursos do servidor (tais como CPU, redes, sistema de arquivos, etc.), uma aplicação implantada em um contêiner está restrita a acessar e utilizar somente os recursos do servidor que estão configurados para esse contêiner.
+
+Isso torna a implantação de aplicações web em contêineres muito estáveis, e a sua configuração bem definida evita imprevistos que são comuns quando aplicações rodam em ambientes com diferentes configurações de sistema operacional, permissões, rede, etc.
+
+É possível utilizar aplicações web com .NET Framework em contêineres Windows. Porém, o .NET Core é bem mais indicado para esse tipo de implantação, por ser modular, ter uma imagem bem menor do que a do .NET Framework. Além disso, diferente do .NET Framework, uma aplicação web com .NET Core pode rodar tanto em contêineres Windows como Linux.
+
+Saiba mais sobre contêineres com o nosso Curso Docker: Criando containers sem dor de cabeça
+
+Microsserviços: .NET Core ou .NET Framework?
+
+
+Arquitetura em microsserviços do website da Casa do Código
+
+Microsserviço é uma técnica de desenvolvimento de software onde a arquitetura da aplicação é formada por um conjunto de serviços independentes e desacoplados.
+
+Uma aplicação composta assim por serviços menores, mais leves e independentes, acaba se tornando mais modular, mais fácil de desenvolver e de testar e de implantar. Várias equipe de desenvolvimento podem trabalhar em paralelo e de forma independente em cada um dos microsserviços, eliminando gargalos na entrega contínua e no desenvolvimento.
+
+Projetos ASP.NET Core para .NET Core são ideais para arquitetura de microsserviços.
+
+Saiba mais em: Microsserviços do .NET: Arquitetura de aplicativos .NET em contêineres (Microsoft Docs)
+
+Multiplataforma: .NET Core ou .NET Framework?
+Felizmente, desenvolvedores de aplicações ASP.NET Core com .NET Core não estão limitados a computadores Windows.
+
+O .NET Core dá suporte ao desenvolvimento em múltiplos sistemas operacionais: Windows, Linux e macOS.
+
+Quais opções tenho para minha IDE (ambiente de desenvolvimento integrado)?
+Se você usa Linux, pode utilizar o Visual Studio Code
+Se você usa Windows ou macOS, pode utilizar tanto o Visual Studio como o Visual Studio Code
+A maioria dos editores de terceiros, como Sublime, Emacs e VI, trabalham com o .NET Core. Esses editores de terceiros podem utilizar o IntelliSense através da instalação da ferramenta OmniSharp.
+
+Para saber mais - Bootstrap
+PRÓXIMA ATIVIDADE
+
+O Bootstrap se tornou um padrão, reduzindo grande parte do desenvolvimento de interfaces, com layouts simples, rápidos e responsivos.
+
+Neste curso, Yuri Padilha ensina passo-a-passo a criação de uma single-page responsiva, e esse conhecimento você pode aproveitar para criação de suas próprias aplicações web com ASP.NET Core.
+
+Criaremos um site voltado para arquitetura. Usaremos, para tanto, tecnologias como HTML, CSS, Javascript, JQuery e, por fim, o Bootstrap3. O Bootstrap3 é um framework que possui vários códigos já prontos o que acaba aumentando a nossa produtividade. Vamos utilizar bastante a sua documentação para nos auxiliar a fazer o site da forma mais eficiente e eficaz possível. Assim, consultando a documentação não será preciso decorar nada! Usaremos, ainda, as melhores práticas de HTML e CSS.
+
+Bootstrap: criação de uma single-page responsiva
+Alura Cursos Online
+
+Autor: Yuri Padilha
+
+Fonte: https://www.alura.com.br/curso-online-bootstrap-criacao-single-page-responsiva
+
+Já temos a aplicação ASP.NET Core MVC rodando, porém, por enquanto temos somente as views, ou seja, as páginas com conteúdo estático em HTML. O próximo passo será passar os dados para estas views, para podermos formar uma página de verdade.
+
+Teremos que criar um modelo, que fornecerá estes dados para o MVC. Para isso, serão necessárias determinadas classes. Normalmente, é necessária a criação de um banco de dados, que nos permita acessar estes dados. Contudo, faremos uma abordagem diferente, chamada code first, ou código primeiro. Isso significa que criaremos as classes e, em seguida, criaremos o banco de dados com base nestas.
+
+As classes são representadas por quatro entidades, que aqui são: Pedido, Cadastro, ItemPedido e Produto. No Pedido, temos os itens do carrinho, e associado a ele temos o Cadastro, com os dados do usuário. Temos também o ItemPedido, com as peculiaridades do pedido, como quantidade e preço e, por fim, temos o Produto, que são os itens presentes no catálogo, no carrossel.
+
+Cada uma das classes possui um atributo, uma propriedade, chamada id, que serve como chave primária para esta entidade. Temos ainda, uma propriedade de navegação, responsáveis por realizar a associação entre uma classe e outra. Por exemplo, temos o Pedido relacionado a Cadastro. Ou seja, é possível acessar o Cadastro a partir de uma classe Pedido, com os dados do usuário.
+
+Retornaremos ao Visual Studio, e abriremos a pasta "_Recursos > dados".
+
+Nela, encontramos um arquivo chamado modelo.cs. Nele, há diversos exemplos de classes, que são justamente aqueles abordados acima. Copiaremos este arquivo e colaremos na pasta "CasaDoCodigo > Models".
+
+Contudo, o modelo, sozinho, é incapaz de fazer algo. Precisamos fazer ainda uma associação com o banco de dados. Para que possamos gerar tabelas a partir do nosso código, precisamos de um intermediário, que chamamos de Entity Framework Core. Ele faz o mapeamento do objeto relacional, e gerará a partir das classes as tabelas, campos e chaves necessários no banco de dados. Posteriormente, ele gerenciará esta troca de informações entre o banco e o sistema. Ele é fundamental para fazermos o acesso aos dados.
+
+Assim, temos as classes do modelo, e precisamos agora criar um contexto para o Entity Framework Core saber como lidar com as entidades para fazer o mapeamento. Para isso, clicaremos com o botão direito do mouse sobre a pasta "CasaDoCodigo" e selecionaremos a opção "Add > Class...". A chamaremos de ApplicationContext.
+
+Esta nova classe precisa herdar de DbContext, lembrando de importar o using. Precisamos inserir ainda um construtor, com o parâmetro options. Clicaremos com o botão direito do mouse sobre Generate constructor 'ApplicationContext(options)'. Removeremos o atributo NotNullAtribute pois ele não será necessário. Criaremos também um override para substituirmos um método, e assim criarmos o modelo.
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+}
+Quando estiver criando o modelo, ele acessará este método para poder fazer o mapeamento. Dando continuidade, faremos o mapeamento a partir do parâmetro modelBuilder e chamaremos o método Entity, que registrará uma classe do nosso modelo, no caso Produto, e o mapearemos para que possa ser adicionado ao modelo. Caso contrário, o Entity Framework não saberá que classes utilizará para gerar o banco de dados.
+
+Para registrar que o método contém uma chave primária, chamaremos o método HasKey e o nome da propriedade que representa a referida chave, ou seja, (t => t.Id):
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Produto>().HasKey(t => t.Id);
+        }
+    }
+}
+
+Você acabou de criar um modelo de dados utilizando código C#. Agora, esse modelo será usado para mapear tabelas de um banco de dados relacional SQL Server, utilizando o framework Entity Framework Core.
+
+Qual componente é necessário desenvolver para fazer o Entity Framework Core realizar operações de consultas e alterações no banco de dados utilizando as entidades que você acabou de criar?
+
+Uma classe que implementa a classe-base DbContext
+  
+Isso mesmo! DbContext é uma classe do namespace Microsoft.EntityFrameworkCore. Uma instância DbContext representa uma sessão com o banco de dados e pode ser usada para consultar e salvar instâncias das suas entidades. O DbContext é uma combinação dos padrões Unit Of Work e Repository.
+
+Nesta aula, criaremos um banco de dados vazio para podermos fazer a migração das classes e gerar as tabelas do banco de dados. Clicaremos no menu "View" do Visual Studio, na barra de menu superior, e selecionaremos a opção "SQL Server Object Explorer". Teremos uma estrutura contendo a pasta "Databases", clicaremos sobre ela com o botão direito do mouse e, em seguida, sobre "Add New Database".
+
+Daremos a ele o nome de CasaDoCodigo e, assim, teremos nosso banco de dados vazio. Precisamos passar as informações do banco para a nossa aplicação, por exemplo, qual o servidor e o seu nome. Por enquanto, no banco CasaDoCodigo temos somente as tabelas do sistema, para criarmos nossas próprias, precisaremos da string de conexão deste.
+
+Clicaremos sobre o nome do banco e pressionaremos a tecla "F4" para abrirmos a janela de propriedades. Em Connection string, temos o texto contendo a string de conexão. Copiaremos este texto. No projeto "CasaDoCodigo", temos uma maneira padrão do ASP.NET Core de definir as configurações de onde acessar este banco de dados.
+
+Abriremos o arquivo appsettings.json, na pasta do projeto "CasaDoCodigo". Nele, há somente uma configuração de log. Portanto, onde será criada a configuração de banco de dados? Teremos uma nova entrada, que chamaremos de ConnectionStrings:
+
+{
+    "Logging": {
+        "IncludeScopes": false,
+        "LogLevel": {
+            "Default": "Warning"
+        }
+    },
+    "ConnectionStrings": {
+
+    }
+}
+Inseriremos a conexão default, que terá este nome e, por padrão, faremos a conexão no banco de dados que acabamos de criar:
+
+{
+    "Logging": {
+        "IncludeScopes": false,
+        "LogLevel": {
+            "Default": "Warning"
+        }
+    },
+    "ConnectionStrings": {
+        "Default": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CasaDoCodigo;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    }
+}
+Com isso, o ASP.NET Core terá informações necessárias para poder acessar o banco. Retornaremos à aplicação, para definirmos como utilizar a ConnectionString. No projeto, temos uma classe de configuração chamada Startup.cs. Nela, há dois métodos principais, o ConfigureServices() e o Configure(). Abriremos o ConfigureServices() e definiremos um método de configuração para o nosso banco de dados.
+
+Temos um serviço já existente, que é o MVC. Para adicionarmos um novo, chamaremos services com o método AddDbContext, passando o nome da classe do contexto do banco de dados, no caso, o ApplicationContext().
+
+Faremos a chamada para este último método passando as opções de configuração do contexto como argumento, ou seja, a definição da utilização da ConnectionString. Assim, passaremos o nome do parâmetro, seguido pelo operador lâmbda (options => options).
+
+A seguir, chamaremos o parâmetro options com o método que nos permite utilizar, como nosso banco de dados, o SQL Server. Precisamos importar o namespace correspondente, utilizando o atalho "Ctrl + ." sobre UseSqlServer. Por fim, passaremos como parâmetro a ConnectionString.
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IServiceProvider serviceProvider)
+    }
+}
+Feito isso, a ConnectionString ainda não foi reconhecida. Na realidade, esta variável sequer existe em nosso código. Por isso, precisamos criá-la, buscando as configurações presentes no arquivo AppSettings.json. Acessaremos o objeto Configuration e o método GetConnectionString(), passando o nome da configuração, que no nosso caso é Default:
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            string connectionString = Configuration.GetConnectionString("Default");
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    }
+}
+Assim, geramos o banco de dados a partir das classes do nosso modelo, com base nesta configuração.
+
+Você acabou de desenvolver o modelo de dados e também o contexto do Entity Framework Core através da classe ApplicationContext, que implementa a classe-base DbContext, para realizar as operações para obter/gravar dados no seu banco de dados Sql Server através das entidades da aplicação.
+
+O que você precisa fazer para adicionar esse contexto do Entity Framework aos serviços do ASP.NET Core?
+
+Chamar o método de extensão services.AddDbContext<ApplicationContext>(options) dentro do método Startup.ConfigureServices.
+
+ 
+Isso aí! Devemos chamar o método AddDbContext dentro do método Startup.ConfigureServices:
+
+services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlServer(<<string de conexão>>)
+);
+
+fazer migrations ->
+
+Relacionamentos e Migrações
+
+De um lado, temos as classes do modelo em C# e, do outro, o banco de dados vazio. Portanto, precisamos fazer a geração das tabelas a partir do modelo, e para isso utilizamos o Entity Framework Core. Acessaremos os seus comandos, clicando na opção "Tools", na barra de menu superior. Na sequência, selecionaremos "NuGet Package Manager > Package Manager Console".
+
+No console, podemos digitar os comandos que permitirão gerar tabelas. Criaremos um pacote de atualizações do esquema do banco de dados e, em seguida, o aplicaremos. Ele é chamado de migração, ou migration. Ele contém informações de quais tabelas geraram quais chaves, ou colunas, a partir do código. Para isso, utilizaremos o comando Add-Migration e, em seguida, teremos que inserir o nome da migração. Daremos o nome Inicial.
+
+PM> Add-Migration Inicial
+Pressionaremos a tecla "Enter" para rodarmos a aplicação, e ele gerará o pacote de migração. Ao finalizar, abriremos o projeto, e na pasta "Migrations" observamos que há uma classe contendo a data, seguida do nome Inicial.cs, nela temos todo o esquema que foi gerado a partir da entidade Produto, são instruções para a criação da tabela de produtos.
+
+Retornaremos ao console. Uma vez que geramos a migração, precisamos fazer a aplicação dela. Para isso, utilizamos o comando Update-Database, seguido de -verbose, que indica ao Entity que ele deve gerar uma série de logs, para podermos visualizar o que está acontecendo. Pressionaremos a tecla "Enter" para executarmos.
+
+Os logs foram gerados, assim como a respectiva tabela no banco de dados, como podemos observar em "SQL Server Object Explorer > CasaDoCodigo > Tables > dbo.Produto". Clicaremos com o botão direito do mouse sobre ela, e selecionaremos a opção "View Designer".
+
+Podemos visualizar que foi gerada uma tabela contendo uma chave primária id, que é uma das propriedades da nossa classe e, em seguida, mais três linhas, com código, nome e preço do produto. Assim, concluímos a criação da nossa primeira migração.
+
+Retornaremos ao ApplicationContext para fazermos o mapeamento do restante das entidades. Assim como fizemos anteriormente, utilizaremos o modelBuilder:
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Produto>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<ItemPedido>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Cadastro>().HasKey(t => t.Id);
+        }
+    }
+}
+Agora que relacionamos, fizemos o mapeamento de todas as entidades, precisamos descrever como serão os relacionamentos. Utilizaremos os comandos para criar estas conexões, como o HasMany(), acompanhado da expressão lambda t.Itens, indicando que queremos trabalhar com muitos itens. Por fim, vamos inserir o novo método WithOne(), que indica o relacionamento de volta, ou seja, cada item de pedido se relaciona a um pedido individual:
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Produto>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id);
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id).HasMany(t => t.Itens).WithOne(t => t.Pedido);
+
+                        modelBuilder.Entity<ItemPedido>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Cadastro>().HasKey(t => t.Id);
+        }
+    }
+}
+A seguir, faremos o relacionamento entre o pedido e o cadastro. A diferença é que esta relação se dá de um para um, ou seja, cada pedido está relacionado a um cadastro e vice-versa. Acrescentaremos ainda um método indicando que o atributo é obrigatório, que é o IsRequired().
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Produto>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id);
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id).HasMany(t => t.Itens).WithOne(t => t.Pedido);
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id).HasOne(t => t.Cadastro).WithOne(t => t.Pedido).IsRequired();
+
+                        modelBuilder.Entity<ItemPedido>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Cadastro>().HasKey(t => t.Id);
+        }
+    }
+}
+Dando continuidade, faremos isso com o ItemPedido. Cada um estará relacionado a um Pedido e a um Produto. Da mesma forma, o Cadastro está relacionado a um Pedido.
+
+namespace CasaDoCodigo
+{
+    public class ApplicationContext : DbContext
+    {
+        public ApplicationContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Produto>().HasKey(t => t.Id);
+
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id);
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id).HasMany(t => t.Itens).WithOne(t => t.Pedido);
+                        modelBuilder.Entity<Pedido>().HasKey(t => t.Id).HasOne(t => t.Cadastro).WithOne(t => t.Pedido).IsRequired();
+
+                        modelBuilder.Entity<ItemPedido>().HasKey(t => t.Id);
+                        modelBuilder.Entity<ItemPedido>().HasOne(t => t.Pedido);
+                        modelBuilder.Entity<ItemPedido>().HasOne(t => t.Produto);
+
+                        modelBuilder.Entity<Cadastro>().HasKey(t => t.Id);
+                        modelBuilder.Entity<Cadastro>().HasOne(t => t.Pedido);
+        }
+    }
+}
+Com isso, concluímos o mapeamento e podemos criar uma nova migração. Retornaremos ao console e digitaremos o comando Add-Migration Modelo. Pressionaremos a tecla "Enter" para executarmos. O novo pacote será criado. Aplicaremos a nova migração com o comando Update-Database -verbose, pressionando a tecla "Enter" para executá-la.
+
+Agora, ao abrir o SQL Object Explorer vemos as tabelas Cadastro, ItemPedido, Pedido e Produto.
+
+Gerando Banco, Classe Startup, Serviços, Injeção de Dependências
+
+Recapitulando, aprendemos a criar um esquema de banco de dados com tabelas, colunas e chaves a partir das classes do C#, utilizando o Entity Framework Core. Caso queira se aprofundar nesta ferramenta, você pode acessar o curso Entity Framework Core: Banco de dados de forma eficiente.
+
+Retornaremos ao projeto e deletaremos o banco de dados "CasaDoCodigo". A seguir, o recriaremos com as tabelas que já estão definidas. Faremos isso aplicando o comando Update-Database -verbose no console. Executando, o banco de dados é recriado, assim como as tabelas. Ao abrirmos o SQL Server Object Explorer novamente, atualizado, veremos que o banco de dados aparece normalmente.
+
+Mas e se quiséssemos criar o banco de dados, assim que a aplicação fosse executada, com o comando "F5", sem precisar digitar o comando Update-Database?
+
+Para fazermos isso, acessaremos a classe Startup.cs, ela que define a configuração da nossa aplicação. Ela possui um método Configure(), que é executado quando a aplicação subir para o servidor, em resposta ao comando "F5". Ela então estará sujeita às requisições do browser e, neste momento, teremos a garantia de que o banco de dados foi criado.
+
+Portanto, acessaremos a classe Database a partir do método Configure(), para garantirmos que ela esteja criada. O primeiro passo será modificar a assinatura deste método, para podermos adicionar um novo parâmetro. Após IHostingEnvironment env, adicionaremos uma vírgula (,) e quebraremos uma linha, para incluirmos o IServiceProvider. Como o nome induz, ele fornecerá um serviço para nós, que é o contexto da aplicação, do banco de dados, chamado ApplicationContext. Definiremos o parâmetro serviceProvider.
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            string connectionString = Configuration.GetConnectionString("Default");
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IServiceProvider serviceProvider)
+    }
+}
+Copiaremos e chamaremos o serviceProvider abaixo, para que ele nos gere uma nova instância de ApplicationContext. Então acessaremos, a partir do contexto, o Database. Assim, este objeto tem o método necessário para garantir que ele gere o banco de dados, caso este ainda não exista, que é o EnsureCreated().
+
+namespace CasaDoCodigo
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            string connectionString = Configuration.GetConnectionString("Default");
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IServiceProvider serviceProvider)
+                {
+                    if (env.IsDevelopment())
+                    {
+                        app.UseBrowserLink();
+                        app.UseDeveloperExceptionPage();
+                    }
+                    else
+                    {
+                        app.UseExceptionHandler
+                    }
+
+                    app.UseStaticFiles();
+
+                    app.UseMvc(routes =>
+                    {
+                        routes.MapRoute(
+                            name: "default",
+                            template: "{controller=Pedido}/{action=Carrossel}/{id?}");
+                    });
+
+                    serviceProvider.GetService<ApplicationContext>().Database.EnsureCreated();
+    }
+}
+Colocaremos um break point nesta linha que acabamos de editar, para vermos o que acontece ao executarmos a aplicação, com o atalho "F5". Ao executar, veremos que a aplicação foi iniciada, subiu, e passará pelo serviceProvider para garantir que o banco de dados foi criado.
+
+Abriremos o SQL Server Object Explorer, onde temos o banco de dados "CasaDoCodigo" — o apagaremos. Executaremos novamente a aplicação. Retornando ao explorador do SQL e atualizando-o, veremos que o banco de dados foi recriado, com todas as suas tabelas.
+
+Portanto, o que vimos foi uma configuração da nossa aplicação do ASP.NET Core, a partir do método Configure(). Resumindo, temos a classe Startup, que define o modo como configuramos a aplicação. Há nela dois métodos, o ConfigureServices() e o Configure().
+
+O ConfigureServices() serve para adicionarmos serviços, por exemplo, o SQL Server, ou o serviço de log. Já a classe Configure() é onde o serviço é consumido, ou utilizado. Por esse motivo, este método também é chamado de configuração de pipeline. Com ele, podemos indicar, por exemplo, que nossa aplicação utilizará o MVC.
+
+O método Configure() define, por exemplo, que vamos utilizar arquivos estáticos em nossa aplicação, por meio do UseStaticFiles(). Já a utilização do MVC é definida pelo método UseMvc(), ou ainda, podemos configurar a chamada do método que acabamos de criar, para garantir que o banco de dados tenha sido criado. Isto é feito pelo parâmetro novo serviceProvider.
+
+Como o ASP.NET Core MVC reconheceu o parâmetro novo? Ele fez isso graças a uma técnica chamada injeção de dependência. Ele já possui esta técnica nativamente, e pode ser utilizada para criar instâncias a partir da definição de parâmetros do tipo interface. Ou seja, podemos definir uma interface, dizer que ela gerará uma instância de uma determinada classe, e então injetar, inserindo parâmetros para a criação das novas instâncias. Também podemos utilizar um esquema alternativo de injeção de dependência, utilizando um outro framework, como o ninject.
+
+Diferenças entre o Entity Framework 6 e o Entity Framework Core
+Neste curso utilizamos Entity Framework Core 2.0 como ORM (Framework de Mapeamento Objeto-Relacional). Talvez você esteja se perguntando: "Quais as diferenças entre o Entity Framework Core e o Entity Framework 6 que eu costumava usar em projetos anteriores?"
+
+Primeiro caso: Para aplicações EF6 existentes
+O Entity Framework Core é considerado um avanço em relação ao Entity Framework 6, porém nem todas as funcionalidades do EF6 foram implementadas no EF Core. As próximas versões do EF Core irão tratar de eliminar essas limitações.
+
+É preciso um bom motivo para migrar um projeto EF 6 para EF Core, caso contrário você pode estar arriscando seu projeto.
+
+Veja no final da página as tabelas comparativas entre as duas versões do Entity Framework para decidir qual a melhor opção.
+
+Segundo caso: Para novas aplicações
+Se você precisar criar novas aplicações, é recomendával utilizar o EF Core, desde que seu aplicativo não necessite de recursos do Entity Framework 6 que ainda não foram implementados no EF Core.
+
+O EF 6 depende do Windows. Isso significa que você não poderá criar novas aplicações com EF 6 para o .NET Core. Somente o Entity Framework Core pode rodar sobre o .NET Core.
+
+Você ainda pode utilizar o Entity Framework 6 em novos projetos, porém é importante saber se ele é aceitável para sua aplicação. Você pode visualizar as diferenças entre EF 6 e EF Core nas tabelas abaixo, que podem lhe ajudar a decidir qual das duas opções é mais adequada ao seu projeto.
+
+Comparação entre os recursos do EF6 e EF Core
+As informações se referem à primeira versão em que o recurso aparece. Quando o recurso não é suportado, a coluna está em branco.
+
+Criação de um modelo	EF 6	EF Core
+Anotações de dados	Sim	1.0
+API fluente	Sim	1.0
+Atualizar modelo do banco de dados	Parcial	
+Chaves alternativas		1.0
+Construtores com parâmetros		2.1
+Convenções personalizadas	Sim	1.0 (parcial)
+Convenções	Sim	1.0
+Conversões de valor da propriedade		2.1
+Criar um modelo do banco de dados: Assistente de VS	Sim	
+Criar um modelo do banco de dados: Linha de comando	Sim	1.0
+Dados espaciais	Sim	
+Divisão de entidade	Sim	
+Divisão de tabela	Sim	2.0
+Editor de gráfico de modelo	Sim	
+Filtros de consulta global		2.0
+Formato de modelo: Código	Sim	1.0
+Formato de modelo: EDMX (XML)	Sim	
+Geração de chaves: Banco de dados	Sim	1.0
+Geração de chaves: Cliente		1.0
+Herança: Tabela por classe concreta (TPC)	Sim	
+Herança: Tabela por hierarquia (TPH)	Sim	1.0
+Herança: Tabela por tipo (TPT)	Sim	
+Mapeamento de campo		1.1
+Mapeamento de classe básico	Sim	1.0
+Mapeamento de função escalar do banco de dados	Ruim	2.0
+Muitos para muitos sem entidade de ingresso	Sim	
+Propriedades de estado sombra		1.0
+Tipos complexos/de propriedade	Sim	2.0
+Tipos mapeados sem chaves (tipos de consulta)		2.1
+Visualização gráfica do modelo	Sim	
+ 
+Consultar Dados	EF6	EF Core
+Avaliação mista de cliente/servidor		1.0
+Carregamento de dados relacionados: carregamento adiantado de tipos derivados		2.1
+Carregamento de dados relacionados: Eager	Sim	1.0
+Carregamento de dados relacionados: Explicit	Sim	1.1
+Carregamento de dados relacionados: Lazy	Sim	2.1
+Consultas explicitamente compiladas	Ruim	2.0
+Consultas LINQ	Sim	1.0 (em andamento para consultas complexas)
+Consultas SQL brutas: Composição com LINQ		1.0
+Consultas SQL brutas: tipos de entidade	Sim	1.0
+Consultas SQL brutas: tipos que não são de entidade (por exemplo, tipos de consulta)	Sim	2.1
+Conversão de GroupBy	Sim	2.1
+Linguagem de consulta baseada em texto (por exemplo, Entity SQL)	1.0	
+SQL gerado legível	Ruim	1.0
+Salvando dados	EF6	EF Core
+Acesso ao estado controlado	Sim	1.0
+APIs de baixo nível de grafo desconectado	Ruim	1.0
+Controle de alterações: Instantâneo	Sim	1.0
+Controle de alterações: Notificação	Sim	1.0
+Controle de alterações: Proxies	Sim	
+Envio em lote de instruções		1.0
+Gráfico desconectado ponta a ponta		1.0 (parcial)
+Mapeamento de procedimento armazenado	Sim	
+Simultaneidade otimista	Sim	1.0
+Transações	Sim	1.0
+ 
+Outros recursos	EF6	EF Core
+APIs de criação/exclusão de banco de dados	Sim	1.0
+Dados de propagação	Sim	2.1
+Ganchos de ciclo de vida (eventos, interceptação)	Sim	
+Migrações	Sim	1.0
+Pool de DbContext		2.0
+Registro em log simples (por exemplo, Database.Log)	Sim	
+Resiliência da conexão	Sim	1.1
+ 
+Provedores de Banco de Dados	EF6	EF Core
+DB2	Sim	1.0
+Firebird	Sim	2.0
+Jet (Microsoft Access)		2.0 (2)
+MySQL	Sim	1.0
+Na memória (para teste)		1.0
+Oracle	Sim	1.0 (1)
+PostgreSQL	Sim	1.0
+SQLite	Sim	1.0
+SQL Server Compact	Sim	1.0 (2)
+SQL Server	Sim	1.0
+ 
+Plataformas	EF6	EF Core
+.NET Core (Console, ASP.NET Core)		1.0
+.NET Framework (Console, WinForms, WPF, ASP.NET)	Sim	1.0
+Mono e Xamarin		1.0 (em andamento)
+UWP		1.0 (em andamento)
+Atualmente existe um provider, mas ele é pago. Existe uma outra versão oficial gratuita para Oracle em desenvolvimento
+Este provider só funciona com .NET Framework (mas não no .NET Core).
+
+DataService, Injeção de dependência	
+
+Poderíamos aproveitar que estamos criando o banco de dados automaticamente para implementarmos um método para a carga destes dados, e alimentarmos nosso banco com o catálogo inicial de produtos. Porém, com isso estaríamos violando o princípio de separação de responsabilidades.
+
+Sendo assim, criaremos uma classe específica (DataService) para não poluirmos a classe Startup, com um método público denominado InicializaDB() para inicializar o banco de dados, caso seja necessário. Para isso, ele precisará acessar o contexto, ApplicationContext.
+
+Portanto, criaremos um campo privado e, para que o contexto seja inicializado, criaremos também uma instância. Poderíamos usar simplesmente private readonly ApplicationContext contexto = new ApplicationContext, mas não o faremos porque queremos usar o sistema de injeção de dependências do ASP.NET Core.
+
+Selecionaremos o campo privado contexto usando o atalho "Ctrl + ." e gerando um construtor, que tomará o parâmetro ApplicationContext contexto como obrigatório na criação do objeto DataService, e então teremos a instância do contexto:
+
+class DataService
+{
+    private readonly ApplicationContext contexto;
+
+    public DataService(ApplicationContext contexto)
+    {
+        this.contexto = contexto;
+    }
+
+    public void InicializaDB()
+    {
+        contexto.Database.EnsureCreated();
+    }
+}
+Por padrão, o ApplicationContext é gerado pela injeção de dependência, assim, é possível acessar o objeto contexto no método InicializaDB(). Para garantir que ele seja criado, usaremos EnsureCreated(), e com isso chamaremos o DataService, em vez de fazer a criação do banco de dados diretamente na classe Startup.
+
+Queremos que se crie uma instância do serviço de dados, para o qual basta substituirmos ApplicationContext por DataService em serviceProvider.GetService<ApplicationContext>().Database.EnsureCreated(), mais acima no código.
+
+Em seguida, chamaremos o novo método, InicializaDB(), deixando a linha de código da seguinte maneira: serviceProvider.GetService<DataService>().InicializaDB(). Porém, para o serviço de injeção de dependência do ASP.NET Core funcionar, é necessário registrar a nova classe, isto é, DataService, no contêiner de injeção de dependências.
+
+Iremos ao método ConfigureServices() da classe Startup e faremos o registro chamando um método que adiciona uma instância, a qual queremos que exista somente enquanto os objetos que a utilizarem estiverem ativos. Este método é AddTransient, que significa adicionar uma instância temporária.
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc();
+
+    string connectionString = Configuration.GetConnectionString("Default");
+
+    services.AddDbContext<ApplicationContext>(options =>
+        options.UseSqlServer(connectionString)
+    );
+
+    services.AddTransient<DataService>();
+}
+Normalmente, trabalhamos com interfaces para a injeção de independência, então moveremos a classe DataService para um novo arquivo utilizando "Ctrl + ." e escolhendo a opção "Move type to DataService.cs". Vamos acessá-lo pelo painel de "Solution Explorer", do lado direito.
+
+Criaremos uma interface a partir deste novo arquivo, com "Ctrl + ." e "Extract Interface...". Na janela que se abre, clicaremos em "OK", e a interface será extraída. Vamos voltar a Startup.cs e, no registro da injeção de dependência, incluiremos o tipo da interface: services.AddTransient<IDataService, DataService>();.
+
+
+Vamos dar uma olhada no código do PedidoController:
+
+    public class PedidoController : Controller
+    {
+        private readonly IProdutoRepository produtoRepository;
+
+        public PedidoController(IProdutoRepository produtoRepository)
+        {
+            this.produtoRepository = produtoRepository;
+        }
+...
+Note que esse construtor está exigindo um parâmetro: public PedidoController(IProdutoRepository produtoRepository). Esse parâmetro é uma dependência, isto é, sem ele o controller não vai funcionar, pois precisamos do repositório de produtos para podermos consultar os produtos do e-commerce.
+
+Mas como esse parâmetro é injetado? Note que, em nenhum momento, nós instanciamos um controller diretamente, como por exemplo PedidoController meuController = new PedidoController(), certo? Quando chamamos uma url para acessar action através do navegador, o controller é instanciado pelo próprio ASP.NET Core, por baixo dos panos. O que fazemos na injeção de dependência é informar o ASP.NET Core sobre tudo o que a instância do controller precisa para ser criada. E então o que o ASP.NET Core faz automatimente, sem a gente ver?
+
+Ele cria uma instância de IProdutoRepository (através da classe ProdutoRepository)
+Ele cria uma instância de PedidoController, passando a instância de IProdutoRepository criada no passo 1.
+Ou seja, esse parâmetro é injetado automaticamente sempre que o ASP.NET Core cria uma nova instância do PedidoController.
+
+Qual seria a alternativa a isso?
+
+Sem injeção de dependência, teríamos que criar as instâncias manualmente, usando o operador new. Teríamos que informar a classe concreta, em tempo de desenvolvimento, o tempo todo. Com injeção de dependência, podemos simplesmente definir parâmetros nos construtores, que são interfaces e não classes concretas. Por que isso é importante? Porque quando programamos com interfaces fazemos com que as classes não precisem conhecer as classes concretas que vão ser criadas, apenas as interfaces. Isso é bom porque diminui o acoplamento e a dependência entre classes.
+
+Um exemplo de injeção de dependência: Imagine que você tenha uma aplicação que gera logs sobre a atividade do usuário no seu site. Você então utiliza injeção de dependência, fazendo seu programa chamar métodos da interface IUserLog. Inicialmente, você define que os logs vão ser gravados em arquivo texto, através de uma classe FileLog (que implementa IUserLog). Mas depois de um tempo, você decide gravar os logs em banco de dados, usando uma outra classe chamada SQLServerLog (que também implementa IUserLog).
+
+Como você faria essa mudança? Com injeção de dependência, você pode simplesmente mudar uma única linha de configuração, indicando que IUserLog deve ser instanciada como SQLServerLog, e não mais como FileLog. Agora, sem injeção de dependência você teria que substituir todas as chamadas da classe FileLog para SQLServerLog.
+
+Você está desenvolvendo uma aplicação da área de Recursos Humanos usando ASP.NET Core 2.0 MVC, e acaba de criar uma nova classe chamada Calendario. Essa classe possui métodos que serão úteis para obter dados para várias páginas. Os métodos são:
+
+public int GetDiasCorridos(DateTime dataInicial, DateTime dataFinal)
+public int GetDiasUteis(DateTime dataInicial, DateTime dataFinal)
+public DateTime GetProximasFerias(int funcionarioId)
+Você deseja que uma instância da classe Calendario esteja disponível para uso em todos os pontos da sua aplicação, e deseja que o código não referencie a classe diretamente, mas sim através da sua interface ICalendario. Quais os passos necessários para realizar essa tarefa?
+
+Criando um parâmetro ICalendario no construtor de cada classe que utilizará a instância da classe Calendario:
+
+public class MinhaClasse()
+{
+    public MinhaClasse(ICalendario calendario)
+    {
+    }
+}
+ 
+Isso mesmo. O parâmetro ICalendario será passado pelo container de injeção de dependência do ASP.NET Core 2.0 como uma instância da classe Calendario.
+
+Alternativa correta
+Usando os métodos da instância do campo calendario nos métodos da classe MinhaClasse:
+
+public void AlgumMetodo(int funcionarioId, DateTime dataInicial, DateTime dataFinal)
+{
+    DateTime inicioProximasFerias = calendario.GetProximasFerias(funcionarioId)
+    int diasCorridos = calendario.GetDiasCorridos(dataInicial, dataFinal)
+    int diasUteis = calendario.GetDiasUteis(dataInicial, dataFinal)
+}
+ 
+Isso mesmo. O campo ICalendario calendario armazena uma referência para o objeto que foi injetado na classe MinhaClasse, portanto os seus métodos já estão disponíveis para uso dentro dos métodos da classe.
+
+Atribuindo o valor do parâmetro ICalendario a um campo privado da classe MinhaClasse:
+
+public class MinhaClasse()
+{
+    private readonly ICalendario calendario;
+
+    public MinhaClasse(ICalendario calendario)
+    {
+        this.calendario = calendario;
+    }
+}
+ 
+Isso mesmo. O campo ICalendario calendario armazenará uma referência para o objeto que foi injetado na classe MinhaClasse;
+
+Registrando a interface e a classe no container de injeção de dependência, no método Startup.ConfigureServices:
+
+services.AddTransient<ICalendario, Calendario>();
+ 
+Isso mesmo. Usamos services.AddTransient para registrar a interface juntamente com a classe concreta. Dessa forma, o container de injeção de dependência do ASP.NET Core 2.0 saberá criar a instância da classe apropriada a partir da interface.
+Quando definimos que os parâmetros de métodos e construtores de uma determinada classe são classes concretas, corremos o risco de "engessar" as relações entre as classes.
+
+É uma boa prática programar para interfaces, pois isso diminui o acoplamento entre as classes, isto é, diminui a dependência entre elas. Por exemplo, imagine esta classe:
+
+public class Automovel()
+{
+    public Automovel(MotorAGasolina motor)
+    {
+    ...
+    }
+}
+O que acontece quando você precisa trocar MotorAGasolina por uma outra classe, chamada MotorAAlcool, que implementa os mesmos métodos e interfaces? Nesse caso, você precisa mudar a classe Automovel:
+
+public class Automovel()
+{
+    public Automovel(MotorAAlcool motor)
+    {
+    ...
+    }
+}
+Mas isso não é bom, pois você está modificando uma classe que funciona perfeitamente, apenas para trocar o tipo de um parâmetro!
+
+Isso representa uma violação de um princípio conhecido como "open-closed principle", isto é, aberto para extensibilidade, fechado para modificação. De acordo com esse princípio, você deveria projetar sua classe para que as mudanças, como alterações nos tipos de parâmeros, não necessitem de alterações na classe Automovel.
+
+Mas quando você estabelece que a interface utilizada é de uma determinada interface, você já definiu um contrato entre a classe Automovel e o tipo de classe que ela recebe como parâmetro do construtor:
+
+public class Automovel()
+{
+    public Automovel(IMotor motor)
+    {
+    }
+}
+A partir daí, não importa qual é exatamente a classe recebida como parâmetro do construtor de Automovel, desde que ela implemente a interface IMotor
+
+
