@@ -58,7 +58,7 @@ namespace CasaDoCodigo
 			{
 				routes.MapRoute( //rota padrão
 					name: "default",
-					template: "{controller=Pedido}/{action=Carrossel}/{id?}");
+					template: "{controller=Pedido}/{action=Carrossel}/{codigo?}");
 			});
 
 			serviceProvider.GetService<IDataService>()//gerando instacia a partir da interface
