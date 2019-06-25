@@ -1,0 +1,3 @@
+
+
+	relacionamento de tabelas -> a parte da chave significa um, a parte que esta o simbolo do infinito significa muitos
