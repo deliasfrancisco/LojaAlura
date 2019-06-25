@@ -11797,34 +11797,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DiegoFrancisco\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Users\\diego.francisco\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DiegoFrancisco\\Documents\\SistemaDeEcommerce\\SistemaDeEcommerce\\SistemaDeEcommerce.csproj",
+      "projectUniqueName": "C:\\Users\\diego.francisco\\Downloads\\LojaAlura\\SistemaDeEcommerce\\SistemaDeEcommerce\\SistemaDeEcommerce.csproj",
       "projectName": "SistemaDeEcommerce",
-      "projectPath": "C:\\Users\\DiegoFrancisco\\Documents\\SistemaDeEcommerce\\SistemaDeEcommerce\\SistemaDeEcommerce.csproj",
-      "packagesPath": "C:\\Users\\DiegoFrancisco\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DiegoFrancisco\\Documents\\SistemaDeEcommerce\\SistemaDeEcommerce\\obj\\",
+      "projectPath": "C:\\Users\\diego.francisco\\Downloads\\LojaAlura\\SistemaDeEcommerce\\SistemaDeEcommerce\\SistemaDeEcommerce.csproj",
+      "packagesPath": "C:\\Users\\diego.francisco\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\diego.francisco\\Downloads\\LojaAlura\\SistemaDeEcommerce\\SistemaDeEcommerce\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\DiegoFrancisco\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\diego.francisco\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://www.nuget.org/api/v2/": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
@@ -11852,6 +11849,7 @@
             "version": "[2.1.2, )"
           },
           "Microsoft.NETCore.App": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "[2.1.0, )",
             "autoReferenced": true

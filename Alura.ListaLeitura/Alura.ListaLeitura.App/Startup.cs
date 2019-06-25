@@ -1,4 +1,5 @@
-﻿using Alura.ListaLeitura.App.Negocio;
+﻿using Alura.ListaLeitura.App.Mvc;
+using Alura.ListaLeitura.App.Negocio;
 using Alura.ListaLeitura.App.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,16 +22,8 @@ namespace Alura.ListaLeitura.App
 
         public void Configure(IApplicationBuilder app)
         {
-            //app.Run(LivrosParaLer);
-            //app.Run(Roteamento); // o metodo que sera executado quando a requesição chegar, recebendo um metodo RequestDelegate
             var builder = new RouteBuilder(app);
-            builder.MapRoute("Livros/ParaLer", LivrosParaLer);
-            builder.MapRoute("Livros/Lendo", LivrosLendo);
-            builder.MapRoute("Livros/Lidos", LivrosLidos);
-            builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", NovoLivroParaLer); //rota com template
-            builder.MapRoute("Livros/Detalhes/{id:int}", ExibeDetalhes);
-            builder.MapRoute("Cadastro/NovoLivro", ExibeFormulario);
-            builder.MapRoute("Cadastro/Incluir", PrecessaFormulario); //criando uma rota especifica para recbero formulario
+            builder.MapRoute("{classe}/{metodo}", RoteamentoPadrao.TratamentoPadrao);
             var rotas = builder.Build();
 
             app.UseRouter(rotas);
@@ -140,7 +133,5 @@ namespace Alura.ListaLeitura.App
             var _repo = new LivroRepositorioCSV();
             return context.Response.WriteAsync(_repo.Lidos.ToString()); //propriedade do context para a resposta
         }
-
-
     }
 }

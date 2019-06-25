@@ -18,7 +18,7 @@ namespace LambdaEList
             idades.Add(70);//
             idades.Add(5);//
 
-            ListExtensoes.AdicionarVarios(idades, 1245, 1145, 55452);  //USO DA CLASSE ListExtensoes CRIADA COM UMA METODO DE LISTA PARA A ADIÇÃO DE VARIOS 
+            ListExtensoes.AdicionarVarios(idades, 1245, 1145, 55452);  //CRIAÇÃO DA CLASSE ListExtensoes COM UMA METODO DE LISTA PARA A ADIÇÃO DE VARIAS IDADES 
             //OBS: FOI FEITO USO DO PARAMS PARA NÃO HAVER A PREOCUPAÇÃO COM O TANTO DE PARAMETROS QUE SERÃO PASSADOS 
 
             idades.AdicionarVarios(45, 23, 41); //idade pode acessar o metodo da classe ListExtensoes diretamente pois foi feito apontado através do this que a lista esta acessivel diretamente para a classe que quiser acessalá diretamente
