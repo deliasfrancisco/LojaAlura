@@ -1,4 +1,8 @@
-﻿@model List<Produto>;
+﻿@{ 
+    ViewData["Title"] = "Carrossel";
+}
+
+@model List<Produto>;
 @* incluir a diretiva @model, que exige o tipo de modelo que iremos injetar na view, isto é, a lista de produtos. *@
 
 <h3>Catálogo</h3>
@@ -41,7 +45,16 @@
                                     <div class="produto-nome">@produto.Codigo</div>
                                     <div><h4><strong>@produto.Preco</strong></h4></div>
                                     <div class="text-center">
-                                        <a href="/" class="btn btn-success">Adicionar</a>
+                                        <a asp-controller="pedido" asp-action="carrinho" class="btn btn-success">Adicionar</a>
+                                        @* Ao usarmos <a asp- class="btn btn-success">Adicionar</a>, por exemplo, o ASP.NET Core MVC
+                                            nos dá uma lista de opções de atributos de tag helper, sendo uma delas asp-controller, que
+                                            escolheremos porque queremos navegar para uma action de um determinado controller, neste caso,
+                                            pedido. Também usaremos asp-action para navegarmos à página do carrinho
+                                            Note que, com isso, o Visual Studio mudou a cor da âncora e a deixou em negrito, indicando
+                                            que o elemento a não é mais uma âncora HTML, e sim uma
+                                            tag helper, ou seja, um componente do ASP.NET Core 
+                                            utilizado pelo mecanismo de renderização Razor para 
+                                            a criação de HTML de maneira mais natural.*@
                                     </div>
                                 </div>
                             </div>

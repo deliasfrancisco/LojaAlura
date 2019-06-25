@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using static CasaDoCodigo.Repositories.CadastroRepository;
+using static CasaDoCodigo.Repositories.ItemPedidoRepository;
+using static CasaDoCodigo.Repositories.PedidoRepository;
 
 namespace CasaDoCodigo
 {
@@ -26,6 +29,9 @@ namespace CasaDoCodigo
 
 			services.AddTransient<IDataService, DataService>();
 			services.AddTransient<IProdutoRepository, ProdutoRepository>(); //criando uma instancia
+			services.AddTransient<IPedidoRepository, PedidoRepository>(); //criando uma instancia
+			services.AddTransient<IItemPedidoRepository, ItemPedidoRepository>(); //criando uma instancia
+			services.AddTransient<ICadastroRepository, CadastroRepository>(); //criando uma instancia
 
 			string connectionString = Configuration.GetConnectionString("Default");// definindo a conexão criada em appsettings
 

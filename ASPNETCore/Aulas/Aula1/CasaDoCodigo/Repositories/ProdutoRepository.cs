@@ -1,4 +1,5 @@
 ﻿using CasaDoCodigo.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +8,31 @@ using static CasaDoCodigo.Startup;
 
 namespace CasaDoCodigo.Repositories
 {
-	public class ProdutoRepository : IProdutoRepository
+	public class ProdutoRepository : BaseRepository<Produto>, IProdutoRepository
 	{
 		private readonly ApplicationContext contexto;
+        private readonly DbSet<Produto> dbSet;
 
-		public ProdutoRepository(ApplicationContext contexto)
-		{
-			this.contexto = contexto;
-		}
+        public ProdutoRepository(ApplicationContext contexto) : base(contexto) //construtor que irá passar o contexto para a classe base
+        {
 
-		public IList<Produto> GetProdutos()
+        }
+
+        public IList<Produto> GetProdutos()
 		{
-			return contexto.Set<Produto>().ToList(); //retorna como uma lista
+			return dbSet.ToList(); //retorna como uma lista
 		}
 
 		public void SaveProdutos(List<Livro> livros)
 		{
+
+
 			foreach (var livro in livros)
 			{
-				contexto.Set<Produto>().Add(new Produto(livro.Nome, livro.Codigo, livro.Preco)); //adicionando informações na memoria
+                if (!dbSet.Where(p => p.Codigo == livro.Codigo).Any()) //ira fazer a verificação se há codigo duplicado, se não for igual ele adiciona o livro, se for ele vai para proxima volta do foreach any retrona verdadeiro ou falso
+                {
+                    dbSet.Add(new Produto(livro.Nome, livro.Codigo, livro.Preco)); //adicionando informações na memoria
+                }
 			}
 			contexto.SaveChanges(); //salvando a listagem de produtos na tabela de produtos
 		}

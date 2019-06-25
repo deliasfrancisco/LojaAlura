@@ -1,0 +1,205 @@
+ O LIKE -> condição usada no where para a busca de parte de string
+
+	<condicao> LIKE '%nome%' //string que tenha o nome, tanto no final, inicio ou meio 
+	<condicao> LIKE '%nome' //string que termine com o nome
+	<condicao> LIKE 'nome%' //string que inicie com o nome
+
+ Comando DISTINCT -> retorna valores cujo a linha de tabelas são diferentes
+
+	SELECT DISTINCT * FROM NOME_TABELA -> MOSTRA AS LINHAS QUE NÃO TENHA REPETIÇÃO
+
+	SELECT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+	SELECT DISTINCT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+	SELECT DISTINCT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS] WHERE
+		[SABOR] = 'Laranja'
+
+	SELECT DISTINCT EMBALAGEM, TAMANHO, SABOR FROM [TABELA DE PRODUTOS]
+
+
+
+ o comando TOP -> Limita o numero de linhas exibidas
+
+	SELECT TOP 4 *
+	FROM NOME_TABELA 
+
+
+	SELECT * FROM [TABELA DE PRODUTOS]
+
+	SELECT TOP 3 * FROM [TABELA DE PRODUTOS]
+
+	SELECT * FROM [TABELA DE PRODUTOS] WHERE [SABOR] = 'Laranja'
+
+	SELECT TOP 3 * FROM [TABELA DE PRODUTOS] WHERE [SABOR] = 'Laranja'
+
+	SELECT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+	SELECT DISTINCT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+	SELECT DISTINCT TOP 3 EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+
+Qual foi a maior venda do produto "Linha Refrescante - 1 Litro - Morango/Limão", em quantidade? (Obtenha este resultado usando 2 SQLs).
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+Primeiro, vamos buscar o código do produto "Linha Refrescante - 1 Litro - Morango/Limão":
+
+SELECT * FROM [TABELA DE PRODUTOS] 
+WHERE [NOME DO PRODUTO] = 'Linha Refrescante - 1 Litro - Morango/Limão'
+Com esta consulta, obtemos o resultado do código deste produto: '1101035'. E com esta informação, fazemos a consulta para achar a maior quantidade vendida deste produto:
+
+SELECT * FROM [ITENS NOTAS FISCAIS]
+WHERE [CODIGO DO PRODUTO] = '1101035'
+ORDER BY QUANTIDADE DESC
+Veremos que a maior quantidade foi 99.
+
+
+Aproveitando o exercício anterior, quantos itens de venda existem com a maior quantidade de venda para o produto '1101035'?
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+Execute o comando:
+
+SELECT COUNT(*) FROM [ITENS NOTAS FISCAIS]
+WHERE [CODIGO DO PRODUTO] = '1101035'
+AND QUANTIDADE = 99
+Teremos como resposta 79.
+
+  comando HAVING -> Condição que se aplica ao resultado de uma  agregação
+
+	SELECT * FROM [dbo].[TABELA DE CLIENTES]
+
+	SELECT ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES] GROUP BY ESTADO
+
+	SELECT ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES] GROUP BY ESTADO 
+	HAVING SUM([LIMITE DE CREDITO]) >= 850000
+
+	SELECT EMBALAGEM, SUM([PREÇO DE LISTA]), MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA]) 
+	FROM [TABELA DE PRODUTOS] GROUP BY EMBALAGEM
+
+	SELECT EMBALAGEM, MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS] 
+	GROUP BY EMBALAGEM HAVING SUM([PREÇO DE LISTA]) <= 80
+
+	SELECT EMBALAGEM, MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS] 
+	GROUP BY EMBALAGEM HAVING SUM([PREÇO DE LISTA]) <= 80 AND MAX([PREÇO DE LISTA]) >= 6
+
+
+
+	Quais são os clientes que fizeram mais de 2000 compras em 2016?
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+Execute a consulta:
+
+SELECT CPF, COUNT(*) FROM [NOTAS FISCAIS] 
+WHERE YEAR(DATA) = 2016 
+GROUP BY CPF 
+HAVING COUNT(*) > 2000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
