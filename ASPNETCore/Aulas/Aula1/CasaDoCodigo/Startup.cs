@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -19,21 +20,21 @@ namespace CasaDoCodigo
 
         public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
+		public void ConfigureServices(IServiceCollection services) //método de configuração para o nosso banco de dados.
 		{
 			services.AddMvc();
 
 			services.AddTransient<IDataService, DataService>();
+			services.AddTransient<IProdutoRepository, ProdutoRepository>(); //criando uma instancia
 
 			string connectionString = Configuration.GetConnectionString("Default");// definindo a conexão criada em appsettings
 
-			services.AddDbContext<ApplicationContext>(optionsAction =>
+			services.AddDbContext<ApplicationContext>(optionsAction =>  // nome da classe do contexto do banco de dados ApplicationContext()
 			optionsAction.UseSqlServer(connectionString)); // instanciando a classe de conexão que no caso e SQL server
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider) // IServiceProvider -> vai fornecer o serviço da aplicação
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+			IServiceProvider serviceProvider) // IServiceProvider -> vai fornecer o serviço da aplicação
 		{
 			if (env.IsDevelopment())
 			{
@@ -54,7 +55,7 @@ namespace CasaDoCodigo
 					template: "{controller=Pedido}/{action=Carrossel}/{id?}");
 			});
 
-			serviceProvider.GetService<IDataService>()
+			serviceProvider.GetService<IDataService>()//gerando instacia a partir da interface
 				.InicializaDB();
 				//.Migrate();
 			//.EnsureCreated();
