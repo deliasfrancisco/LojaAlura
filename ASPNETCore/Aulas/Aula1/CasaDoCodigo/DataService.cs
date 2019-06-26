@@ -1,5 +1,6 @@
 ﻿using CasaDoCodigo.Models;
 using CasaDoCodigo.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,9 @@ namespace CasaDoCodigo
 			public void InicializaDB()
 			{
 				contexto.Database.EnsureCreated();
+
 				List<Livro> livros = GetLivros();
+
 				produtoRepository.SaveProdutos(livros);
 			}
 
@@ -35,8 +38,5 @@ namespace CasaDoCodigo
 				return livros;
 			}
 		}
-
-		
-
 	}
 }

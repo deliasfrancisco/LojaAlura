@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using static CasaDoCodigo.Repositories.CadastroRepository;
-using static CasaDoCodigo.Repositories.ItemPedidoRepository;
-using static CasaDoCodigo.Repositories.PedidoRepository;
 
 namespace CasaDoCodigo
 {
@@ -23,9 +20,11 @@ namespace CasaDoCodigo
 
         public IConfiguration Configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services) //método de configuração para o nosso banco de dados.
+		public void ConfigureServices(IServiceCollection services) // ConfigureServices(), que é onde adicionamos o serviço à aplicação; método de configuração para o nosso banco de dados.
 		{
 			services.AddMvc();
+			services.AddDistributedMemoryCache(); //responsável por manter as informações na memória, conforme vamos navegando, o serviço de cache, mais especificamente, o cache distribuído em memória
+			services.AddSession();
 
 			services.AddTransient<IDataService, DataService>();
 			services.AddTransient<IProdutoRepository, ProdutoRepository>(); //criando uma instancia
@@ -35,11 +34,11 @@ namespace CasaDoCodigo
 
 			string connectionString = Configuration.GetConnectionString("Default");// definindo a conexão criada em appsettings
 
-			services.AddDbContext<ApplicationContext>(optionsAction =>  // nome da classe do contexto do banco de dados ApplicationContext()
-			optionsAction.UseSqlServer(connectionString)); // instanciando a classe de conexão que no caso e SQL server
+			services.AddDbContext<ApplicationContext>(options =>  // nome da classe do contexto do banco de dados ApplicationContext()
+			options.UseSqlServer(connectionString)); // instanciando a classe de conexão que no caso e SQL server
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, // Configure(), em que definimos que iremos realmente utilizar o determinado serviço
 			IServiceProvider serviceProvider) // IServiceProvider -> vai fornecer o serviço da aplicação
 		{
 			if (env.IsDevelopment())
@@ -53,6 +52,7 @@ namespace CasaDoCodigo
 			}
 
 			app.UseStaticFiles();
+			app.UseSession();
 
 			app.UseMvc(routes =>
 			{
