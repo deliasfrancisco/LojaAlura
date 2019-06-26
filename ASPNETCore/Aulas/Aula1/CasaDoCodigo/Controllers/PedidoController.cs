@@ -27,13 +27,13 @@ namespace CasaDoCodigo.Controllers
 
 		public IActionResult Carrinho(string codigo)
 		{
-			if (string.IsNullOrEmpty(codigo))
+			if (!string.IsNullOrEmpty(codigo)) //verifica se o codigo foi preenchido ou não
 			{
 				pedidoRepository.AddItem(codigo);
 			}
 
-			Pedido pedido = pedidoRepository.GetPedido();
-			return View(pedido.Itens);
+			Pedido pedido = pedidoRepository.GetPedido(); //metodo para receber o pedido da sessão atual
+			return View(pedido.Itens); // passando (retornando) para a view a solicitação de itens feita no repositorio
 		}
 
 		public IActionResult Cadastro()
@@ -43,7 +43,15 @@ namespace CasaDoCodigo.Controllers
 
 		public IActionResult Resumo()
 		{
-			return View();
+            Pedido pedido = pedidoRepository.GetPedido(); //consultyando o pedido
+
+			return View(pedido);
 		}
+
+        [HttpPost] //com o http post força os parametros a serem passados pelo corpo da pagina HTML, impedindo que os dados sejam passados pelo endereço do navagador
+        public void UpdateUnidade([FromBody]ItemPedido itemPedido) //metodo para ser utilizado no javascript
+        {
+
+        }
 	}
 }

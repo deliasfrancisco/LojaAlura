@@ -8,35 +8,32 @@ using static CasaDoCodigo.Repositories.ProdutoRepository;
 
 namespace CasaDoCodigo
 {
-	public partial class Startup
+    class DataService : IDataService
     {
-		class DataService : IDataService
-		{
-			private readonly ApplicationContext contexto; //injecção de dependencias
-			private readonly IProdutoRepository produtoRepository;
+        private readonly ApplicationContext contexto; //injecção de dependencias
+        private readonly IProdutoRepository produtoRepository;
 
-			public DataService(ApplicationContext contexto,
-				IProdutoRepository produtoRepository)
-			{
-				this.contexto = contexto;
-				this.produtoRepository = produtoRepository;
-			}
+        public DataService(ApplicationContext contexto,
+            IProdutoRepository produtoRepository)
+        {
+            this.contexto = contexto;
+            this.produtoRepository = produtoRepository;
+        }
 
-			public void InicializaDB()
-			{
-				contexto.Database.EnsureCreated();
+        public void InicializaDB()
+        {
+            contexto.Database.Migrate();
 
-				List<Livro> livros = GetLivros();
+            List<Livro> livros = GetLivros();
 
-				produtoRepository.SaveProdutos(livros);
-			}
+            produtoRepository.SaveProdutos(livros);
+        }
 
-			private static List<Livro> GetLivros()
-			{
-				var json = File.ReadAllText("livros.json"); //vai fazer a a leitura do arquivo json
-				var livros = JsonConvert.DeserializeObject<List<Livro>>(json);  // converte um arquivo json em objeto  //deserializar o objeto
-				return livros;
-			}
-		}
-	}
+        private static List<Livro> GetLivros()
+        {
+            var json = File.ReadAllText("livros.json"); //vai fazer a a leitura do arquivo json
+            var livros = JsonConvert.DeserializeObject<List<Livro>>(json);  // converte um arquivo json em objeto  //deserializar o objeto
+            return livros;
+        }
+    }
 }
