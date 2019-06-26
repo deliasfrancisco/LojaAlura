@@ -1,0 +1,19 @@
+
+
+	LEFT JOIN -> Retorna todos da tabela da esquerde e somante os correspondentes na da direita
+
+Qual seria a consulta, usando sub-consulta, que seria equivalente a:
+
+SELECT CPF, COUNT(*) FROM [NOTAS FISCAIS]
+WHERE YEAR(DATA) = 2016
+GROUP BY CPF
+HAVING COUNT(*) > 2000
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+A consulta seria:
+
+SELECT X.CPF, X.CONTADOR FROM 
+(SELECT CPF, COUNT(*) AS CONTADOR FROM [NOTAS FISCAIS]
+WHERE YEAR(DATA) = 2016
+GROUP BY CPF) X WHERE X.CONTADOR > 2000

@@ -1,0 +1,258 @@
+
+
+
+SELECT * FROM [TABELA DE PRODUTOS]
+
+SELECT [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END
+FROM
+[TABELA DE PRODUTOS]
+
+SELECT [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END,
+AVG([PREÇO DE LISTA])
+FROM
+[TABELA DE PRODUTOS]
+GROUP BY [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END
+
+SELECT YEAR(DATA), COUNT(*) FROM [NOTAS FISCAIS] GROUP BY YEAR(DATA)
+
+
+Veja o ano de nascimento dos clientes e classifique-os como: nascidos antes de 1990 são adultos, nascidos entre 1990 e 1995 são jovens e nascidos depois de 1995 são crianças. Liste o nome do cliente e esta classificação.
+
+VER OPINIÃO DO INSTRUTOR
+Opinião do instrutor
+
+A consulta ficará assim:
+
+select [NOME],
+case 
+    when year([DATA DE NASCIMENTO]) < 1990 then 'Adulto'
+    when year([DATA DE NASCIMENTO]) between 1990 and 1995 then 'Jovem'
+    else 'Criança' end as [Classificação Etária]
+ from [TABELA DE CLIENTES]
+
+
+Usando DISTINCT para visualizar a tabela
+1) Abra o arquivo Consultas DISTINCT 1.sql no SQL Server Management Studio 2017.
+
+2) Execute a consulta:
+
+SELECT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+
+Note que há diversos registros com EMBALAGEM e TAMANHO repetidos.
+
+3) Agora, execute o mesmo comando com a cláusula DISTINCT:
+
+SELECT DISTINCT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+
+4) Os filtros aplicados até agora podem ser executados em conjunto com os comandos SQL com a cláusula DISTINCT, mesmo que o campo usado para a condição não esteja sendo exibido no resultado da consulta:
+
+SELECT DISTINCT EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS] WHERE
+[SABOR] = 'Laranja'
+
+
+Limitando a saída da consulta
+5) Abra o arquivo Consultas DISTINCT 2.sql.
+
+6) Execute a seleção de todos os produtos:
+
+SELECT * FROM [TABELA DE PRODUTOS]
+
+
+7) Limite e olhe os primeiros 3 produtos desta lista:
+
+SELECT TOP 3 * FROM [TABELA DE PRODUTOS]
+
+
+8) Limite a consulta, utilizando filtros, como mostrado abaixo:
+
+SELECT TOP 3 * FROM [TABELA DE PRODUTOS] WHERE [SABOR] = 'Laranja'
+
+
+9) Também é possível mesclar o TOP com o DISTINCT como mostrado abaixo:
+
+SELECT DISTINCT TOP 3 EMBALAGEM, TAMANHO FROM [TABELA DE PRODUTOS]
+
+
+Ordenando a saída da consulta
+10) Abra o arquivo Ordenando a saída da consulta.sql.
+
+11) Execute o comando abaixo para listar todos os produtos:
+
+SELECT * FROM [dbo].[TABELA DE PRODUTOS]
+
+
+12) Visualize esta mesma lista, mas ordenada pelo preço:
+
+SELECT * FROM [TABELA DE PRODUTOS] ORDER BY [PREÇO DE LISTA]
+
+
+13) Na consulta acima, você vê os dados ordenados do menor para o maior. Se quiser ao contrário, use a cláusula DESC:
+
+SELECT * FROM [TABELA DE PRODUTOS] ORDER BY [PREÇO DE LISTA] DESC
+
+
+14) Você pode usar como critério de ordenação um campo string. Neste caso, o SQL Server usará como critério de ordenação a ordem alfabética:
+
+SELECT * FROM [TABELA DE PRODUTOS] ORDER BY [NOME DO PRODUTO]
+
+
+15) Bem como ordenar usando critérios em conjunto:
+
+SELECT [EMBALAGEM], [NOME DO PRODUTO] FROM [TABELA DE PRODUTOS]
+ORDER BY [EMBALAGEM], [NOME DO PRODUTO]
+
+
+16) Inclusive a direção da ordenação pode ser diferente. Uma para cada tipo de campo:
+
+SELECT [EMBALAGEM], [NOME DO PRODUTO] FROM [TABELA DE PRODUTOS]
+ORDER BY [EMBALAGEM] DESC, [NOME DO PRODUTO] ASC
+
+
+Agrupando os resultados
+17) Abra o arquivo Agrupando os resultados.sql.
+
+18) Liste todos os clientes:
+
+SELECT * FROM [dbo].[TABELA DE CLIENTES]
+
+
+19) Agora, selecione somente o estado e o limite de crédito:
+
+SELECT ESTADO, [LIMITE DE CREDITO] FROM [dbo].[TABELA DE CLIENTES]
+
+
+20) Calcule o total de limite de crédito por estado. Neste caso, use o comando GROUP BY para obter este resultado:
+
+SELECT ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES] GROUP BY ESTADO
+
+
+21) Você pode obter também a média de crédito em cada estado:
+
+SELECT ESTADO, AVG([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES] GROUP BY ESTADO
+
+
+22) Do preço de lista dos produtos, obtenha os mais caros por embalagem:
+
+SELECT EMBALAGEM, MAX([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS] GROUP BY EMBALAGEM
+
+
+23) Ou então o menor:
+
+SELECT EMBALAGEM, MIN([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS] GROUP BY EMBALAGEM
+
+
+24) O comando COUNT(*) conta o número de ocorrências. Por exemplo, para saber quantos produtos há por cada tipo de embalagem, execute:
+
+SELECT EMBALAGEM, COUNT(*) FROM [TABELA DE PRODUTOS] GROUP BY EMBALAGEM
+
+
+25) E você pode juntar os comandos de GROUP BY com os filtros já apresentados anteriormente:
+
+SELECT BAIRRO, ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES]
+WHERE [ESTADO]  = 'SP' GROUP BY BAIRRO, ESTADO
+
+
+Usando a condição HAVING
+26) Abra o arquivo Usando Having.sql.
+
+27) Execute o seguinte comando:
+
+SELECT BAIRRO, ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES]
+WHERE [ESTADO] = 'SP' GROUP BY BAIRRO, ESTADO
+
+
+28) Agora, limite esta consulta aos valores maiores que 140000. O natural seria aplicar um filtro sobre o SUM([LIMITE DE CREDITO]):
+
+SELECT BAIRRO, ESTADO, SUM([LIMITE DE CREDITO]) AS SOMA_LIMITE FROM [TABELA DE CLIENTES]
+WHERE [ESTADO] = 'SP' AND SOMA_LIMITE >= 140000 GROUP BY BAIRRO, ESTADO
+Nesta consulta, foi aplicado um alias para SUM([LIMITE DE CREDITO]), que foi utilizado no filtro SOMA_LIMITE >= 140000. Mas, ao rodar esta consulta, você terá:
+
+
+
+29) Para isso, use o HAVING. Digite o seguinte comando:
+
+SELECT BAIRRO, ESTADO, SUM([LIMITE DE CREDITO]) AS SOMA_LIMITE FROM [TABELA DE CLIENTES]
+WHERE [ESTADO] = 'SP' GROUP BY BAIRRO, ESTADO HAVING SUM([LIMITE DE CREDITO]) >= 140000
+Você terá:
+
+
+
+30) Olhe outra consulta, agora associada à lista de clientes:
+
+SELECT * FROM [dbo].[TABELA DE CLIENTES]
+
+
+31) Observe o limite de crédito para cada estado, limitados a valores maiores ou iguais a 850000:
+
+SELECT ESTADO, SUM([LIMITE DE CREDITO]) FROM [TABELA DE CLIENTES] GROUP BY ESTADO
+HAVING SUM([LIMITE DE CREDITO]) >= 850000
+
+
+32) Junte condições no HAVING. Veja a consulta abaixo que ao mesmo tempo obtém a soma (SUM), o MAX e o MIN de preços:
+
+SELECT EMBALAGEM, SUM([PREÇO DE LISTA]), MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA])
+FROM [TABELA DE PRODUTOS] GROUP BY EMBALAGEM
+
+
+33) E então aplique o HAVING sobre esta consulta:
+
+SELECT EMBALAGEM, MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS]
+GROUP BY EMBALAGEM HAVING SUM([PREÇO DE LISTA]) <= 80
+
+
+34) Você pode, inclusive, fazer condições compostas:
+
+SELECT EMBALAGEM, MAX([PREÇO DE LISTA]), MIN([PREÇO DE LISTA]) FROM [TABELA DE PRODUTOS]
+GROUP BY EMBALAGEM HAVING SUM([PREÇO DE LISTA]) <= 80 AND MAX([PREÇO DE LISTA]) >= 6
+
+
+Usando condições para classificar resultados
+35) Abra o arquivo Classificando Resultados.sql.
+
+36) Verifique a lista de produtos:
+
+SELECT * FROM [TABELA DE PRODUTOS]
+
+
+37) Classifique os produtos em CAROS (preço maior que 12), EM CONTA (preço entre 7 e 12) ou BARATOS (preço menor que 7):
+
+SELECT [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END
+FROM
+[TABELA DE PRODUTOS]
+Você terá:
+
+
+
+38) Você pode juntar uma função de GROUP BY com a classificação. Como ela faz parte da agregação, a regra de construção da classificação deve estar presente na propriedades do GROUP BY. Veja abaixo:
+
+SELECT [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END,
+AVG([PREÇO DE LISTA])
+FROM
+[TABELA DE PRODUTOS]
+GROUP BY [NOME DO PRODUTO],
+CASE WHEN [PREÇO DE LISTA] >= 12 THEN 'PRODUTO CARO'
+WHEN [PREÇO DE LISTA] >= 7 AND [PREÇO DE LISTA] < 12 THEN 'PRODUTO EM CONTA'
+ELSE 'PRODUTO BARATO' END
+
+
+39) Isso mostra que sempre que você usar uma fórmula ou função dentro da especificação do SELECT, e conter um agrupamento, esta função ou fórmula deve fazer parte do GROUP BY:
+
+SELECT YEAR(DATA), COUNT(*) FROM [NOTAS FISCAIS] GROUP BY YEAR(DATA)
+

@@ -1,0 +1,3 @@
+
+
+	VIEW -> View é uma tabela logica que tem o resultado de uma consulta, que pode ser usada depois em qualquer outra consulta
