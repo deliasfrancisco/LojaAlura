@@ -10,3 +10,14 @@ Criando Método POST no Servidor para Receber Requisição
 O atributo HttpPost
 Ajax com jQuery
 O método jQuery.ajax
+
+Aula 2 - Alterando a Quantidade de Itens
+Chamando Repositório de Itens a Partir do Controller
+Injeção de dependência
+Alterando a Quantidade no Banco de Dados
+O evento HTML onclick
+Salvando dados com DbContext.SaveChanges()
+Organizando Código JavaScript com Classe
+Montando uma classe com EcmaScript 6 (ES6)
+Digitando a Nova Quantidade
+O evento HTML onblur
