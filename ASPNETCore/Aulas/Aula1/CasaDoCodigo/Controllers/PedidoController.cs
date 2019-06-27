@@ -1,4 +1,5 @@
-﻿using CasaDoCodigo.Models;
+﻿using CasaDoCodigo.Migrations;
+using CasaDoCodigo.Models;
 using CasaDoCodigo.Models.ViewModels;
 using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ namespace CasaDoCodigo.Controllers
 				pedidoRepository.AddItem(codigo);
 			}
 
-			//Pedido pedido = pedidoRepository.GetPedido(); //metodo para receber o pedido da sessão atual
+			Pedido pedido = pedidoRepository.GetPedido(); //metodo para receber o pedido da sessão atual
 			List<ItemPedido> itens = pedidoRepository.GetPedido().Itens;
 			CarrinhoViewModel carrinhoViewModel = new CarrinhoViewModel(itens); 
 			return base.View(carrinhoViewModel); // passando (retornando) para a view a solicitação de itens feita no repositorio
@@ -55,9 +56,9 @@ namespace CasaDoCodigo.Controllers
 		}
 
         [HttpPost] //com o http post força os parametros a serem passados pelo corpo da pagina HTML, impedindo que os dados sejam passados pelo endereço do navagador
-        public void UpdateQuantidade([FromBody]ItemPedido itemPedido) //metodo para ser utilizado no javascript
+        public UpdateQuantidadeResponse UpdateQuantidade([FromBody]ItemPedido itemPedido) //metodo para ser utilizado no javascript
         {
-			itemPedidoRepository.UpdateQuantidade(itemPedido); //gravar a informação no banco de dados
+            return pedidoRepository.UpdateQuantidade(itemPedido); //gravar a informação no banco de dados
         }
 	}
 }

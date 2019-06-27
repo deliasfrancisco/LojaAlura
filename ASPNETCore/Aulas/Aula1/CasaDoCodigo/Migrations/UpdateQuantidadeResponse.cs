@@ -12,10 +12,10 @@ namespace CasaDoCodigo.Migrations
 		public UpdateQuantidadeResponse(ItemPedido itemPedido, CarrinhoViewModel carrinhoViewModel)
 		{
 			ItemPedido = itemPedido;
-			this.carrinhoViewModel = carrinhoViewModel;
+			CarrinhoViewModel = carrinhoViewModel;
 		}
 
 		public ItemPedido ItemPedido { get; } //somente leitura
-		public CarrinhoViewModel carrinhoViewModel { get; }
+		public CarrinhoViewModel CarrinhoViewModel { get; } //somente leitura
 	}
 }

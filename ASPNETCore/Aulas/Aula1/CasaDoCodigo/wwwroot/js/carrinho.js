@@ -1,12 +1,12 @@
 ﻿class Carrinho {
-    clickIncremento(btn) {
-        let data = this.getData(btn);
+    clickIncremento(button) {
+        let data = this.getData(button);
         data.Quantidade++;
         this.postQuantidade(data);
     }
 
-    clickDecremento(btn) {
-        let data = this.getData(btn);
+    clickDecremento(button) {
+        let data = this.getData(button);
         data.Quantidade--;
         this.postQuantidade(data);
     }
@@ -33,8 +33,29 @@
             type: 'POST',
             contentType: 'application/json',
             date: JSON.stringify(data)
+        }).done(function (response) {
+            let itemPedido = response.itemPedido;
+            let linhaDoItem = $('[item-id=' + itemPedido.Id + ']')
+            linhaDoItem.find('input').val(itemPedido.Quantidade);
+
+            linhaDoItem.find('[subtotal]').html((itemPedido.subtotal).duasCasas());
+
+            let carrinhoViewModel = response.carrinhoViewModel;
+            $('[numero-itens]').html('total: ' + carrinhoViewModel.itens.length + ' itens');
+
+            $('[total]').html((carrinhoViewModel.total).duasCasas());
+
+            if (itemPedido.Quantidade == 0) {
+                linhaDoItem.remove();
+            }
+
+            debugger;
         });
     }
 }
 
 var carrinho = new Carrinho();
+
+Number.prototype.duasCasas = function () {
+    return this.toFixed(2).replace('.', ',')
+}
